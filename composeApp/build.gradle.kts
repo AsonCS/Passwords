@@ -78,6 +78,8 @@ android {
     sourceSets["main"].res.srcDirs("src/androidMain/res")
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 
+    sourceSets["debug"].res.srcDirs("src/androidMain/res", "src/commonMain/composeResources")
+
     defaultConfig {
         applicationId = "br.com.asoncs.multi.passwords"
         minSdk = libs.versions.android.minSdk.get().toInt()
@@ -104,6 +106,7 @@ android {
     }
     dependencies {
         debugImplementation(compose.uiTooling)
+        debugImplementation(compose.components.uiToolingPreview)
     }
 }
 

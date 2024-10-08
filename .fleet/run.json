@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "type": "android-app",
+            "name": "Android",
+            "module": "Passwords.composeApp.main",
+        },
+        {
+            "type": "gradle",
+            "name": "Clean and Build",
+            "tasks": [
+                "clean",
+                "build"
+            ],
+        },
+        {
+            "type": "gradle",
+            "name": "Tasks",
+            "tasks": [
+                "tasks"
+            ],
+        },
+    ]
+}
