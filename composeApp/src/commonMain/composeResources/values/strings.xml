@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Passwords</string>
+
+    <string name="login_screen_username">Username</string>
+    <string name="login_screen_username_placeholder">Email, phone, or username</string>
+    <string name="login_screen_password">Password</string>
+    <string name="login_screen_password_placeholder">8 characters minimum</string>
+</resources>
