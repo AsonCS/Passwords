@@ -7,33 +7,36 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import br.com.asoncs.multi.passwords.R
-import br.com.asoncs.multi.passwords.ui.PreviewPixel7
-import br.com.asoncs.multi.passwords.ui.PreviewPtBr
+import br.com.asoncs.multi.passwords.ui.*
 
 @PreviewPixel7
 @Composable
 private fun LoginScreenPreview(
     @PreviewParameter(ValuesProvider::class) state: LoginState
 ) {
-    LoginScreen(
-        Modifier,
-        {},
-        {},
-        props(),
-        state
-    )
+    PreviewContainer {
+        LoginScreen(
+            modifier = Modifier,
+            onLogin = {},
+            onSignup = {},
+            props = props(),
+            state = state
+        )
+    }
 }
 
 @PreviewPtBr
 @Composable
 private fun LoginScreenPreview() {
-    LoginScreen(
-        Modifier,
-        {},
-        {},
-        props(),
-        LoginState()
-    )
+    PreviewContainer {
+        LoginScreen(
+            modifier = Modifier,
+            onLogin = {},
+            onSignup = {},
+            props = props(),
+            state = LoginState()
+        )
+    }
 }
 
 class ValuesProvider : PreviewParameterProvider<LoginState> {

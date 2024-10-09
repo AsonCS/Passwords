@@ -56,12 +56,20 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.androidx.navigation.compose)
 
             implementation(libs.kotlinx.serialization.json)
 
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
+
+            implementation(libs.coil3.compose)
+            implementation(libs.coil3.core)
+//            implementation(libs.coil3.network)
+//            implementation(libs.coil3.video)
+//            implementation(libs.coil3.svg)
+//            implementation(libs.coil3.gif)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

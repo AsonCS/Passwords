@@ -19,16 +19,18 @@ import passwords.composeapp.generated.resources.*
 
 @Composable
 fun LoginScreen(
+    navigateToHome: () -> Unit,
+    navigateToSignup: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = koinInject()
 ) {
     val state by viewModel.state.collectAsState()
 
     LoginScreen(
-        modifier,
-        onLogin = {},
-        onSignup = {},
-        LoginProps(
+        modifier = modifier,
+        onLogin = navigateToHome,
+        onSignup = navigateToSignup,
+        props = LoginProps(
             appName = stringResource(Res.string.multi_app_name),
             image = painterResource(Res.drawable.compose_multiplatform),
             login = stringResource(Res.string.login_screen_login),
@@ -38,7 +40,7 @@ fun LoginScreen(
             userName = stringResource(Res.string.login_screen_username),
             userNamePlaceholder = stringResource(Res.string.login_screen_username_placeholder),
         ),
-        state
+        state = state
     )
 }
 

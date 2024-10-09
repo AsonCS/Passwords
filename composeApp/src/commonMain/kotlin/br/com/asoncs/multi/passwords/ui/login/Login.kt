@@ -2,7 +2,12 @@ package br.com.asoncs.multi.passwords.ui.login
 
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
+import br.com.asoncs.multi.passwords.ui.navigation.LoginDestination
 import kotlinx.coroutines.flow.StateFlow
+
+data object LoginScreenDestination : LoginDestination("login")
 
 class LoginProps(
     val appName: String,
@@ -34,3 +39,14 @@ abstract class LoginViewModel : ViewModel() {
     )
 }
 
+fun NavGraphBuilder.loginDestination(
+    navigateToHome: () -> Unit,
+    navigateToSignup: () -> Unit,
+) {
+    composable(route = LoginScreenDestination.route) {
+        LoginScreen(
+            navigateToHome = navigateToHome,
+            navigateToSignup = navigateToSignup
+        )
+    }
+}

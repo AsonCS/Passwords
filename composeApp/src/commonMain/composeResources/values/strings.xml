@@ -7,4 +7,6 @@
     <string name="login_screen_password_placeholder">8 characters minimum</string>
     <string name="login_screen_login">Log in</string>
     <string name="login_screen_signup">Sign up</string>
+
+    <string name="signup_screen">Sign up</string>
 </resources>
