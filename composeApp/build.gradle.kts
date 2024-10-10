@@ -88,6 +88,9 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
         }
+        wasmJsMain.dependencies {
+            implementation(npm("firebase", "10.14.1"))
+        }
     }
 }
 
