@@ -1,0 +1,17 @@
+package br.com.asoncs.multi.passwords.extension
+
+actual fun platformError(
+    message: String,
+    tag: String,
+    throwable: Throwable?
+) {
+    println("$tag| $message")
+    error(throwable ?: Throwable(message))
+}
+
+actual fun platformLog(
+    message: String,
+    tag: String
+) {
+    println("$tag| $message")
+}
