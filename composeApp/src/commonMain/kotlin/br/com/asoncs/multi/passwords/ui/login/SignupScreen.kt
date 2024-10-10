@@ -1,51 +1,121 @@
 package br.com.asoncs.multi.passwords.ui.login
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.dp
+import br.com.asoncs.multi.passwords.ui.component.Loading
+import br.com.asoncs.multi.passwords.ui.login.LoginState.Filling
+import br.com.asoncs.multi.passwords.ui.login.LoginState.Loading
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import passwords.composeapp.generated.resources.Res
-import passwords.composeapp.generated.resources.signup_screen
+import org.koin.compose.koinInject
+import passwords.composeapp.generated.resources.*
 
 @Composable
 fun SignupScreen(
-    navigateToLogin: () -> Unit,
-    modifier: Modifier = Modifier
+    navigateUp: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: LoginViewModel = koinInject()
 ) {
+    val state by viewModel.state.collectAsState()
+
     SignupScreen(
         modifier = modifier,
-        navigateToLogin = navigateToLogin,
-        props = SignupProps(
-            stringResource(Res.string.signup_screen)
-        )
+        navigateUp = navigateUp,
+        props = LoginProps(
+            appName = stringResource(Res.string.multi_app_name),
+            googleLogin = null,
+            image = painterResource(Res.drawable.compose_multiplatform),
+            login = null,
+            onGoogleLogin = null,
+            onLogin = null,
+            onSignup = viewModel::signup,
+            onUpdatePassword = viewModel::updatePassword,
+            onUpdateUsername = viewModel::updateUsername,
+            password = stringResource(Res.string.login_screen_password),
+            passwordPlaceholder = stringResource(Res.string.login_screen_password_placeholder),
+            signup = stringResource(Res.string.login_screen_signup),
+            userName = stringResource(Res.string.login_screen_username),
+            userNamePlaceholder = stringResource(Res.string.login_screen_username_placeholder)
+        ),
+        state = state
     )
 }
 
 @Composable
-fun SignupScreen(
+internal fun SignupScreen(
     modifier: Modifier,
-    navigateToLogin: () -> Unit,
-    props: SignupProps
+    navigateUp: () -> Unit,
+    props: LoginProps,
+    state: LoginState
 ) {
     Box(
         modifier
-            .fillMaxSize(),
-        contentAlignment = Alignment.Center
+            .fillMaxSize()
     ) {
-        Text(
-            props.text,
+        Column(
+            modifier
+                .matchParentSize()
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement
+                .spacedBy(
+                    alignment = Alignment.CenterVertically,
+                    space = 16.dp
+                )
+        ) {
+            Logo(
+                Modifier,
+                props
+            )
+
+            when (state) {
+                is Filling -> {
+                    if (state.errorMessage != null) {
+                        Text(
+                            state.errorMessage,
+                            color = MaterialTheme.colors.error
+                        )
+                    }
+
+                    Fields(
+                        Modifier,
+                        props,
+                        state
+                    )
+
+                    Buttons(
+                        Modifier,
+                        props
+                    )
+                }
+
+                is Loading -> Loading()
+            }
+        }
+
+        IconButton(
+            navigateUp,
             Modifier
-                .clickable {
-                    navigateToLogin()
-                },
-            fontSize = 50.sp,
-            fontWeight = FontWeight.Bold
-        )
+                .align(Alignment.TopStart)
+                .padding(
+                    start = 16.dp,
+                    top = 48.dp
+                )
+        ) {
+            Icon(
+                Icons.AutoMirrored.Filled.ArrowBack,
+                null,
+                Modifier
+                    .size(48.dp)
+            )
+        }
     }
 }

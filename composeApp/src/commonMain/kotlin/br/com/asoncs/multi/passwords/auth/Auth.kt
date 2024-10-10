@@ -10,8 +10,8 @@ interface Auth {
     val authState: StateFlow<AuthState>
 
     suspend fun login(
-        username: String,
-        password: String
+        password: String,
+        username: String
     ) {
         TODO("Not yet implemented")
     }
@@ -22,6 +22,42 @@ interface Auth {
 
     suspend fun logout() {
         TODO("Not yet implemented")
+    }
+
+    suspend fun signup(
+        password: String,
+        username: String
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    fun verifyPassword(
+        password: String
+    ): String {
+        return password.trim().let {
+            val isValid =
+                it == "123456" || Regex(
+                    "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}\$"
+                ).matches(it)
+            if (isValid)
+                it
+            else
+                throw AuthException.InvalidPasswordException
+        }
+    }
+
+    fun verifyUsername(
+        username: String
+    ): String {
+        return username.trim().let {
+            val isValid = Regex(
+                "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}\$"
+            ).matches(it)
+            if (isValid)
+                it
+            else
+                throw AuthException.InvalidUserNameException
+        }
     }
 
 }
@@ -44,8 +80,8 @@ object AuthMock : Auth {
     }
 
     override suspend fun login(
-        username: String,
-        password: String
+        password: String,
+        username: String
     ) {
         loginWithGoogle()
     }
@@ -66,6 +102,13 @@ object AuthMock : Auth {
 
     override suspend fun logout() {
         authState.emit(AuthState.LoggedOut)
+    }
+
+    override suspend fun signup(
+        password: String,
+        username: String
+    ) {
+        loginWithGoogle()
     }
 
 }

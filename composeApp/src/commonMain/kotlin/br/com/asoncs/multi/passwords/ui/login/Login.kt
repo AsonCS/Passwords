@@ -11,13 +11,13 @@ const val TAG_LOGIN = "login"
 
 data object LoginScreenDestination : LoginDestination("login")
 
-class LoginProps(
+internal open class LoginProps(
     val appName: String,
-    val googleLogin: String,
+    val googleLogin: String?,
     val image: Painter,
-    val login: String,
-    val onGoogleLogin: () -> Unit,
-    val onLogin: () -> Unit,
+    val login: String?,
+    val onGoogleLogin: (() -> Unit)?,
+    val onLogin: (() -> Unit)?,
     val onSignup: () -> Unit,
     val onUpdatePassword: (String) -> Unit,
     val onUpdateUsername: (String) -> Unit,
@@ -25,23 +25,24 @@ class LoginProps(
     val passwordPlaceholder: String,
     val signup: String,
     val userName: String,
-    val userNamePlaceholder: String,
+    val userNamePlaceholder: String
 )
 
-sealed class LoginState(
-    val username: String = "",
-    val password: String = ""
-) {
-    class Filling(
+sealed class LoginState {
+
+    abstract val password: String
+    abstract val username: String
+
+    data class Filling(
         val errorMessage: String? = null,
-        username: String = "",
-        password: String = ""
-    ) : LoginState(username, password)
+        override val password: String = "",
+        override val username: String = ""
+    ) : LoginState()
 
     class Loading(
-        username: String,
-        password: String
-    ) : LoginState(username, password)
+        override val password: String,
+        override val username: String
+    ) : LoginState()
 }
 
 abstract class LoginViewModel : ViewModel() {
@@ -53,6 +54,10 @@ abstract class LoginViewModel : ViewModel() {
     }
 
     open fun loginWithGoogle() {
+        TODO("Not yet implemented")
+    }
+
+    open fun signup() {
         TODO("Not yet implemented")
     }
 

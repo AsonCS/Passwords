@@ -4,7 +4,16 @@ sealed class AuthException(
     override val message: String,
     override val cause: Throwable? = null
 ) : Exception() {
+    data object InvalidPasswordException : AuthException("InvalidPasswordException")
     data object InvalidUserException : AuthException("InvalidUserException")
+    data object InvalidUserNameException : AuthException("InvalidUserNameException")
+
+    class FirebaseAuthWeakPasswordException(
+        cause: Throwable
+    ) : AuthException(
+        "FirebaseAuthWeakPasswordException",
+        cause
+    )
 
     class GetCredentialCancellationException(
         cause: Throwable
@@ -27,5 +36,10 @@ sealed class AuthException(
         cause
     )
 
-    data object UnknownException : AuthException("UnknownException")
+    class UnknownException(
+        cause: Throwable? = null
+    ) : AuthException(
+        "UnknownException",
+        cause
+    )
 }

@@ -7,7 +7,7 @@ import br.com.asoncs.multi.passwords.ui.navigation.AppDestination
 
 data object SplashDestination : AppDestination("splash")
 
-class SplashProps(
+internal class SplashProps(
     val image: Painter
 )
 

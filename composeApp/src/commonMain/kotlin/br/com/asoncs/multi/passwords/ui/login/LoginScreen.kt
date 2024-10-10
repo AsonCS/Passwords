@@ -44,14 +44,14 @@ fun LoginScreen(
             passwordPlaceholder = stringResource(Res.string.login_screen_password_placeholder),
             signup = stringResource(Res.string.login_screen_signup),
             userName = stringResource(Res.string.login_screen_username),
-            userNamePlaceholder = stringResource(Res.string.login_screen_username_placeholder),
+            userNamePlaceholder = stringResource(Res.string.login_screen_username_placeholder)
         ),
         state = state
     )
 }
 
 @Composable
-fun LoginScreen(
+internal fun LoginScreen(
     modifier: Modifier,
     props: LoginProps,
     state: LoginState
@@ -80,6 +80,7 @@ fun LoginScreen(
                         color = MaterialTheme.colors.error
                     )
                 }
+
                 Fields(
                     Modifier,
                     props,
@@ -98,7 +99,7 @@ fun LoginScreen(
 }
 
 @Composable
-fun Logo(
+internal fun Logo(
     modifier: Modifier,
     props: LoginProps
 ) {
@@ -122,10 +123,10 @@ fun Logo(
 }
 
 @Composable
-private fun Fields(
+internal fun Fields(
     modifier: Modifier,
     props: LoginProps,
-    state: LoginState.Filling
+    state: Filling
 ) {
     Column(
         modifier,
@@ -163,7 +164,9 @@ private fun Fields(
             props.onUpdatePassword,
             keyboardActions = KeyboardActions(
                 onDone = {
-                    props.onLogin()
+                    props.onLogin
+                        ?.invoke()
+                        ?: props.onSignup()
                 }
             ),
             keyboardOptions = KeyboardOptions(
@@ -189,7 +192,7 @@ private fun Fields(
 }
 
 @Composable
-private fun Buttons(
+internal fun Buttons(
     modifier: Modifier,
     props: LoginProps
 ) {
@@ -202,14 +205,16 @@ private fun Buttons(
                 space = 8.dp
             )
     ) {
-        Button(
-            props.onLogin,
-            Modifier
-                .width(200.dp)
-        ) {
-            Text(
-                props.login
-            )
+        if (props.onLogin != null && props.login != null) {
+            Button(
+                props.onLogin,
+                Modifier
+                    .width(200.dp)
+            ) {
+                Text(
+                    props.login
+                )
+            }
         }
         OutlinedButton(
             props.onSignup,
@@ -220,17 +225,19 @@ private fun Buttons(
                 props.signup
             )
         }
-        Button(
-            props.onGoogleLogin,
-            Modifier
-                .width(200.dp),
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = MaterialTheme.colors.secondary
-            )
-        ) {
-            Text(
-                props.googleLogin
-            )
+        if (props.onGoogleLogin != null && props.googleLogin != null) {
+            Button(
+                props.onGoogleLogin,
+                Modifier
+                    .width(200.dp),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colors.secondary
+                )
+            ) {
+                Text(
+                    props.googleLogin
+                )
+            }
         }
     }
 }

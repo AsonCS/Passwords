@@ -24,7 +24,7 @@ fun SplashScreen(
 }
 
 @Composable
-fun SplashScreen(
+internal fun SplashScreen(
     modifier: Modifier,
     props: SplashProps
 ) {

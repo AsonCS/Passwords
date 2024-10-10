@@ -7,7 +7,7 @@ import br.com.asoncs.multi.passwords.ui.navigation.AppDestination
 
 data object HomeDestination : AppDestination("home")
 
-class HomeProps(
+internal class HomeProps(
     val image: Painter,
     val onLogout: () -> Unit
 )

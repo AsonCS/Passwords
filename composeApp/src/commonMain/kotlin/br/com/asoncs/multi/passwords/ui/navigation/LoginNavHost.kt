@@ -23,22 +23,14 @@ fun LoginNavHost(
     ) {
         loginDestination(
             navigateToSignup = {
-                navController.navigateTo(SignupDestination)
+                navController.navigate(SignupDestination.route)
             }
         )
         signupDestination(
-            navigateToLogin = {
-                navController.navigateTo(LoginScreenDestination)
+            navigateUp = {
+                navController.navigateUp()
             }
         )
-    }
-}
-
-fun NavHostController.navigateTo(
-    destination: LoginDestination
-) {
-    navigate(destination.route) {
-        launchSingleTop = true
     }
 }
 

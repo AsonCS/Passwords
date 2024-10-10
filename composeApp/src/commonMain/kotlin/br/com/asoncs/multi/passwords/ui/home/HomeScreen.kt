@@ -41,7 +41,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun HomeScreen(
+internal fun HomeScreen(
     modifier: Modifier,
     props: HomeProps,
     state: LoggedIn?,

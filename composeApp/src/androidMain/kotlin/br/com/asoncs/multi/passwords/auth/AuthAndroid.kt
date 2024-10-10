@@ -7,8 +7,7 @@ import br.com.asoncs.multi.passwords.R
 import br.com.asoncs.multi.passwords.auth.AuthState.LoggedIn
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
@@ -22,18 +21,18 @@ interface AuthAndroid : Auth {
 
     val context: Context
 
-    fun onAuthCreate() {
-        Firebase.auth
-    }
-
-    fun onAuthResume(
-        scope: CoroutineScope
+    override suspend fun login(
+        password: String,
+        username: String
     ) {
-        scope.launch {
+        try {
             Firebase.auth
-                .currentUser
-                ?.emitUser()
-                ?: authState.emit(AuthState.LoggedOut)
+                .signInWithEmailAndPassword(username, password)
+                .await()
+                .user
+                .emitUser()
+        } catch (t: Throwable) {
+            throw AuthException.UnknownException(t)
         }
     }
 
@@ -103,7 +102,7 @@ interface AuthAndroid : Auth {
                 }
 
                 else -> {
-                    throw AuthException.UnknownException
+                    throw AuthException.UnknownException()
                 }
             }
         } catch (e: NoCredentialException) {
@@ -112,12 +111,46 @@ interface AuthAndroid : Auth {
             throw AuthException.GetCredentialCancellationException(e)
         } catch (e: GetCredentialException) {
             throw AuthException.GetCredentialException(e)
+        } catch (t: Throwable) {
+            throw AuthException.UnknownException(t)
         }
     }
 
     override suspend fun logout() {
         Firebase.auth.signOut()
         authState.emit(AuthState.LoggedOut)
+    }
+
+    override suspend fun signup(
+        password: String,
+        username: String
+    ) {
+        try {
+            Firebase.auth
+                .createUserWithEmailAndPassword(username, password)
+                .await()
+                .user
+                .emitUser()
+        } catch (e: FirebaseAuthWeakPasswordException) {
+            throw AuthException.FirebaseAuthWeakPasswordException(e)
+        } catch (t: Throwable) {
+            throw AuthException.UnknownException(t)
+        }
+    }
+
+    fun onAuthCreate() {
+        Firebase.auth
+    }
+
+    fun onAuthResume(
+        scope: CoroutineScope
+    ) {
+        scope.launch {
+            Firebase.auth
+                .currentUser
+                ?.emitUser()
+                ?: authState.emit(AuthState.LoggedOut)
+        }
     }
 
     private suspend fun FirebaseUser?.emitUser() {
