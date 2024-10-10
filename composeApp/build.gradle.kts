@@ -5,10 +5,12 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
-    alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.jetbrainsCompose)
+    alias(libs.plugins.kotlinMultiplatform)
 }
 
 kotlin {
@@ -43,8 +45,19 @@ kotlin {
         val desktopMain by getting
 
         androidMain.dependencies {
+            implementation(project.dependencies.platform(libs.firebase.bom))
+
             implementation(compose.preview)
+
             implementation(libs.androidx.activity.compose)
+            // implementation(libs.firebase.admin)
+            implementation(libs.firebase.analytics)
+            implementation(libs.firebase.auth)
+            implementation(libs.firebase.crashlytics)
+            // implementation(libs.firebase.mpp.auth)
+            // implementation(libs.firebase.performance)
+            implementation(libs.google.id)
+            implementation(libs.play.services.auth)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -66,10 +79,10 @@ kotlin {
 
             implementation(libs.coil3.compose)
             implementation(libs.coil3.core)
-//            implementation(libs.coil3.network)
-//            implementation(libs.coil3.video)
-//            implementation(libs.coil3.svg)
-//            implementation(libs.coil3.gif)
+            // implementation(libs.coil3.network)
+            // implementation(libs.coil3.video)
+            // implementation(libs.coil3.svg)
+            // implementation(libs.coil3.gif)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -111,6 +124,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     dependencies {
         debugImplementation(compose.uiTooling)

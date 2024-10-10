@@ -7,12 +7,20 @@ import androidx.navigation.compose.composable
 import br.com.asoncs.multi.passwords.ui.navigation.LoginDestination
 import kotlinx.coroutines.flow.StateFlow
 
+const val TAG_LOGIN = "login"
+
 data object LoginScreenDestination : LoginDestination("login")
 
 class LoginProps(
     val appName: String,
+    val googleLogin: String,
     val image: Painter,
     val login: String,
+    val onGoogleLogin: () -> Unit,
+    val onLogin: () -> Unit,
+    val onSignup: () -> Unit,
+    val onUpdatePassword: (String) -> Unit,
+    val onUpdateUsername: (String) -> Unit,
     val password: String,
     val passwordPlaceholder: String,
     val signup: String,
@@ -20,33 +28,51 @@ class LoginProps(
     val userNamePlaceholder: String,
 )
 
-data class LoginState(
+sealed class LoginState(
     val username: String = "",
-    val password: String = "",
-    val updatePassword: (String) -> Unit = {},
-    val updateUsername: (String) -> Unit = {}
-)
+    val password: String = ""
+) {
+    class Filling(
+        val errorMessage: String? = null,
+        username: String = "",
+        password: String = ""
+    ) : LoginState(username, password)
+
+    class Loading(
+        username: String,
+        password: String
+    ) : LoginState(username, password)
+}
 
 abstract class LoginViewModel : ViewModel() {
-    abstract val state: StateFlow<LoginState>
+    open val state: StateFlow<LoginState>
+        get() = TODO("Not yet implemented")
 
-    abstract fun updatePassword(
+    open fun login() {
+        TODO("Not yet implemented")
+    }
+
+    open fun loginWithGoogle() {
+        TODO("Not yet implemented")
+    }
+
+    open fun updatePassword(
         password: String
-    )
+    ) {
+        TODO("Not yet implemented")
+    }
 
-    abstract fun updateUsername(
+    open fun updateUsername(
         username: String
-    )
+    ) {
+        TODO("Not yet implemented")
+    }
 }
 
 fun NavGraphBuilder.loginDestination(
-    navigateToHome: () -> Unit,
     navigateToSignup: () -> Unit,
 ) {
     composable(route = LoginScreenDestination.route) {
-        LoginScreen(
-            navigateToHome = navigateToHome,
-            navigateToSignup = navigateToSignup
-        )
+        LoginScreen(navigateToSignup)
     }
 }

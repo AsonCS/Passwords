@@ -1,11 +1,9 @@
 package br.com.asoncs.multi.passwords.ui.navigation
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import br.com.asoncs.multi.passwords.ui.home.HomeDestination
 import br.com.asoncs.multi.passwords.ui.home.homeDestination
 import br.com.asoncs.multi.passwords.ui.splash.SplashDestination
 import br.com.asoncs.multi.passwords.ui.splash.splashDestination
@@ -16,21 +14,16 @@ abstract class AppDestination(
 
 @Composable
 fun AppNavHost(
-    navController: NavHostController,
-    modifier: Modifier = Modifier
+    modifier: Modifier,
+    navController: NavHostController
 ) {
     NavHost(
         navController = navController,
         startDestination = SplashDestination.route,
         modifier = modifier
-            .fillMaxSize()
     ) {
         homeDestination()
-        loginNavDestination(
-            navigateToHome = {
-                navController.navigateTo(HomeDestination)
-            }
-        )
+        loginNavDestination()
         splashDestination()
     }
 }

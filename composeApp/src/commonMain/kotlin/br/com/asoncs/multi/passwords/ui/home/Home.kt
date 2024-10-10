@@ -8,7 +8,8 @@ import br.com.asoncs.multi.passwords.ui.navigation.AppDestination
 data object HomeDestination : AppDestination("home")
 
 class HomeProps(
-    val image: Painter
+    val image: Painter,
+    val onLogout: () -> Unit
 )
 
 fun NavGraphBuilder.homeDestination() {

@@ -1,11 +1,12 @@
 <resources>
     <string name="multi_app_name">Senhas</string>
 
+    <string name="login_screen_google_login">Entrar com Google</string>
+    <string name="login_screen_login">Entrar</string>
     <string name="login_screen_username">Nome de usuário</string>
     <string name="login_screen_username_placeholder">Email, telefone, ou email</string>
     <string name="login_screen_password">Senha</string>
     <string name="login_screen_password_placeholder">Mínimo de 8 characteres</string>
-    <string name="login_screen_login">Entrar</string>
     <string name="login_screen_signup">Cadastrar</string>
 
     <string name="signup_screen">Cadastrar</string>

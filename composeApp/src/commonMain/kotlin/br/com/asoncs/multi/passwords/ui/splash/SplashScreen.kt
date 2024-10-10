@@ -2,11 +2,11 @@ package br.com.asoncs.multi.passwords.ui.splash
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import br.com.asoncs.multi.passwords.ui.component.Loading
 import org.jetbrains.compose.resources.painterResource
 import passwords.composeapp.generated.resources.Res
 import passwords.composeapp.generated.resources.compose_multiplatform
@@ -44,9 +44,6 @@ fun SplashScreen(
             Modifier
                 .size(300.dp)
         )
-        CircularProgressIndicator(
-            Modifier
-                .size(100.dp)
-        )
+        Loading()
     }
 }

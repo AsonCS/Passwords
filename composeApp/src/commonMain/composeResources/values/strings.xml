@@ -1,11 +1,14 @@
 <resources>
     <string name="multi_app_name">Passwords</string>
 
+    <string name="firebase_default_web_client_id" translatable="false">821675050828-6dr69en4i3pi7guaogatj51crjp5i94d.apps.googleusercontent.com</string>
+
+    <string name="login_screen_google_login">Google log in</string>
+    <string name="login_screen_login">Log in</string>
     <string name="login_screen_username">Username</string>
     <string name="login_screen_username_placeholder">Email, phone, or username</string>
     <string name="login_screen_password">Password</string>
     <string name="login_screen_password_placeholder">8 characters minimum</string>
-    <string name="login_screen_login">Log in</string>
     <string name="login_screen_signup">Sign up</string>
 
     <string name="signup_screen">Sign up</string>

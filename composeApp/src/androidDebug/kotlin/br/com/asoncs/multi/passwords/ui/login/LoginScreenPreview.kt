@@ -17,8 +17,6 @@ private fun LoginScreenPreview(
     PreviewContainer {
         LoginScreen(
             modifier = Modifier,
-            onLogin = {},
-            onSignup = {},
             props = props(),
             state = state
         )
@@ -31,18 +29,16 @@ private fun LoginScreenPreview() {
     PreviewContainer {
         LoginScreen(
             modifier = Modifier,
-            onLogin = {},
-            onSignup = {},
             props = props(),
-            state = LoginState()
+            state = LoginState.Filling()
         )
     }
 }
 
 class ValuesProvider : PreviewParameterProvider<LoginState> {
     override val values = sequenceOf(
-        LoginState(),
-        LoginState(
+        LoginState.Filling(),
+        LoginState.Filling(
             username = "username@com.br",
             password = "password"
         )
@@ -52,8 +48,14 @@ class ValuesProvider : PreviewParameterProvider<LoginState> {
 @Composable
 private fun props() = LoginProps(
     appName = stringResource(R.string.multi_app_name),
+    googleLogin = stringResource(R.string.login_screen_google_login),
     image = painterResource(R.drawable.compose_multiplatform),
     login = stringResource(R.string.login_screen_login),
+    onGoogleLogin = {},
+    onLogin = {},
+    onSignup = {},
+    onUpdatePassword = {},
+    onUpdateUsername = {},
     password = stringResource(R.string.login_screen_password),
     passwordPlaceholder = stringResource(R.string.login_screen_password_placeholder),
     signup = stringResource(R.string.login_screen_signup),

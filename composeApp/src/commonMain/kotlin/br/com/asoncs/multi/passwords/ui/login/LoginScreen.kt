@@ -12,6 +12,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.com.asoncs.multi.passwords.ui.component.Loading
+import br.com.asoncs.multi.passwords.ui.login.LoginState.Filling
+import br.com.asoncs.multi.passwords.ui.login.LoginState.Loading
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -19,7 +22,6 @@ import passwords.composeapp.generated.resources.*
 
 @Composable
 fun LoginScreen(
-    navigateToHome: () -> Unit,
     navigateToSignup: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = koinInject()
@@ -28,12 +30,16 @@ fun LoginScreen(
 
     LoginScreen(
         modifier = modifier,
-        onLogin = navigateToHome,
-        onSignup = navigateToSignup,
         props = LoginProps(
             appName = stringResource(Res.string.multi_app_name),
+            googleLogin = stringResource(Res.string.login_screen_google_login),
             image = painterResource(Res.drawable.compose_multiplatform),
             login = stringResource(Res.string.login_screen_login),
+            onGoogleLogin = viewModel::loginWithGoogle,
+            onLogin = viewModel::login,
+            onSignup = navigateToSignup,
+            onUpdatePassword = viewModel::updatePassword,
+            onUpdateUsername = viewModel::updateUsername,
             password = stringResource(Res.string.login_screen_password),
             passwordPlaceholder = stringResource(Res.string.login_screen_password_placeholder),
             signup = stringResource(Res.string.login_screen_signup),
@@ -47,8 +53,6 @@ fun LoginScreen(
 @Composable
 fun LoginScreen(
     modifier: Modifier,
-    onLogin: () -> Unit,
-    onSignup: () -> Unit,
     props: LoginProps,
     state: LoginState
 ) {
@@ -57,7 +61,51 @@ fun LoginScreen(
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement
+            .spacedBy(
+                alignment = Alignment.CenterVertically,
+                space = 16.dp
+            )
+    ) {
+        Logo(
+            Modifier,
+            props
+        )
+
+        when (state) {
+            is Filling -> {
+                if (state.errorMessage != null) {
+                    Text(
+                        state.errorMessage,
+                        color = MaterialTheme.colors.error
+                    )
+                }
+                Fields(
+                    Modifier,
+                    props,
+                    state
+                )
+
+                Buttons(
+                    Modifier,
+                    props
+                )
+            }
+
+            is Loading -> Loading()
+        }
+    }
+}
+
+@Composable
+fun Logo(
+    modifier: Modifier,
+    props: LoginProps
+) {
+    Column(
+        modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         Image(
             props.image,
@@ -70,13 +118,27 @@ fun LoginScreen(
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold
         )
-        Spacer(
-            Modifier
-                .height(16.dp)
-        )
+    }
+}
+
+@Composable
+private fun Fields(
+    modifier: Modifier,
+    props: LoginProps,
+    state: LoginState.Filling
+) {
+    Column(
+        modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement
+            .spacedBy(
+                alignment = Alignment.CenterVertically,
+                space = 8.dp
+            )
+    ) {
         TextField(
             state.username,
-            state.updateUsername,
+            props.onUpdateUsername,
             keyboardOptions = KeyboardOptions(
                 autoCorrect = false,
                 capitalization = KeyboardCapitalization.None,
@@ -95,16 +157,13 @@ fun LoginScreen(
             },
             singleLine = true
         )
-        Spacer(
-            Modifier
-                .height(8.dp)
-        )
+
         TextField(
             state.password,
-            state.updatePassword,
+            props.onUpdatePassword,
             keyboardActions = KeyboardActions(
                 onDone = {
-                    onLogin()
+                    props.onLogin()
                 }
             ),
             keyboardOptions = KeyboardOptions(
@@ -126,12 +185,25 @@ fun LoginScreen(
             singleLine = true,
             visualTransformation = PasswordVisualTransformation()
         )
-        Spacer(
-            Modifier
-                .height(16.dp)
-        )
+    }
+}
+
+@Composable
+private fun Buttons(
+    modifier: Modifier,
+    props: LoginProps
+) {
+    Column(
+        modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement
+            .spacedBy(
+                alignment = Alignment.CenterVertically,
+                space = 8.dp
+            )
+    ) {
         Button(
-            onLogin,
+            props.onLogin,
             Modifier
                 .width(200.dp)
         ) {
@@ -139,17 +211,25 @@ fun LoginScreen(
                 props.login
             )
         }
-        Spacer(
-            Modifier
-                .height(8.dp)
-        )
         OutlinedButton(
-            onSignup,
+            props.onSignup,
             Modifier
                 .width(200.dp)
         ) {
             Text(
                 props.signup
+            )
+        }
+        Button(
+            props.onGoogleLogin,
+            Modifier
+                .width(200.dp),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = MaterialTheme.colors.secondary
+            )
+        ) {
+            Text(
+                props.googleLogin
             )
         }
     }

@@ -13,7 +13,6 @@ abstract class LoginDestination(
 
 @Composable
 fun LoginNavHost(
-    navigateToHome: () -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
@@ -23,7 +22,6 @@ fun LoginNavHost(
         modifier = modifier
     ) {
         loginDestination(
-            navigateToHome = navigateToHome,
             navigateToSignup = {
                 navController.navigateTo(SignupDestination)
             }
@@ -46,10 +44,8 @@ fun NavHostController.navigateTo(
 
 data object LoginNavDestination : AppDestination("login")
 
-fun NavGraphBuilder.loginNavDestination(
-    navigateToHome: () -> Unit
-) {
+fun NavGraphBuilder.loginNavDestination() {
     composable(route = LoginNavDestination.route) {
-        LoginNavHost(navigateToHome)
+        LoginNavHost()
     }
 }
