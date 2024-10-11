@@ -192,5 +192,14 @@ val buildConfigGenerator by tasks.registering(Sync::class) {
     }
 
     // the target directory
-    into(layout.projectDirectory.dir("src/commonMain/kotlin/${lApplicationId.replace(".", "/")}/generated/"))
+    into(
+        layout.projectDirectory.dir(
+            "src/commonMain/kotlin/${
+                lApplicationId.replace(
+                    ".",
+                    "/"
+                )
+            }/generated/"
+        )
+    )
 }

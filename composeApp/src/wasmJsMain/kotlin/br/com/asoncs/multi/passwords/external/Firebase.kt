@@ -22,9 +22,19 @@ external object FirebaseApp : JsAny {
 @JsModule("firebase/auth")
 external object FirebaseAuth : JsAny {
 
+    fun createUserWithEmailAndPassword(
+        auth: Auth,
+        email: String,
+        password: String
+    ): Promise<JsAny>
+
     fun getAuth(
         app: JsAny
     ): Auth
+
+    fun getRedirectResult(
+        auth: Auth
+    ): Promise<JsAny>
 
     fun onAuthStateChanged(
         auth: Auth,
@@ -34,6 +44,12 @@ external object FirebaseAuth : JsAny {
     fun signInWithPopup(
         auth: Auth,
         provider: JsAny
+    ): Promise<JsAny>
+
+    fun signInWithEmailAndPassword(
+        auth: Auth,
+        email: String,
+        password: String
     ): Promise<JsAny>
 
     fun signOut(

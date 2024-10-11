@@ -1,10 +1,10 @@
 package br.com.asoncs.multi.passwords.auth
 
 import br.com.asoncs.multi.passwords.auth.AuthState.LoggedOut
-import br.com.asoncs.multi.passwords.extension.error
-import br.com.asoncs.multi.passwords.extension.log
+import br.com.asoncs.multi.passwords.extension.*
 import br.com.asoncs.multi.passwords.external.*
 import br.com.asoncs.multi.passwords.ui.login.TAG_LOGIN
+import kotlinx.browser.window
 import kotlinx.coroutines.await
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -62,23 +62,31 @@ object WasmJsAuth : Auth {
         // console.log("auth", auth)
     }
 
-    override suspend fun loginWithGoogle() {
-        TAG_LOGIN.log("loginWithGoogle")
-        FirebaseAuth.signInWithPopup(auth, googleProvider)
-            .then {
-                // This gives you a Google Access Token. You can use it to access the Google API.
-                val credential = FirebaseAuth
-                    .GoogleAuthProvider
-                    .credentialFromResult(it)
-                TAG_LOGIN.log("accessToken: ${credential.accessToken}")
-
+    override suspend fun login(
+        password: String,
+        username: String
+    ) {
+        FirebaseAuth
+            .signInWithEmailAndPassword(
+                auth = auth,
+                email = username,
+                password = password
+            ).then {
                 auth.currentUser.emitUser()
-            }
-            .catch {
-                TAG_LOGIN.error("loginWithGoogle")
+            }.catch {
+                TAG_LOGIN.error("login")
                 console.log(it)
                 it
             }.await<JsAny>()
+    }
+
+    override suspend fun loginWithGoogle() {
+        val isMobile = window.isMobile
+        TAG_LOGIN.log("loginWithGoogle| isMobile: $isMobile")
+        if (isMobile)
+            loginWithGetRedirectResult()
+        else
+            loginWithSignInWithPopup()
     }
 
     override suspend fun logout() {
@@ -92,7 +100,18 @@ object WasmJsAuth : Auth {
         password: String,
         username: String
     ) {
-        Here
+        FirebaseAuth
+            .createUserWithEmailAndPassword(
+                auth = auth,
+                email = username,
+                password = password
+            ).then {
+                auth.currentUser.emitUser()
+            }.catch {
+                TAG_LOGIN.error("signup")
+                console.log(it)
+                it
+            }.await<JsAny>()
     }
 
     private fun FirebaseAuth.User?.emitUser(): JsAny {
@@ -111,6 +130,42 @@ object WasmJsAuth : Auth {
         }
 
         return this
+    }
+
+    private suspend fun loginWithGetRedirectResult() {
+        FirebaseAuth
+            .getRedirectResult(auth)
+            .then {
+                // This gives you a Google Access Token. You can use it to access Google APIs.
+                val credential = FirebaseAuth
+                    .GoogleAuthProvider
+                    .credentialFromResult(it);
+                TAG_LOGIN.log("accessToken: ${credential.accessToken}")
+
+                auth.currentUser.emitUser()
+            }.catch {
+                TAG_LOGIN.error("loginWithGetRedirectResult")
+                console.log(it)
+                it
+            }.await<JsAny>()
+    }
+
+    private suspend fun loginWithSignInWithPopup() {
+        FirebaseAuth
+            .signInWithPopup(auth, googleProvider)
+            .then {
+                // This gives you a Google Access Token. You can use it to access the Google API.
+                val credential = FirebaseAuth
+                    .GoogleAuthProvider
+                    .credentialFromResult(it)
+                TAG_LOGIN.log("accessToken: ${credential.accessToken}")
+
+                auth.currentUser.emitUser()
+            }.catch {
+                TAG_LOGIN.error("loginWithSignInWithPopup")
+                console.log(it)
+                it
+            }.await<JsAny>()
     }
 
 }
