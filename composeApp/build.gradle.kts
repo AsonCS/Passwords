@@ -10,10 +10,14 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.firebase.appdistribution)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.kotlinMultiplatform)
 }
 
+val keystoreProperties = Properties().apply {
+    load(rootProject.file("keystore.properties").inputStream())
+}
 val lApplicationId = libs.versions.applicationId
     .get()
 val lApplicationVersion = libs.versions.applicationVersion
@@ -128,6 +132,15 @@ android {
         }
     }
     buildTypes {
+        getByName("debug") {
+            firebaseAppDistribution {
+                artifactPath =
+                    "./composeApp/build/outputs/apk_from_bundle/debug/composeApp-debug-universal.apk"
+                artifactType = "APK"
+                releaseNotesFile = "./composeApp/release_notes.txt"
+                testers = "acsgsa92@gmail.com"
+            }
+        }
         getByName("release") {
             isMinifyEnabled = false
         }
@@ -159,10 +172,6 @@ compose.desktop {
 }
 
 val buildConfigGenerator by tasks.registering(Sync::class) {
-    val keystoreProperties = Properties().apply {
-        load(rootProject.file("keystore.properties").inputStream())
-    }
-
     from(
         resources.text.fromString(
             """
