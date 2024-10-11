@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.androidApplication)
@@ -12,6 +13,15 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.kotlinMultiplatform)
 }
+
+val lApplicationId = libs.versions.applicationId
+    .get()
+val lApplicationVersion = libs.versions.applicationVersion
+    .get()
+val lApplicationVersionCode = libs.versions.applicationVersion
+    .get()
+    .replace(".", "")
+    .toInt()
 
 kotlin {
     @OptIn(ExperimentalWasmDsl::class)
@@ -56,6 +66,7 @@ kotlin {
             implementation(libs.firebase.crashlytics)
             // implementation(libs.firebase.mpp.auth)
             // implementation(libs.firebase.performance)
+            implementation(libs.firebase.ui)
             implementation(libs.google.id)
             implementation(libs.play.services.auth)
         }
@@ -95,7 +106,7 @@ kotlin {
 }
 
 android {
-    namespace = "br.com.asoncs.multi.passwords"
+    namespace = lApplicationId
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
@@ -105,11 +116,11 @@ android {
     sourceSets["debug"].res.srcDirs("src/androidMain/res", "src/commonMain/composeResources")
 
     defaultConfig {
-        applicationId = "br.com.asoncs.multi.passwords"
+        applicationId = lApplicationId
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = lApplicationVersionCode
+        versionName = lApplicationVersion
     }
     packaging {
         resources {
@@ -137,12 +148,49 @@ android {
 
 compose.desktop {
     application {
-        mainClass = "br.com.asoncs.multi.passwords.MainKt"
+        mainClass = "$lApplicationId.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "br.com.asoncs.multi.passwords"
+            packageName = lApplicationId
             packageVersion = "1.0.0"
         }
     }
+}
+
+val buildConfigGenerator by tasks.registering(Sync::class) {
+    val keystoreProperties = Properties().apply {
+        load(rootProject.file("keystore.properties").inputStream())
+    }
+
+    from(
+        resources.text.fromString(
+            """
+                |package $lApplicationId.generated
+                |
+                |object MultiBuildConfig {
+                |   const val APPLICATION_ID = "$lApplicationId"
+                |   const val APPLICATION_VERSION = "$lApplicationVersion"
+                |   const val APPLICATION_VERSION_CODE = "$lApplicationVersionCode"
+                |
+                |   const val DEBUG = true
+                |
+                |   const val FIREBASE_APP_ID = "${keystoreProperties["firebaseAppId"]}"
+                |   const val FIREBASE_API_KEY = "${keystoreProperties["firebaseApiKey"]}"
+                |   const val FIREBASE_AUTH_DOMAIN = "${keystoreProperties["firebaseAuthDomain"]}"
+                |   const val FIREBASE_MEASUREMENT_ID = "${keystoreProperties["firebaseMeasurementId"]}"
+                |   const val FIREBASE_MESSAGING_SENDER_ID = "${keystoreProperties["firebaseMessagingSenderId"]}"
+                |   const val FIREBASE_PROJECT_ID = "${keystoreProperties["firebaseProjectId"]}"
+                |   const val FIREBASE_STORAGE_BUCKET = "${keystoreProperties["firebaseStorageBucket"]}"
+                |}
+                |
+            """.trimMargin()
+        )
+    ) {
+        rename { "MultiBuildConfig.kt" } // set the file name
+        into("") // change the directory to match the package
+    }
+
+    // the target directory
+    into(layout.projectDirectory.dir("src/commonMain/kotlin/${lApplicationId.replace(".", "/")}/generated/"))
 }

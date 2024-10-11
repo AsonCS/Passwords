@@ -5,16 +5,17 @@ import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.lifecycleScope
-import br.com.asoncs.multi.passwords.auth.AuthAndroid
-import br.com.asoncs.multi.passwords.auth.AuthState
+import br.com.asoncs.multi.passwords.auth.*
 import br.com.asoncs.multi.passwords.ui.App
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class MainActivity : ComponentActivity(), AuthAndroid {
+class MainActivity : ComponentActivity(), AuthAndroidV1, AuthAndroidV2 {
 
-    override val context = this
-
-    override val authState = MutableStateFlow<AuthState>(AuthState.Unknown)
+    override val activity = this
+    override val authState = MutableStateFlow<AuthState>(
+        AuthState.Unknown
+    )
+    override val signInLauncher = signInLauncher()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +32,11 @@ class MainActivity : ComponentActivity(), AuthAndroid {
     override fun onResume() {
         super.onResume()
         onAuthResume(lifecycleScope)
+    }
+
+    override suspend fun loginWithGoogle() {
+        // TODO Check NoClassDefFoundError super<AuthAndroidV2>.loginWithGoogle()
+        super<AuthAndroidV1>.loginWithGoogle()
     }
 
 }

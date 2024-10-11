@@ -1,4 +1,7 @@
 [versions]
+applicationId = "br.com.asoncs.multi.passwords"
+applicationVersion = "1.0.0" # Just one digit for minor and medium versions
+
 agp = "8.2.2"
 android-compileSdk = "34"
 android-minSdk = "24"
@@ -15,6 +18,7 @@ androidx-test-junit = "1.2.1"
 coil3-io = "3.0.0-rc01"
 compose-plugin = "1.6.11"
 firebase = "3.0.2"
+firebase-ui = "8.0.2"
 google-id = "1.1.1"
 google-services = "4.4.2"
 junit = "4.13.2"
@@ -22,7 +26,7 @@ koin = "4.0.0-RC2"
 kotlin = "2.0.20"
 kotlinx-coroutines = "1.8.1"
 kotlinx-serialization = "1.7.1"
-play-services = "21.2.0"
+play-services-auth = "20.7.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core-ktx" }
@@ -49,6 +53,7 @@ firebase-bom = "com.google.firebase:firebase-bom:33.4.0"
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 #firebase-mpp-auth = "dev.gitlive:firebase-auth:1.13.0"
 #firebase-performance = { module = "com.google.firebase:firebase-perf" }
+firebase-ui = { group = "com.firebaseui", name = "firebase-ui-auth", version.ref = "firebase-ui" }
 google-id = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "google-id" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
@@ -58,7 +63,7 @@ kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotl
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
-play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "play-services" }
+play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "play-services-auth" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -1,16 +1,16 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Web" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="BuildConfigGenerator" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$" />
       <option name="externalSystemIdString" value="GRADLE" />
-      <option name="scriptParameters" value="-t --quiet" />
+      <option name="scriptParameters" value="" />
       <option name="taskDescriptions">
         <list />
       </option>
       <option name="taskNames">
         <list>
-          <option value="wasmJsBrowserRun" />
+          <option value="buildConfigGenerator" />
         </list>
       </option>
       <option name="vmOptions" />
@@ -19,8 +19,6 @@
     <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
     <DebugAllEnabled>false</DebugAllEnabled>
     <RunAsTest>false</RunAsTest>
-    <method v="2">
-      <option name="RunConfigurationTask" enabled="true" run_configuration_name="BuildConfigGenerator" run_configuration_type="GradleRunConfiguration" />
-    </method>
+    <method v="2" />
   </configuration>
 </component>

@@ -1,17 +1,22 @@
 package br.com.asoncs.multi.passwords.extension
 
+import br.com.asoncs.multi.passwords.external.console
+
 actual fun platformError(
     message: String,
     tag: String,
     throwable: Throwable?
 ) {
-    println("$tag| $message")
-    error(throwable ?: Throwable(message))
+    console.error(
+        tag,
+        message,
+        throwable?.message.toString()
+    )
 }
 
 actual fun platformLog(
     message: String,
     tag: String
 ) {
-    println("$tag| $message")
+    console.log(tag, message)
 }
