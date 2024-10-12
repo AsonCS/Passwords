@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
+import org.jetbrains.kotlin.incremental.deleteDirectoryContents
 import java.util.Properties
 
 plugins {
@@ -210,5 +211,24 @@ val buildConfigGenerator by tasks.registering(Sync::class) {
                 )
             }/generated/"
         )
+    )
+}
+
+val moveBuiltFiles by tasks.registering(Sync::class) {
+    val destination = layout.projectDirectory.dir(
+        "../dist/"
+    )
+    try {
+        destination.asFile.deleteDirectoryContents()
+    } catch (_: Throwable) {
+        // Do nothing
+    }
+    from(
+        layout.projectDirectory.dir(
+            "build/dist/wasmJs/productionExecutable/"
+        )
+    )
+    into(
+        destination
     )
 }

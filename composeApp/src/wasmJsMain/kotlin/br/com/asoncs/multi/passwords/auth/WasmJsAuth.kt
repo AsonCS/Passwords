@@ -31,7 +31,7 @@ object WasmJsAuth : Auth {
         authState.emit(LoggedOut)
         FirebaseAuth.onAuthStateChanged(auth) {
             val user = auth.currentUser
-            console.log("checkAuthState.onAuthStateChanged", user)
+            // console.log("checkAuthState.onAuthStateChanged", user)
             if (user != null)
                 user.emitUser()
             else
