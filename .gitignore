@@ -6,6 +6,7 @@ xcuserdata
 !src/**/build/
 local.properties
 keystore.properties
+composeApp/release_notes.txt
 .idea
 .DS_Store
 captures
