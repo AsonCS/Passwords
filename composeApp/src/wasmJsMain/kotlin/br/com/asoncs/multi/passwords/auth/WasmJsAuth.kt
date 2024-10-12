@@ -83,7 +83,8 @@ object WasmJsAuth : Auth {
     override suspend fun loginWithGoogle() {
         val isMobile = window.isMobile
         TAG_LOGIN.log("loginWithGoogle| isMobile: $isMobile")
-        if (isMobile)
+        // TODO Fix redirect method
+        if (false && isMobile)
             loginWithGetRedirectResult()
         else
             loginWithSignInWithPopup()
