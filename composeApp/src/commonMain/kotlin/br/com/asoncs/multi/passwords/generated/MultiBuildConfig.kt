@@ -5,6 +5,8 @@ object MultiBuildConfig {
    const val APPLICATION_VERSION = "1.0.0"
    const val APPLICATION_VERSION_CODE = "100"
 
+   const val BASE_URL_TEST = "https://api.github.com"
+
    const val DEBUG = true
 
    const val FIREBASE_APP_ID = "1:821675050828:web:bbac37cd50814b447f71e9"

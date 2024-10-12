@@ -13,7 +13,8 @@ plugins {
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.firebase.appdistribution)
     alias(libs.plugins.jetbrainsCompose)
-    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 val keystoreProperties = Properties().apply {
@@ -73,36 +74,43 @@ kotlin {
             // implementation(libs.firebase.performance)
             implementation(libs.firebase.ui)
             implementation(libs.google.id)
+            implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.ktor.okhttp)
             implementation(libs.play.services.auth)
         }
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material)
-            implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            implementation(compose.foundation)
+            implementation(compose.material)
+            implementation(compose.runtime)
+            implementation(compose.ui)
+
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.androidx.navigation.compose)
-
-            implementation(libs.kotlinx.serialization.json)
-
-            implementation(libs.koin.core)
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
-
             implementation(libs.coil3.compose)
             implementation(libs.coil3.core)
             // implementation(libs.coil3.network)
             // implementation(libs.coil3.video)
             // implementation(libs.coil3.svg)
             // implementation(libs.coil3.gif)
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.ktor.core)
+            implementation(libs.ktor.logging)
+            implementation(libs.ktor.negotiation)
+            implementation(libs.ktor.serialization)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
+
             implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.ktor.apache5)
         }
         wasmJsMain.dependencies {
             implementation(npm("firebase", "10.14.1"))
@@ -182,6 +190,8 @@ val buildConfigGenerator by tasks.registering(Sync::class) {
                 |   const val APPLICATION_ID = "$lApplicationId"
                 |   const val APPLICATION_VERSION = "$lApplicationVersion"
                 |   const val APPLICATION_VERSION_CODE = "$lApplicationVersionCode"
+                |
+                |   const val BASE_URL_TEST = "https://api.github.com"
                 |
                 |   const val DEBUG = true
                 |

@@ -8,5 +8,6 @@ plugins {
     alias(libs.plugins.firebase.appdistribution) apply false
     alias(libs.plugins.google.services) apply false
     alias(libs.plugins.jetbrainsCompose) apply false
-    alias(libs.plugins.kotlinMultiplatform) apply false
+    alias(libs.plugins.kotlin.multiplatform) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
 }

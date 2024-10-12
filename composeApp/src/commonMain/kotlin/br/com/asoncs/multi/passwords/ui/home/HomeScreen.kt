@@ -3,16 +3,17 @@ package br.com.asoncs.multi.passwords.ui.home
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import br.com.asoncs.multi.passwords.Greeting
-import br.com.asoncs.multi.passwords.auth.Auth
-import br.com.asoncs.multi.passwords.auth.AuthState.LoggedIn
-import kotlinx.coroutines.launch
+import br.com.asoncs.multi.passwords.ui.component.Loading
+import br.com.asoncs.multi.passwords.ui.home.HomeState.*
+import coil3.compose.AsyncImage
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import passwords.composeapp.generated.resources.Res
@@ -21,31 +22,31 @@ import passwords.composeapp.generated.resources.compose_multiplatform
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    auth: Auth = koinInject()
+    viewModel: HomeViewModel = koinInject()
 ) {
-    val scope = rememberCoroutineScope()
-    val authState by auth.authState.collectAsState()
+    val state by viewModel.state
+        .collectAsState()
 
     HomeScreen(
         modifier = modifier,
         props = HomeProps(
             image = painterResource(Res.drawable.compose_multiplatform),
-            onLogout = {
-                scope.launch {
-                    auth.logout()
-                }
-            }
+            onLogout = viewModel::logout
         ),
-        state = authState as? LoggedIn
+        state = state
     )
+
+    LaunchedEffect(true) {
+        viewModel.githubUser()
+    }
 }
 
 @Composable
 internal fun HomeScreen(
     modifier: Modifier,
     props: HomeProps,
-    state: LoggedIn?,
-    initialShowContent: Boolean = false
+    state: HomeState,
+    initialShowContent: Boolean = true
 ) {
     var showContent by remember {
         mutableStateOf(initialShowContent)
@@ -55,11 +56,24 @@ internal fun HomeScreen(
             .verticalScroll(rememberScrollState())
             .fillMaxSize()
             .padding(
+                horizontal = 8.dp,
                 vertical = 32.dp
             ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        if (state is Loading) {
+            Loading()
+            return
+        }
+
+        if (state is Error) {
+            Text(
+                "Error: ${state.message}",
+                color = MaterialTheme.colors.error
+            )
+        }
+
         Button(
             props.onLogout
         ) {
@@ -86,12 +100,34 @@ internal fun HomeScreen(
                 Text(
                     "Compose: $greeting"
                 )
-                state?.user?.run {
+                state.user?.run {
                     Text(
                         "Hello $name, you're logged in!"
                     )
                     Text(
                         "Email: $email"
+                    )
+                }
+                if (state is Success) {
+                    Text(
+                        "Github result"
+                    )
+                    // TODO Fix image, I think it is because of visibility
+                    AsyncImage(
+                        state.githubUser.avatarUrl,
+                        contentDescription = state.githubUser.name,
+                        Modifier
+                            .size(200.dp)
+                            .clip(CircleShape)
+                    )
+                    Text(
+                        "Name: ${state.githubUser.name}"
+                    )
+                    Text(
+                        "Login: ${state.githubUser.login}"
+                    )
+                    Text(
+                        "Id: ${state.githubUser.id}"
                     )
                 }
             }

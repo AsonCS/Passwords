@@ -8,6 +8,13 @@ sealed class AuthException(
     data object InvalidUserException : AuthException("InvalidUserException")
     data object InvalidUserNameException : AuthException("InvalidUserNameException")
 
+    class FirebaseAuthInvalidCredentialsException(
+        cause: Throwable
+    ) : AuthException(
+        "FirebaseAuthInvalidCredentialsException",
+        cause
+    )
+
     class FirebaseAuthWeakPasswordException(
         cause: Throwable
     ) : AuthException(

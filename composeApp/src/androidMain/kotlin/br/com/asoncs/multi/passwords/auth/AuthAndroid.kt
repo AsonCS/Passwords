@@ -3,8 +3,7 @@ package br.com.asoncs.multi.passwords.auth
 import androidx.activity.ComponentActivity
 import br.com.asoncs.multi.passwords.auth.AuthState.LoggedIn
 import br.com.asoncs.multi.passwords.auth.AuthState.LoggedOut
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
@@ -27,6 +26,8 @@ interface AuthAndroid : Auth {
                 .await()
                 .user
                 .emitUser()
+        } catch (e: FirebaseAuthInvalidCredentialsException) {
+            throw AuthException.FirebaseAuthInvalidCredentialsException(e)
         } catch (t: Throwable) {
             throw AuthException.UnknownException(t)
         }

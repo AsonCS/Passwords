@@ -43,9 +43,11 @@ sealed class LoginState {
         override val password: String,
         override val username: String
     ) : LoginState()
+
 }
 
 abstract class LoginViewModel : ViewModel() {
+
     open val state: StateFlow<LoginState>
         get() = TODO("Not yet implemented")
 
@@ -72,6 +74,7 @@ abstract class LoginViewModel : ViewModel() {
     ) {
         TODO("Not yet implemented")
     }
+
 }
 
 fun NavGraphBuilder.loginDestination(
