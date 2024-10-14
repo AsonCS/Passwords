@@ -20,15 +20,14 @@ import br.com.asoncs.multi.passwords.auth.User
 import br.com.asoncs.multi.passwords.extension.log
 import br.com.asoncs.multi.passwords.ui.component.Loading
 import coil3.compose.SubcomposeAsyncImage
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun AppTopBar(
-    modifier: Modifier = Modifier,
-    viewModel: AppViewModel = koinViewModel()
+    viewModel: AppViewModel,
+    modifier: Modifier = Modifier
 ) {
-//    val stateAuth by viewModel.stateAuth
-//        .collectAsState()
+    val stateAuth by viewModel.stateAuth
+        .collectAsState()
     val stateTopBar by viewModel.stateTopBar
         .collectAsState()
 
@@ -37,9 +36,9 @@ fun AppTopBar(
         AppTopBar(
             hasBackButton = stateTopBar.hasBackButton,
             modifier = modifier,
-            backHandler = /*stateTopBar.backHandler ?:*/ {},
-            user = null/*(stateAuth as? LoggedIn)
-                ?.user*/
+            backHandler = stateTopBar.backHandler ?: {},
+            user = (stateAuth as? LoggedIn)
+                ?.user
         )
     }
 }

@@ -35,7 +35,8 @@ fun App(
 
             AppScreen(
                 modifier,
-                navController
+                navController,
+                viewModel
             )
 
             LaunchedEffect(true) {
@@ -65,7 +66,7 @@ fun App(
 }
 
 data class AppTopBarState(
-    //val backHandler: (() -> Unit)? = null,
+    val backHandler: (() -> Unit)? = null,
     val hasBackButton: Boolean = false,
     val hasTopBar: Boolean = false
 )

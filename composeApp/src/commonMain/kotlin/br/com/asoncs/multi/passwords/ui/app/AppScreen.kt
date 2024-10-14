@@ -10,18 +10,20 @@ import br.com.asoncs.multi.passwords.ui.navigation.AppNavHost
 @Composable
 fun AppScreen(
     modifier: Modifier,
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: AppViewModel
 ) {
     Scaffold(
         modifier,
         topBar = {
-            AppTopBar()
+            AppTopBar(viewModel)
         }
     ) {
         AppNavHost(
             modifier
                 .fillMaxSize(),
-            navController
+            navController,
+            viewModel
         )
     }
 }

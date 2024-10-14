@@ -21,9 +21,9 @@ import passwords.composeapp.generated.resources.*
 @Composable
 fun SignupScreen(
     navigateUp: () -> Unit,
+    viewModelApp: AppViewModel,
     modifier: Modifier = Modifier,
-    viewModel: LoginViewModel = koinViewModel(),
-    viewModelApp: AppViewModel = koinViewModel()
+    viewModel: LoginViewModel = koinViewModel()
 ) {
     val state by viewModel.state
         .collectAsState()

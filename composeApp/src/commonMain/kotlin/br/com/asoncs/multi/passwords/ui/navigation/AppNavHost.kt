@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import br.com.asoncs.multi.passwords.ui.app.AppViewModel
 import br.com.asoncs.multi.passwords.ui.home.homeDestination
 import br.com.asoncs.multi.passwords.ui.splash.SplashDestination
 import br.com.asoncs.multi.passwords.ui.splash.splashDestination
@@ -17,7 +18,8 @@ abstract class AppDestination(
 @Composable
 fun AppNavHost(
     modifier: Modifier,
-    navController: NavHostController
+    navController: NavHostController,
+    viewModelApp: AppViewModel
 ) {
     NavHost(
         navController = navController,
@@ -25,7 +27,7 @@ fun AppNavHost(
         modifier = modifier
     ) {
         homeDestination()
-        loginNavDestination()
+        loginNavDestination(viewModelApp)
         splashDestination()
     }
 }
