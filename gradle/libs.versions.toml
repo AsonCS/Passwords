@@ -15,7 +15,7 @@ androidx-lifecycle = "2.8.0"
 androidx-navigation = "2.8.0-alpha02"
 androidx-material = "1.12.0"
 androidx-test-junit = "1.2.1"
-coil3-io = "3.0.0-rc01"
+coil3 = "3.0.0-rc01"
 compose-plugin = "1.6.11"
 coroutines = "1.9.0"
 firebase-crashlytics = "3.0.2"
@@ -43,12 +43,13 @@ androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", nam
 androidx-lifecycle-viewmodel-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 androidx-navigation-compose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "androidx-navigation" }
-coil3-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil3-io" }
-coil3-core = { module = "io.coil-kt.coil3:coil-core", version.ref = "coil3-io" }
-#coil3-network = { module = "io.coil-kt.coil3:coil-network", version.ref = "coil3-io" }
-#coil3-gif = { module = "io.coil-kt.coil3:coil-gif", version.ref = "coil3-io" }
-#coil3-svg = { module = "io.coil-kt.coil3:coil-svg", version.ref = "coil3-io" }
-#coil3-video = { module = "io.coil-kt.coil3:coil-video", version.ref = "coil3-io" }
+coil3-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil3" }
+coil3-core = { module = "io.coil-kt.coil3:coil-core", version.ref = "coil3" }
+coil3-js = { module = "io.coil-kt.coil3:coil-network-core-wasm-js", version.ref = "coil3" }
+coil3-js-ktor = { module = "io.coil-kt.coil3:coil-network-ktor-wasm-js", version = "3.0.0-alpha08" }
+coil3-jvm = { module = "io.coil-kt.coil3:coil-network-okhttp-jvm", version.ref = "coil3" }
+coil3-network = { module = "io.coil-kt.coil3:coil-network-core", version.ref = "coil3" }
+coil3-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil3" }
 #firebase-admin = { module = "com.google.firebase:firebase-admin", version = "9.3.0" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
@@ -59,6 +60,7 @@ firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 firebase-ui = { group = "com.firebaseui", name = "firebase-ui-auth", version.ref = "firebase-ui" }
 google-id = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "google-id" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
 koin-compose = { group = "io.insert-koin", name = "koin-compose", version.ref = "koin" }
 koin-compose-viewmodel = { group = "io.insert-koin", name = "koin-compose-viewmodel", version.ref = "koin" }

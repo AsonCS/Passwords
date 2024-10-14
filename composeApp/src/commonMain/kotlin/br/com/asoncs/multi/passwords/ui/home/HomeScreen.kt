@@ -3,26 +3,25 @@ package br.com.asoncs.multi.passwords.ui.home
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import br.com.asoncs.multi.passwords.Greeting
+import br.com.asoncs.multi.passwords.ui.app.AppViewModel
 import br.com.asoncs.multi.passwords.ui.component.Loading
 import br.com.asoncs.multi.passwords.ui.home.HomeState.*
-import coil3.compose.AsyncImage
 import org.jetbrains.compose.resources.painterResource
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 import passwords.composeapp.generated.resources.Res
 import passwords.composeapp.generated.resources.compose_multiplatform
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = koinInject()
+    viewModel: HomeViewModel = koinViewModel(),
+    viewModelApp: AppViewModel = koinViewModel()
 ) {
     val state by viewModel.state
         .collectAsState()
@@ -38,6 +37,9 @@ fun HomeScreen(
 
     LaunchedEffect(true) {
         viewModel.githubUser()
+        viewModelApp.stateTopBarUpdate(
+            null, true, true
+        )
     }
 }
 
@@ -46,7 +48,7 @@ internal fun HomeScreen(
     modifier: Modifier,
     props: HomeProps,
     state: HomeState,
-    initialShowContent: Boolean = true
+    initialShowContent: Boolean = false
 ) {
     var showContent by remember {
         mutableStateOf(initialShowContent)
@@ -100,25 +102,9 @@ internal fun HomeScreen(
                 Text(
                     "Compose: $greeting"
                 )
-                state.user?.run {
-                    Text(
-                        "Hello $name, you're logged in!"
-                    )
-                    Text(
-                        "Email: $email"
-                    )
-                }
                 if (state is Success) {
                     Text(
                         "Github result"
-                    )
-                    // TODO Fix image, I think it is because of visibility
-                    AsyncImage(
-                        state.githubUser.avatarUrl,
-                        contentDescription = state.githubUser.name,
-                        Modifier
-                            .size(200.dp)
-                            .clip(CircleShape)
                     )
                     Text(
                         "Name: ${state.githubUser.name}"

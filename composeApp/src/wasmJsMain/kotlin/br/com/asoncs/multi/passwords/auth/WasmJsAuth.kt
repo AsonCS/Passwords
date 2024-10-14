@@ -6,20 +6,14 @@ import br.com.asoncs.multi.passwords.external.*
 import br.com.asoncs.multi.passwords.ui.login.TAG_LOGIN
 import kotlinx.browser.window
 import kotlinx.coroutines.await
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
 
 object WasmJsAuth : Auth {
-
-    override val authState = MutableStateFlow<AuthState>(
-        AuthState.Unknown
-    )
 
     private lateinit var app: JsAny
     private lateinit var auth: FirebaseAuth.Auth
     private lateinit var googleProvider: FirebaseAuth.GoogleAuthProvider
 
-    suspend fun checkAuthState() {
+    fun checkAuthState() {
         /*
         val currentUser = auth.currentUser
         console.log("checkAuthState", currentUser)
@@ -28,16 +22,14 @@ object WasmJsAuth : Auth {
         else
             authState.emit(LoggedOut)
         */
-        authState.emit(LoggedOut)
+        onEmit(LoggedOut)
         FirebaseAuth.onAuthStateChanged(auth) {
             val user = auth.currentUser
             // console.log("checkAuthState.onAuthStateChanged", user)
             if (user != null)
                 user.emitUser()
             else
-                authState.update {
-                    LoggedOut
-                }
+                onEmit(LoggedOut)
         }
     }
 
@@ -61,6 +53,8 @@ object WasmJsAuth : Auth {
             }
         // console.log("auth", auth)
     }
+
+    override var onEmit: (AuthState) -> Unit = {}
 
     override suspend fun login(
         password: String,
@@ -94,7 +88,7 @@ object WasmJsAuth : Auth {
         FirebaseAuth
             .signOut(auth)
             .await<JsAny>()
-        authState.emit(LoggedOut)
+        onEmit(LoggedOut)
     }
 
     override suspend fun signup(
@@ -119,7 +113,7 @@ object WasmJsAuth : Auth {
         if (this == null)
             throw AuthException.InvalidUserException
 
-        authState.update {
+        onEmit(
             AuthState.LoggedIn(
                 User(
                     name = displayName,
@@ -128,7 +122,7 @@ object WasmJsAuth : Auth {
                     uid = uid
                 )
             )
-        }
+        )
 
         return this
     }

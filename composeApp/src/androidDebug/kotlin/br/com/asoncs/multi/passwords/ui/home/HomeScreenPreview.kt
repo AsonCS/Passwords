@@ -6,8 +6,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import br.com.asoncs.multi.passwords.R
-import br.com.asoncs.multi.passwords.auth.User
-import br.com.asoncs.multi.passwords.data.model.Test
+import br.com.asoncs.multi.passwords.core.model.GithubUser
 import br.com.asoncs.multi.passwords.ui.PreviewContainer
 import br.com.asoncs.multi.passwords.ui.PreviewPixel7
 
@@ -22,14 +21,11 @@ private fun HomeScreenPreview(
             modifier = Modifier,
             props = props(),
             state = HomeState.Success(
-                test = Test(
-                    bodyAsText = "Test"
-                ),
-                user = User(
-                    "Son",
-                    "abc@com.br",
-                    null,
-                    "uid"
+                githubUser = GithubUser(
+                    avatarUrl = null,
+                    id = 1,
+                    login = "Son",
+                    name = "Son"
                 )
             )
         )

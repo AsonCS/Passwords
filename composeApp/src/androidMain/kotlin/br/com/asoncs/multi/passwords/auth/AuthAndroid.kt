@@ -7,14 +7,12 @@ import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 interface AuthAndroid : Auth {
 
     val activity: ComponentActivity
-    override val authState: MutableStateFlow<AuthState>
 
     override suspend fun login(
         password: String,
@@ -35,7 +33,7 @@ interface AuthAndroid : Auth {
 
     override suspend fun logout() {
         Firebase.auth.signOut()
-        authState.emit(LoggedOut)
+        onEmit(LoggedOut)
     }
 
     override suspend fun signup(
@@ -59,7 +57,7 @@ interface AuthAndroid : Auth {
         if (this == null)
             throw AuthException.InvalidUserException
 
-        authState.emit(
+        onEmit(
             LoggedIn(
                 User(
                     name = displayName,
@@ -83,7 +81,7 @@ interface AuthAndroid : Auth {
             Firebase.auth
                 .currentUser
                 ?.emitUser()
-                ?: authState.emit(LoggedOut)
+                ?: onEmit(LoggedOut)
         }
     }
 

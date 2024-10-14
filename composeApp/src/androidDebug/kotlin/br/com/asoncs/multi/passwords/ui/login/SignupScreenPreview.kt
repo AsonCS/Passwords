@@ -14,7 +14,6 @@ private fun SignupScreenPreview() {
     PreviewContainer {
         SignupScreen(
             modifier = Modifier,
-            navigateUp = {},
             props = props(),
             state = LoginState.Filling()
         )

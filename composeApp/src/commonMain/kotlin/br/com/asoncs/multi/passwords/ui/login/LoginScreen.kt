@@ -17,14 +17,14 @@ import br.com.asoncs.multi.passwords.ui.login.LoginState.Filling
 import br.com.asoncs.multi.passwords.ui.login.LoginState.Loading
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 import passwords.composeapp.generated.resources.*
 
 @Composable
 fun LoginScreen(
     navigateToSignup: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: LoginViewModel = koinInject()
+    viewModel: LoginViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsState()
 

@@ -67,6 +67,7 @@ kotlin {
 
             implementation(libs.androidx.activity.compose)
             // implementation(libs.firebase.admin)
+            implementation(libs.coil3.okhttp)
             implementation(libs.firebase.analytics)
             implementation(libs.firebase.auth)
             implementation(libs.firebase.crashlytics)
@@ -74,6 +75,7 @@ kotlin {
             // implementation(libs.firebase.performance)
             implementation(libs.firebase.ui)
             implementation(libs.google.id)
+            implementation(libs.koin.android)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.ktor.okhttp)
             implementation(libs.play.services.auth)
@@ -92,10 +94,7 @@ kotlin {
             implementation(libs.androidx.navigation.compose)
             implementation(libs.coil3.compose)
             implementation(libs.coil3.core)
-            // implementation(libs.coil3.network)
-            // implementation(libs.coil3.video)
-            // implementation(libs.coil3.svg)
-            // implementation(libs.coil3.gif)
+            implementation(libs.coil3.network)
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
@@ -109,11 +108,15 @@ kotlin {
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
 
+            implementation(libs.coil3.jvm)
             implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.ktor.apache5)
         }
         wasmJsMain.dependencies {
             implementation(npm("firebase", "10.14.1"))
+
+            implementation(libs.coil3.js)
+            implementation(libs.coil3.js.ktor)
         }
     }
 }

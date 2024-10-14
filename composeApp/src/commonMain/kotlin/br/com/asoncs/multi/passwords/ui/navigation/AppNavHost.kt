@@ -9,7 +9,9 @@ import br.com.asoncs.multi.passwords.ui.splash.SplashDestination
 import br.com.asoncs.multi.passwords.ui.splash.splashDestination
 
 abstract class AppDestination(
-    val route: String
+    val route: String,
+    val hasBackButton: Boolean = false,
+    val hasTopBar: Boolean = false
 )
 
 @Composable

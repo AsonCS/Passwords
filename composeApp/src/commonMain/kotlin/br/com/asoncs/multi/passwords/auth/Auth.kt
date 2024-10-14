@@ -2,12 +2,10 @@ package br.com.asoncs.multi.passwords.auth
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Default
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 
 interface Auth {
 
-    val authState: StateFlow<AuthState>
+    var onEmit: (AuthState) -> Unit
 
     suspend fun login(
         password: String,
@@ -70,14 +68,14 @@ sealed class AuthState {
 
 object AuthMock : Auth {
 
-    override val authState = MutableStateFlow<AuthState>(AuthState.Unknown)
-
     init {
         CoroutineScope(Default).launch {
             delay(3_000)
-            authState.emit(AuthState.LoggedOut)
+            onEmit(AuthState.LoggedOut)
         }
     }
+
+    override var onEmit: (AuthState) -> Unit = {}
 
     override suspend fun login(
         password: String,
@@ -88,12 +86,12 @@ object AuthMock : Auth {
 
     override suspend fun loginWithGoogle() {
         delay(3_000)
-        authState.emit(
+        onEmit(
             AuthState.LoggedIn(
                 User(
-                    "Son",
-                    "abc@com.br",
-                    null,
+                    "AsonCS",
+                    "asoncs_github_mock@mock.com.br",
+                    "https://avatars.githubusercontent.com/u/42609750?v=4",
                     "uid"
                 )
             )
@@ -101,7 +99,7 @@ object AuthMock : Auth {
     }
 
     override suspend fun logout() {
-        authState.emit(AuthState.LoggedOut)
+        onEmit(AuthState.LoggedOut)
     }
 
     override suspend fun signup(
