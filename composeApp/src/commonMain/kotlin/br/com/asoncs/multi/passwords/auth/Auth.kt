@@ -5,7 +5,9 @@ import kotlinx.coroutines.Dispatchers.Default
 
 interface Auth {
 
-    var emit: (AuthState) -> Unit
+    fun onAuthInit(
+        emit: (AuthState) -> Unit
+    )
 
     suspend fun login(
         password: String,
@@ -75,7 +77,20 @@ object AuthMock : Auth {
         }
     }
 
-    override var emit: (AuthState) -> Unit = {}
+    private var emit: (AuthState) -> Unit = {}
+    val mockUser = User(
+        "AsonCS Mock",
+        "asoncs_github_mock@mock.com.br",
+        "https://avatars.githubusercontent.com/u/42609750?v=4",
+        "uid"
+    )
+
+    override fun onAuthInit(
+        emit: (AuthState) -> Unit
+    ) {
+        this.emit = emit
+        emit(AuthState.LoggedOut)
+    }
 
     override suspend fun login(
         password: String,
@@ -87,14 +102,7 @@ object AuthMock : Auth {
     override suspend fun loginWithGoogle() {
         delay(3_000)
         emit(
-            AuthState.LoggedIn(
-                User(
-                    "AsonCS",
-                    "asoncs_github_mock@mock.com.br",
-                    "https://avatars.githubusercontent.com/u/42609750?v=4",
-                    "uid"
-                )
-            )
+            AuthState.LoggedIn(mockUser)
         )
     }
 

@@ -41,6 +41,5 @@ private class ValuesProvider : PreviewParameterProvider<Boolean> {
 
 @Composable
 private fun props() = HomeProps(
-    image = painterResource(R.drawable.compose_multiplatform),
-    onLogout = {}
+    image = painterResource(R.drawable.compose_multiplatform)
 )

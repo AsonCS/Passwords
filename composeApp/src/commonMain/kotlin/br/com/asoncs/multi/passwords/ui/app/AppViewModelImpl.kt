@@ -31,13 +31,13 @@ class AppViewModelImpl : AppViewModel() {
     }
 
     override fun stateTopBarUpdate(
-        backHandler: (() -> Unit)?,
-        showUserIcon: Boolean
+        handlerBack: (() -> Unit)?,
+        handlerUser: (() -> Unit)?
     ) {
         _stateTopBar.update {
             AppTopBarState(
-                backHandler = backHandler,
-                showUserIcon = showUserIcon
+                handlerBack = handlerBack,
+                handlerUser = handlerUser
             )
         }
     }

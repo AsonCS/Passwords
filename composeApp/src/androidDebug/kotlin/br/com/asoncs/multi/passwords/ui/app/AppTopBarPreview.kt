@@ -14,9 +14,9 @@ private fun AppTopBarPreview(
 ) {
     PreviewContainer {
         AppTopBar(
-            backHandler = state.backHandler,
+            handlerBack = state.handlerBack,
+            handlerUser = state.handlerUser,
             modifier = Modifier,
-            showUserIcon = state.showUserIcon,
             userName = "John Doe",
             userPhotoUrl = null
         )
@@ -26,14 +26,14 @@ private fun AppTopBarPreview(
 private class ValuesProvider : PreviewParameterProvider<AppTopBarState> {
     override val values = sequenceOf(
         AppTopBarState(
-            backHandler = {},
-            showUserIcon = true
+            handlerBack = {},
+            handlerUser = {}
         ),
         AppTopBarState(
-            showUserIcon = true
+            handlerUser = {}
         ),
         AppTopBarState(
-            backHandler = {}
+            handlerBack = {}
         )
     )
 }

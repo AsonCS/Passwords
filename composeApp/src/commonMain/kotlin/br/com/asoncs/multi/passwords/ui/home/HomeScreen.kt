@@ -13,32 +13,31 @@ import br.com.asoncs.multi.passwords.ui.app.AppViewModel
 import br.com.asoncs.multi.passwords.ui.component.Loading
 import br.com.asoncs.multi.passwords.ui.home.HomeState.*
 import org.jetbrains.compose.resources.painterResource
-import org.koin.compose.viewmodel.koinViewModel
 import passwords.composeapp.generated.resources.Res
 import passwords.composeapp.generated.resources.compose_multiplatform
 
 @Composable
 fun HomeScreen(
     appViewModel: AppViewModel,
-    modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = koinViewModel()
+    homeViewModel: HomeViewModel,
+    navigateToUser: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val state by viewModel.state
+    val state by homeViewModel.state
         .collectAsState()
 
     HomeScreen(
         modifier = modifier,
         props = HomeProps(
-            image = painterResource(Res.drawable.compose_multiplatform),
-            onLogout = viewModel::logout
+            image = painterResource(Res.drawable.compose_multiplatform)
         ),
         state = state
     )
 
     LaunchedEffect(Unit) {
-        viewModel.githubUser()
+        homeViewModel.githubUser()
         appViewModel.stateTopBarUpdate(
-            showUserIcon = true
+            handlerUser = navigateToUser
         )
     }
 }
@@ -76,11 +75,6 @@ internal fun HomeScreen(
             )
         }
 
-        Button(
-            props.onLogout
-        ) {
-            Text("Log out")
-        }
         Button(
             onClick = { showContent = !showContent }
         ) {

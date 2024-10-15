@@ -1,15 +1,17 @@
-package br.com.asoncs.multi.passwords.ui.login
+package br.com.asoncs.multi.passwords.ui.user
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import br.com.asoncs.multi.passwords.ui.app.AppViewModel
-import br.com.asoncs.multi.passwords.ui.navigation.LoginDestination
+import br.com.asoncs.multi.passwords.ui.home.HomeViewModel
+import br.com.asoncs.multi.passwords.ui.navigation.HomeDestination
 
-data object SignupDestination : LoginDestination<SignupDestination.Args>(
-    "signup"
+data object UserDestination : HomeDestination<UserDestination.Args>(
+    "user"
 ) {
     class Args(
         val appViewModel: AppViewModel,
+        val homeViewModel: HomeViewModel,
         val navigateUp: () -> Unit
     )
 
@@ -18,8 +20,9 @@ data object SignupDestination : LoginDestination<SignupDestination.Args>(
         builder: NavGraphBuilder
     ) {
         builder.composable(route) {
-            SignupScreen(
+            UserScreen(
                 args.appViewModel,
+                args.homeViewModel,
                 args.navigateUp
             )
         }

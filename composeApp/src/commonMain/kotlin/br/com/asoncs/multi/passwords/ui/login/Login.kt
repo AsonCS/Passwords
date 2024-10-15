@@ -10,7 +10,26 @@ import kotlinx.coroutines.flow.StateFlow
 
 const val TAG_LOGIN = "login"
 
-data object LoginScreenDestination : LoginDestination("login")
+data object LoginScreenDestination : LoginDestination<LoginScreenDestination.Args>(
+    "login"
+) {
+    class Args(
+        val appViewModel: AppViewModel,
+        val navigateToSignup: () -> Unit
+    )
+
+    override fun destination(
+        args: Args,
+        builder: NavGraphBuilder
+    ) {
+        builder.composable(route) {
+            LoginScreen(
+                args.appViewModel,
+                args.navigateToSignup
+            )
+        }
+    }
+}
 
 internal open class LoginProps(
     val appName: String,
@@ -76,13 +95,4 @@ abstract class LoginViewModel : ViewModel() {
         TODO("Not yet implemented")
     }
 
-}
-
-fun NavGraphBuilder.loginDestination(
-    appViewModel: AppViewModel,
-    navigateToSignup: () -> Unit
-) {
-    composable(route = LoginScreenDestination.route) {
-        LoginScreen(appViewModel, navigateToSignup)
-    }
 }

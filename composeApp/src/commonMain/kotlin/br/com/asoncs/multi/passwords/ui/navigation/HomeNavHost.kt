@@ -6,10 +6,12 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import br.com.asoncs.multi.passwords.ui.app.AppViewModel
-import br.com.asoncs.multi.passwords.ui.login.LoginScreenDestination
-import br.com.asoncs.multi.passwords.ui.login.SignupDestination
+import br.com.asoncs.multi.passwords.ui.home.HomeScreenDestination
+import br.com.asoncs.multi.passwords.ui.home.HomeViewModel
+import br.com.asoncs.multi.passwords.ui.user.UserDestination
+import org.koin.compose.viewmodel.koinViewModel
 
-abstract class LoginDestination<Args>(
+abstract class HomeDestination<Args>(
     val route: String
 ) {
     abstract fun destination(
@@ -19,28 +21,31 @@ abstract class LoginDestination<Args>(
 }
 
 @Composable
-fun LoginNavHost(
+fun HomeNavHost(
     appViewModel: AppViewModel,
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    homeViewModel: HomeViewModel = koinViewModel()
 ) {
     NavHost(
         navController = navController,
-        startDestination = LoginScreenDestination.route,
+        startDestination = HomeScreenDestination.route,
         modifier = modifier
     ) {
-        LoginScreenDestination.destination(
-            LoginScreenDestination.Args(
+        HomeScreenDestination.destination(
+            HomeScreenDestination.Args(
                 appViewModel,
-                navigateToSignup = {
-                    navController.navigate(SignupDestination.route)
+                homeViewModel,
+                navigateToUser = {
+                    navController.navigate(UserDestination.route)
                 }
             ),
             this
         )
-        SignupDestination.destination(
-            SignupDestination.Args(
+        UserDestination.destination(
+            UserDestination.Args(
                 appViewModel,
+                homeViewModel,
                 navigateUp = navController::navigateUp
             ),
             this
@@ -48,15 +53,15 @@ fun LoginNavHost(
     }
 }
 
-data object LoginNavDestination : AppDestination<AppViewModel>(
-    "login"
+data object HomeNavDestination : AppDestination<AppViewModel>(
+    "home"
 ) {
     override fun destination(
         args: AppViewModel,
         builder: NavGraphBuilder
     ) {
         builder.composable(route) {
-            LoginNavHost(args)
+            HomeNavHost(args)
         }
     }
 }

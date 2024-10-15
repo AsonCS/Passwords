@@ -7,11 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.navigation.compose.rememberNavController
 import br.com.asoncs.multi.passwords.auth.*
-import br.com.asoncs.multi.passwords.auth.AuthState.*
 import br.com.asoncs.multi.passwords.di.koinApplication
-import br.com.asoncs.multi.passwords.ui.home.HomeDestination
-import br.com.asoncs.multi.passwords.ui.navigation.LoginNavDestination
-import br.com.asoncs.multi.passwords.ui.navigation.navigateTo
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,33 +35,18 @@ fun App(
             )
 
             LaunchedEffect(Unit) {
-                auth.emit = appViewModel::stateAuthUpdate
                 delay(1_000)
-                appViewModel.stateAuth.collect {
-                    when (it) {
-                        is LoggedIn -> {
-                            navController.navigateTo(HomeDestination)
-                        }
-
-                        LoggedOut -> {
-                            navController.navigateTo(LoginNavDestination)
-                        }
-
-                        Unknown -> {
-                            // Do nothing
-                        }
-                    }
-                }
+                auth.onAuthInit(appViewModel::stateAuthUpdate)
             }
         }
     }
 }
 
 data class AppTopBarState(
-    val backHandler: (() -> Unit)? = null,
-    val showUserIcon: Boolean = false,
-    val showTopBar: Boolean = backHandler != null
-            || showUserIcon
+    val handlerBack: (() -> Unit)? = null,
+    val handlerUser: (() -> Unit)? = null,
+    val showTopBar: Boolean = handlerBack != null
+            || handlerUser != null
 )
 
 abstract class AppViewModel : ViewModel() {
@@ -84,8 +65,8 @@ abstract class AppViewModel : ViewModel() {
     }
 
     open fun stateTopBarUpdate(
-        backHandler: (() -> Unit)? = null,
-        showUserIcon: Boolean = false
+        handlerBack: (() -> Unit)? = null,
+        handlerUser: (() -> Unit)? = null
     ) {
         TODO("Not yet implemented")
     }

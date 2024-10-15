@@ -51,7 +51,7 @@ fun SignupScreen(
 
     LaunchedEffect(Unit) {
         appViewModel.stateTopBarUpdate(
-            backHandler = navigateUp
+            handlerBack = navigateUp
         )
     }
 }

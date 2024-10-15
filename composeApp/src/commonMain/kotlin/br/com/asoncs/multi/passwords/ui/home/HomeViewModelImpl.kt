@@ -28,6 +28,9 @@ class HomeViewModelImpl(
     }
 
     override fun githubUser() {
+        if (_state.value is Success)
+            return
+
         viewModelScope.launch {
             runCatching {
                 repository.githubUser("AsonCS")

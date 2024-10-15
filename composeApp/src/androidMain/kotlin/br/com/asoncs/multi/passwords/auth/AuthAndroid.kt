@@ -1,6 +1,7 @@
 package br.com.asoncs.multi.passwords.auth
 
 import androidx.activity.ComponentActivity
+import androidx.lifecycle.lifecycleScope
 import br.com.asoncs.multi.passwords.auth.AuthState.LoggedIn
 import br.com.asoncs.multi.passwords.auth.AuthState.LoggedOut
 import com.google.firebase.auth.*
@@ -12,7 +13,16 @@ import kotlinx.coroutines.tasks.await
 
 interface AuthAndroid : Auth {
 
+    var emit: (AuthState) -> Unit
+
     val activity: ComponentActivity
+
+    override fun onAuthInit(
+        emit: (AuthState) -> Unit
+    ) {
+        this.emit = emit
+        onAuthResume(activity.lifecycleScope)
+    }
 
     override suspend fun login(
         password: String,
