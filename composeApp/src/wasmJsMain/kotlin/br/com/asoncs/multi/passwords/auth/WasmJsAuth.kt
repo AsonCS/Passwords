@@ -14,27 +14,13 @@ object WasmJsAuth : Auth {
     private lateinit var auth: FirebaseAuth.Auth
     private lateinit var googleProvider: FirebaseAuth.GoogleAuthProvider
 
-    fun checkAuthState() {
-        /*
-        val currentUser = auth.currentUser
-        console.log("checkAuthState", currentUser)
-        if (currentUser != null)
-            currentUser.emitUser()
-        else
-            authState.emit(LoggedOut)
-        */
-        emit(LoggedOut)
-        FirebaseAuth.onAuthStateChanged(auth) {
-            val user = auth.currentUser
-            // console.log("checkAuthState.onAuthStateChanged", user)
-            if (user != null)
-                user.emitUser()
-            else
-                emit(LoggedOut)
-        }
-    }
+    private var emit: (AuthState) -> Unit = {}
 
-    fun init() {
+    override fun onAuthInit(
+        emit: (AuthState) -> Unit
+    ) {
+        this.emit = emit
+
         app = FirebaseApp
             .initializeApp(firebaseConfig)
         // console.log("app", app)
@@ -53,9 +39,24 @@ object WasmJsAuth : Auth {
                 languageCode = "it"
             }
         // console.log("auth", auth)
-    }
 
-    override var emit: (AuthState) -> Unit = {}
+        /*
+        val currentUser = auth.currentUser
+        console.log("checkAuthState", currentUser)
+        if (currentUser != null)
+            currentUser.emitUser()
+        else
+            authState.emit(LoggedOut)
+        */
+        FirebaseAuth.onAuthStateChanged(auth) {
+            val user = auth.currentUser
+            // console.log("checkAuthState.onAuthStateChanged", user)
+            if (user != null)
+                user.emitUser()
+            else
+                emit(LoggedOut)
+        }
+    }
 
     override suspend fun login(
         password: String,

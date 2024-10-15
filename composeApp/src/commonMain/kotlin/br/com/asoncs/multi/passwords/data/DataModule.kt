@@ -1,12 +1,15 @@
 package br.com.asoncs.multi.passwords.data
 
 import br.com.asoncs.multi.passwords.data.api.TestApi
+import br.com.asoncs.multi.passwords.data.remote.ImageRemote
 import br.com.asoncs.multi.passwords.data.remote.TestRemote
+import br.com.asoncs.multi.passwords.data.repository.ImageRepository
 import br.com.asoncs.multi.passwords.data.repository.TestRepository
 import br.com.asoncs.multi.passwords.extension.log
 import br.com.asoncs.multi.passwords.generated.MultiBuildConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngineFactory
+import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.*
 import io.ktor.serialization.kotlinx.json.json
@@ -18,7 +21,6 @@ expect val platformEngine: HttpClientEngineFactory<*>
 const val TAG_DATA = "data"
 
 fun dataModule() = module {
-
     // Api
     single<TestApi> {
         TestApi.Impl(
@@ -27,6 +29,11 @@ fun dataModule() = module {
     }
 
     // Remote
+    single<ImageRemote> {
+        ImageRemote.Impl(
+            client = get()
+        )
+    }
     single<TestRemote> {
         TestRemote.Impl(
             api = get(),
@@ -35,6 +42,11 @@ fun dataModule() = module {
     }
 
     // Repository
+    single<ImageRepository> {
+        ImageRepository.Impl(
+            remote = get()
+        )
+    }
     single<TestRepository> {
         TestRepository.Impl(
             remote = get()
@@ -61,7 +73,7 @@ fun dataModule() = module {
                     classDiscriminator = "#class"
                 })
             }
+            install(HttpCache)
         }
     }
-
 }

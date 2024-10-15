@@ -93,8 +93,6 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.androidx.navigation.compose)
             implementation(libs.coil3.compose)
-            implementation(libs.coil3.core)
-            implementation(libs.coil3.network)
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
@@ -114,9 +112,6 @@ kotlin {
         }
         wasmJsMain.dependencies {
             implementation(npm("firebase", "10.14.1"))
-
-            implementation(libs.coil3.js)
-            implementation(libs.coil3.js.ktor)
         }
     }
 }

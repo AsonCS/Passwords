@@ -2,8 +2,8 @@ package br.com.asoncs.multi.passwords.generated
 
 object MultiBuildConfig {
    const val APPLICATION_ID = "br.com.asoncs.multi.passwords"
-   const val APPLICATION_VERSION = "1.0.0"
-   const val APPLICATION_VERSION_CODE = "100"
+   const val APPLICATION_VERSION = "1.0.1"
+   const val APPLICATION_VERSION_CODE = "101"
 
    const val BASE_URL_TEST = "https://api.github.com"
 

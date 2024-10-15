@@ -1,6 +1,8 @@
 package br.com.asoncs.multi.passwords.ui.user
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -10,8 +12,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import br.com.asoncs.multi.passwords.auth.User
 import br.com.asoncs.multi.passwords.ui.app.AppViewModel
+import br.com.asoncs.multi.passwords.ui.component.UserIcon
 import br.com.asoncs.multi.passwords.ui.home.HomeViewModel
-import br.com.asoncs.multi.passwords.ui.home.UserIcon
 
 @Composable
 fun UserScreen(
@@ -47,8 +49,10 @@ fun UserScreen(
     Column(
         modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(
-                horizontal = 32.dp
+                horizontal = 32.dp,
+                vertical = 64.dp
             ),
         verticalArrangement = Arrangement.spacedBy(
             alignment = Alignment.CenterVertically,
@@ -77,9 +81,9 @@ fun UserScreen(
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
             )
-        }
 
-        Divider()
+            Divider()
+        }
 
         user.email?.let { email ->
             Text(
@@ -90,9 +94,9 @@ fun UserScreen(
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
             )
-        }
 
-        Divider()
+            Divider()
+        }
 
         Text(
             "UID:"

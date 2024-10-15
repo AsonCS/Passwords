@@ -8,7 +8,7 @@ import br.com.asoncs.multi.passwords.ui.app.App
 fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
-        title = "Passwords",
+        title = "\uD83D\uDD10\uD83D\uDD10\uD83D\uDD10",
     ) {
         App(AuthMock)
     }

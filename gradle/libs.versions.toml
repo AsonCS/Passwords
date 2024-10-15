@@ -1,6 +1,6 @@
 [versions]
 applicationId = "br.com.asoncs.multi.passwords"
-applicationVersion = "1.0.0" # Just one digit for minor and medium versions
+applicationVersion = "1.0.1" # Just one digit for minor and medium versions
 
 agp = "8.2.2"
 android-compileSdk = "34"
@@ -44,11 +44,7 @@ androidx-lifecycle-viewmodel-compose = { group = "org.jetbrains.androidx.lifecyc
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 androidx-navigation-compose = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "androidx-navigation" }
 coil3-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil3" }
-coil3-core = { module = "io.coil-kt.coil3:coil-core", version.ref = "coil3" }
-coil3-js = { module = "io.coil-kt.coil3:coil-network-core-wasm-js", version.ref = "coil3" }
-coil3-js-ktor = { module = "io.coil-kt.coil3:coil-network-ktor-wasm-js", version = "3.0.0-alpha08" }
 coil3-jvm = { module = "io.coil-kt.coil3:coil-network-okhttp-jvm", version.ref = "coil3" }
-coil3-network = { module = "io.coil-kt.coil3:coil-network-core", version.ref = "coil3" }
 coil3-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil3" }
 #firebase-admin = { module = "com.google.firebase:firebase-admin", version = "9.3.0" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }

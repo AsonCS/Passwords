@@ -9,7 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import br.com.asoncs.multi.passwords.ui.home.UserIcon
+import br.com.asoncs.multi.passwords.ui.component.UserIcon
 
 @Composable
 fun AppTopBar(
