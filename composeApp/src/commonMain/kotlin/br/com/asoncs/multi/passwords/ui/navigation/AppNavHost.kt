@@ -49,7 +49,7 @@ fun AppNavHost(
             when (it) {
                 is LoggedIn -> {
                     navController.navigate(HomeNavDestination.route) {
-                        popUpTo(SplashDestination.route) {
+                        popUpTo(LoginNavDestination.route) {
                             inclusive = true
                         }
                     }
