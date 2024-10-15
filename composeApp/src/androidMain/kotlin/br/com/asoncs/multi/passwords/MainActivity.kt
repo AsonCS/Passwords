@@ -13,7 +13,7 @@ class MainActivity : ComponentActivity(),
     AuthAndroidV2 {
 
     override val activity = this
-    override var onEmit: (AuthState) -> Unit = {}
+    override var emit: (AuthState) -> Unit = {}
     override val signInLauncher = signInLauncher()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity(),
 
         setContent {
             App(
-                auth = AuthMock // this
+                auth = /*this, // */ AuthMock,
             )
         }
     }

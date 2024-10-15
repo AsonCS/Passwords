@@ -5,13 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import br.com.asoncs.multi.passwords.core.model.GithubUser
+import br.com.asoncs.multi.passwords.ui.app.AppViewModel
 import br.com.asoncs.multi.passwords.ui.navigation.AppDestination
 import kotlinx.coroutines.flow.StateFlow
 
-data object HomeDestination : AppDestination(
-    hasTopBar = true,
-    route = "home"
-)
+data object HomeDestination : AppDestination("home")
 
 internal class HomeProps(
     val image: Painter,
@@ -47,8 +45,10 @@ abstract class HomeViewModel : ViewModel() {
 
 }
 
-fun NavGraphBuilder.homeDestination() {
+fun NavGraphBuilder.homeDestination(
+    appViewModel: AppViewModel
+) {
     composable(route = HomeDestination.route) {
-        HomeScreen()
+        HomeScreen(appViewModel)
     }
 }

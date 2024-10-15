@@ -8,10 +8,10 @@ import br.com.asoncs.multi.passwords.ui.navigation.LoginDestination
 data object SignupDestination : LoginDestination("signup")
 
 fun NavGraphBuilder.signupDestination(
-    navigateUp: () -> Unit,
-    viewModelApp: AppViewModel
+    appViewModel: AppViewModel,
+    navigateUp: () -> Unit
 ) {
     composable(route = SignupDestination.route) {
-        SignupScreen(navigateUp, viewModelApp)
+        SignupScreen(appViewModel, navigateUp)
     }
 }

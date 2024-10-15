@@ -15,40 +15,39 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import br.com.asoncs.multi.passwords.auth.AuthState.LoggedIn
-import br.com.asoncs.multi.passwords.auth.User
-import br.com.asoncs.multi.passwords.extension.log
 import br.com.asoncs.multi.passwords.ui.component.Loading
 import coil3.compose.SubcomposeAsyncImage
 
 @Composable
 fun AppTopBar(
-    viewModel: AppViewModel,
+    appViewModel: AppViewModel,
     modifier: Modifier = Modifier
 ) {
-    val stateAuth by viewModel.stateAuth
-        .collectAsState()
-    val stateTopBar by viewModel.stateTopBar
+    val stateAuthUser by appViewModel.stateAuthUser
+        .collectAsState(null)
+    val stateTopBar by appViewModel.stateTopBar
         .collectAsState()
 
-    TAG_APP.log("$stateTopBar")
-    if (stateTopBar.hasTopBar) {
+    if (stateTopBar.showTopBar) {
         AppTopBar(
-            hasBackButton = stateTopBar.hasBackButton,
+            backHandler = stateTopBar.backHandler,
             modifier = modifier,
-            backHandler = stateTopBar.backHandler ?: {},
-            user = (stateAuth as? LoggedIn)
-                ?.user
+            showUserIcon = stateTopBar.showUserIcon,
+            userName = stateAuthUser
+                ?.name,
+            userPhotoUrl = stateAuthUser
+                ?.photoUrl
         )
     }
 }
 
 @Composable
 fun AppTopBar(
-    hasBackButton: Boolean,
+    backHandler: (() -> Unit)?,
     modifier: Modifier,
-    backHandler: () -> Unit,
-    user: User?
+    showUserIcon: Boolean,
+    userName: String?,
+    userPhotoUrl: String?
 ) {
     val size = 48.dp
 
@@ -61,7 +60,7 @@ fun AppTopBar(
             ).height(size),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (hasBackButton) {
+        if (backHandler != null) {
             IconButton(
                 backHandler
             ) {
@@ -79,27 +78,29 @@ fun AppTopBar(
                 .weight(1f)
         )
 
-        SubcomposeAsyncImage(
-            user?.photoUrl,
-            user?.name,
-            Modifier
-                .size(size)
-                .clip(CircleShape),
-            contentScale = ContentScale.Crop,
-            error = {
-                Icon(
-                    Icons.Sharp.Person,
-                    contentDescription,
-                    Modifier
-                        .border(4.dp, Color.Black, CircleShape)
-                        .padding(4.dp)
-                )
-            },
-            loading = {
-                Loading(
-                    size = size
-                )
-            }
-        )
+        if (showUserIcon) {
+            SubcomposeAsyncImage(
+                userPhotoUrl,
+                userName,
+                Modifier
+                    .size(size)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop,
+                error = {
+                    Icon(
+                        Icons.Sharp.Person,
+                        contentDescription,
+                        Modifier
+                            .border(4.dp, Color.Black, CircleShape)
+                            .padding(4.dp)
+                    )
+                },
+                loading = {
+                    Loading(
+                        size = size
+                    )
+                }
+            )
+        }
     }
 }

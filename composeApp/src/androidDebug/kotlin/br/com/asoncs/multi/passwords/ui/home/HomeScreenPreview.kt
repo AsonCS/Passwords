@@ -32,7 +32,7 @@ private fun HomeScreenPreview(
     }
 }
 
-class ValuesProvider : PreviewParameterProvider<Boolean> {
+private class ValuesProvider : PreviewParameterProvider<Boolean> {
     override val values = sequenceOf(
         false,
         true

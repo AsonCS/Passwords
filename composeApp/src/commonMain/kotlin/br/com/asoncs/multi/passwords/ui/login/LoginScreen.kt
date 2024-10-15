@@ -12,6 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.com.asoncs.multi.passwords.ui.app.AppViewModel
 import br.com.asoncs.multi.passwords.ui.component.Loading
 import br.com.asoncs.multi.passwords.ui.login.LoginState.Filling
 import br.com.asoncs.multi.passwords.ui.login.LoginState.Loading
@@ -22,6 +23,7 @@ import passwords.composeapp.generated.resources.*
 
 @Composable
 fun LoginScreen(
+    appViewModel: AppViewModel,
     navigateToSignup: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = koinViewModel()
@@ -48,6 +50,10 @@ fun LoginScreen(
         ),
         state = state
     )
+
+    LaunchedEffect(Unit) {
+        appViewModel.stateTopBarUpdate()
+    }
 }
 
 @Composable

@@ -33,7 +33,7 @@ interface AuthAndroid : Auth {
 
     override suspend fun logout() {
         Firebase.auth.signOut()
-        onEmit(LoggedOut)
+        emit(LoggedOut)
     }
 
     override suspend fun signup(
@@ -57,7 +57,7 @@ interface AuthAndroid : Auth {
         if (this == null)
             throw AuthException.InvalidUserException
 
-        onEmit(
+        emit(
             LoggedIn(
                 User(
                     name = displayName,
@@ -81,7 +81,7 @@ interface AuthAndroid : Auth {
             Firebase.auth
                 .currentUser
                 ?.emitUser()
-                ?: onEmit(LoggedOut)
+                ?: emit(LoggedOut)
         }
     }
 

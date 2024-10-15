@@ -35,7 +35,7 @@ private fun LoginScreenPreview() {
     }
 }
 
-class ValuesProvider : PreviewParameterProvider<LoginState> {
+private class ValuesProvider : PreviewParameterProvider<LoginState> {
     override val values = sequenceOf(
         LoginState.Filling(),
         LoginState.Filling(

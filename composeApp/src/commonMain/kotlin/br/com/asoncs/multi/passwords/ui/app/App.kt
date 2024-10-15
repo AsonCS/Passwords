@@ -5,10 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.rememberNavController
-import br.com.asoncs.multi.passwords.auth.Auth
-import br.com.asoncs.multi.passwords.auth.AuthState
+import br.com.asoncs.multi.passwords.auth.*
+import br.com.asoncs.multi.passwords.auth.AuthState.*
 import br.com.asoncs.multi.passwords.di.koinApplication
 import br.com.asoncs.multi.passwords.ui.home.HomeDestination
 import br.com.asoncs.multi.passwords.ui.navigation.LoginNavDestination
@@ -31,31 +30,28 @@ fun App(
     }) {
         MaterialTheme {
             val navController = rememberNavController()
-            val viewModel = koinViewModel<AppViewModel>()
+            val appViewModel = koinViewModel<AppViewModel>()
 
             AppScreen(
+                appViewModel,
                 modifier,
-                navController,
-                viewModel
+                navController
             )
 
-            LaunchedEffect(true) {
-                auth.onEmit = viewModel::stateAuthUpdate
-                viewModel.collectBackStack(
-                    navController.currentBackStackEntryFlow
-                )
+            LaunchedEffect(Unit) {
+                auth.emit = appViewModel::stateAuthUpdate
                 delay(1_000)
-                viewModel.stateAuth.collect {
+                appViewModel.stateAuth.collect {
                     when (it) {
-                        is AuthState.LoggedIn -> {
+                        is LoggedIn -> {
                             navController.navigateTo(HomeDestination)
                         }
 
-                        AuthState.LoggedOut -> {
+                        LoggedOut -> {
                             navController.navigateTo(LoginNavDestination)
                         }
 
-                        AuthState.Unknown -> {
+                        Unknown -> {
                             // Do nothing
                         }
                     }
@@ -67,22 +63,19 @@ fun App(
 
 data class AppTopBarState(
     val backHandler: (() -> Unit)? = null,
-    val hasBackButton: Boolean = false,
-    val hasTopBar: Boolean = false
+    val showUserIcon: Boolean = false,
+    val showTopBar: Boolean = backHandler != null
+            || showUserIcon
 )
 
 abstract class AppViewModel : ViewModel() {
 
     open val stateAuth: StateFlow<AuthState>
         get() = TODO("Not yet implemented")
+    open val stateAuthUser: Flow<User?>
+        get() = TODO("Not yet implemented")
     open val stateTopBar: StateFlow<AppTopBarState>
         get() = TODO("Not yet implemented")
-
-    open fun collectBackStack(
-        currentBackStackEntryFlow: Flow<NavBackStackEntry>
-    ) {
-        TODO("Not yet implemented")
-    }
 
     open fun stateAuthUpdate(
         state: AuthState
@@ -92,8 +85,7 @@ abstract class AppViewModel : ViewModel() {
 
     open fun stateTopBarUpdate(
         backHandler: (() -> Unit)? = null,
-        hasBackButton: Boolean,
-        hasTopBar: Boolean
+        showUserIcon: Boolean = false
     ) {
         TODO("Not yet implemented")
     }

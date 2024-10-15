@@ -10,24 +10,22 @@ import br.com.asoncs.multi.passwords.ui.splash.SplashDestination
 import br.com.asoncs.multi.passwords.ui.splash.splashDestination
 
 abstract class AppDestination(
-    val route: String,
-    val hasBackButton: Boolean = false,
-    val hasTopBar: Boolean = false
+    val route: String
 )
 
 @Composable
 fun AppNavHost(
+    appViewModel: AppViewModel,
     modifier: Modifier,
-    navController: NavHostController,
-    viewModelApp: AppViewModel
+    navController: NavHostController
 ) {
     NavHost(
         navController = navController,
         startDestination = SplashDestination.route,
         modifier = modifier
     ) {
-        homeDestination()
-        loginNavDestination(viewModelApp)
+        homeDestination(appViewModel)
+        loginNavDestination(appViewModel)
         splashDestination()
     }
 }

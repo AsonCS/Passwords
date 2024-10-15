@@ -19,9 +19,9 @@ import passwords.composeapp.generated.resources.compose_multiplatform
 
 @Composable
 fun HomeScreen(
+    appViewModel: AppViewModel,
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = koinViewModel(),
-    viewModelApp: AppViewModel = koinViewModel()
+    viewModel: HomeViewModel = koinViewModel()
 ) {
     val state by viewModel.state
         .collectAsState()
@@ -35,10 +35,10 @@ fun HomeScreen(
         state = state
     )
 
-    LaunchedEffect(true) {
+    LaunchedEffect(Unit) {
         viewModel.githubUser()
-        viewModelApp.stateTopBarUpdate(
-            null, true, true
+        appViewModel.stateTopBarUpdate(
+            showUserIcon = true
         )
     }
 }

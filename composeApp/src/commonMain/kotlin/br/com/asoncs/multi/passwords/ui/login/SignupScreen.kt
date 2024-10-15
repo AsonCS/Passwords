@@ -20,8 +20,8 @@ import passwords.composeapp.generated.resources.*
 
 @Composable
 fun SignupScreen(
+    appViewModel: AppViewModel,
     navigateUp: () -> Unit,
-    viewModelApp: AppViewModel,
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = koinViewModel()
 ) {
@@ -49,8 +49,10 @@ fun SignupScreen(
         state = state
     )
 
-    LaunchedEffect(true) {
-        viewModelApp.stateTopBarUpdate(navigateUp, true, true)
+    LaunchedEffect(Unit) {
+        appViewModel.stateTopBarUpdate(
+            backHandler = navigateUp
+        )
     }
 }
 

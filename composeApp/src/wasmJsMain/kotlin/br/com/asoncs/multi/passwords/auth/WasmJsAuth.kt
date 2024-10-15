@@ -22,14 +22,14 @@ object WasmJsAuth : Auth {
         else
             authState.emit(LoggedOut)
         */
-        onEmit(LoggedOut)
+        emit(LoggedOut)
         FirebaseAuth.onAuthStateChanged(auth) {
             val user = auth.currentUser
             // console.log("checkAuthState.onAuthStateChanged", user)
             if (user != null)
                 user.emitUser()
             else
-                onEmit(LoggedOut)
+                emit(LoggedOut)
         }
     }
 
@@ -54,7 +54,7 @@ object WasmJsAuth : Auth {
         // console.log("auth", auth)
     }
 
-    override var onEmit: (AuthState) -> Unit = {}
+    override var emit: (AuthState) -> Unit = {}
 
     override suspend fun login(
         password: String,
@@ -88,7 +88,7 @@ object WasmJsAuth : Auth {
         FirebaseAuth
             .signOut(auth)
             .await<JsAny>()
-        onEmit(LoggedOut)
+        emit(LoggedOut)
     }
 
     override suspend fun signup(
@@ -113,7 +113,7 @@ object WasmJsAuth : Auth {
         if (this == null)
             throw AuthException.InvalidUserException
 
-        onEmit(
+        emit(
             AuthState.LoggedIn(
                 User(
                     name = displayName,

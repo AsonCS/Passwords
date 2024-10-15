@@ -1,7 +1,6 @@
 package br.com.asoncs.multi.passwords.ui.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -15,7 +14,7 @@ abstract class LoginDestination(
 
 @Composable
 fun LoginNavHost(
-    viewModelApp: AppViewModel,
+    appViewModel: AppViewModel,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
@@ -25,32 +24,26 @@ fun LoginNavHost(
         modifier = modifier
     ) {
         loginDestination(
+            appViewModel,
             navigateToSignup = {
                 navController.navigate(SignupDestination.route)
             }
         )
         signupDestination(
+            appViewModel,
             navigateUp = {
                 navController.navigateUp()
-            },
-            viewModelApp
+            }
         )
-    }
-
-    LaunchedEffect(true) {
-        viewModelApp.stateTopBarUpdate(null, false, true)
     }
 }
 
-data object LoginNavDestination : AppDestination(
-    hasTopBar = true,
-    route = "login"
-)
+data object LoginNavDestination : AppDestination("login")
 
 fun NavGraphBuilder.loginNavDestination(
-    viewModelApp: AppViewModel
+    appViewModel: AppViewModel
 ) {
     composable(route = LoginNavDestination.route) {
-        LoginNavHost(viewModelApp)
+        LoginNavHost(appViewModel)
     }
 }

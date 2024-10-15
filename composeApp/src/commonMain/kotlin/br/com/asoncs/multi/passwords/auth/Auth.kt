@@ -5,7 +5,7 @@ import kotlinx.coroutines.Dispatchers.Default
 
 interface Auth {
 
-    var onEmit: (AuthState) -> Unit
+    var emit: (AuthState) -> Unit
 
     suspend fun login(
         password: String,
@@ -71,11 +71,11 @@ object AuthMock : Auth {
     init {
         CoroutineScope(Default).launch {
             delay(3_000)
-            onEmit(AuthState.LoggedOut)
+            emit(AuthState.LoggedOut)
         }
     }
 
-    override var onEmit: (AuthState) -> Unit = {}
+    override var emit: (AuthState) -> Unit = {}
 
     override suspend fun login(
         password: String,
@@ -86,7 +86,7 @@ object AuthMock : Auth {
 
     override suspend fun loginWithGoogle() {
         delay(3_000)
-        onEmit(
+        emit(
             AuthState.LoggedIn(
                 User(
                     "AsonCS",
@@ -99,7 +99,7 @@ object AuthMock : Auth {
     }
 
     override suspend fun logout() {
-        onEmit(AuthState.LoggedOut)
+        emit(AuthState.LoggedOut)
     }
 
     override suspend fun signup(
