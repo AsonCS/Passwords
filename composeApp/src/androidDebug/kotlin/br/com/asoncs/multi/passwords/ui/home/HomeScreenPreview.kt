@@ -6,8 +6,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import br.com.asoncs.multi.passwords.R
-import br.com.asoncs.multi.passwords.auth.AuthState.LoggedIn
-import br.com.asoncs.multi.passwords.auth.User
+import br.com.asoncs.multi.passwords.core.model.GithubUser
 import br.com.asoncs.multi.passwords.ui.PreviewContainer
 import br.com.asoncs.multi.passwords.ui.PreviewPixel7
 
@@ -21,19 +20,19 @@ private fun HomeScreenPreview(
             initialShowContent = showContent,
             modifier = Modifier,
             props = props(),
-            state = LoggedIn(
-                User(
-                    "Son",
-                    "abc@com.br",
-                    null,
-                    "uid"
+            state = HomeState.Success(
+                githubUser = GithubUser(
+                    avatarUrl = null,
+                    id = 1,
+                    login = "Son",
+                    name = "Son"
                 )
             )
         )
     }
 }
 
-class ValuesProvider : PreviewParameterProvider<Boolean> {
+private class ValuesProvider : PreviewParameterProvider<Boolean> {
     override val values = sequenceOf(
         false,
         true
@@ -42,6 +41,5 @@ class ValuesProvider : PreviewParameterProvider<Boolean> {
 
 @Composable
 private fun props() = HomeProps(
-    image = painterResource(R.drawable.compose_multiplatform),
-    onLogout = {}
+    image = painterResource(R.drawable.compose_multiplatform)
 )

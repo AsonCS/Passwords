@@ -1,19 +1,27 @@
 package br.com.asoncs.multi.passwords.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import br.com.asoncs.multi.passwords.ui.home.homeDestination
+import br.com.asoncs.multi.passwords.auth.AuthState.*
+import br.com.asoncs.multi.passwords.ui.app.AppViewModel
 import br.com.asoncs.multi.passwords.ui.splash.SplashDestination
-import br.com.asoncs.multi.passwords.ui.splash.splashDestination
 
-abstract class AppDestination(
+abstract class AppDestination<Args>(
     val route: String
-)
+) {
+    abstract fun destination(
+        args: Args,
+        builder: NavGraphBuilder
+    )
+}
 
 @Composable
 fun AppNavHost(
+    appViewModel: AppViewModel,
     modifier: Modifier,
     navController: NavHostController
 ) {
@@ -22,16 +30,37 @@ fun AppNavHost(
         startDestination = SplashDestination.route,
         modifier = modifier
     ) {
-        homeDestination()
-        loginNavDestination()
-        splashDestination()
+        HomeNavDestination.destination(
+            appViewModel,
+            this
+        )
+        LoginNavDestination.destination(
+            appViewModel,
+            this
+        )
+        SplashDestination.destination(
+            Unit,
+            this
+        )
     }
-}
 
-fun NavHostController.navigateTo(
-    destination: AppDestination
-) {
-    navigate(destination.route) {
-        popBackStack()
+    LaunchedEffect(Unit) {
+        appViewModel.stateAuth.collect {
+            when (it) {
+                is LoggedIn -> {
+                    navController.popBackStack()
+                    navController.navigate(HomeNavDestination.route)
+                }
+
+                LoggedOut -> {
+                    navController.popBackStack()
+                    navController.navigate(LoginNavDestination.route)
+                }
+
+                Unknown -> {
+                    // Do nothing
+                }
+            }
+        }
     }
 }

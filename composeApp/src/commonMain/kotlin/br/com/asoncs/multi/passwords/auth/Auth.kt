@@ -2,12 +2,12 @@ package br.com.asoncs.multi.passwords.auth
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Default
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 
 interface Auth {
 
-    val authState: StateFlow<AuthState>
+    fun onAuthInit(
+        emit: (AuthState) -> Unit
+    )
 
     suspend fun login(
         password: String,
@@ -70,13 +70,26 @@ sealed class AuthState {
 
 object AuthMock : Auth {
 
-    override val authState = MutableStateFlow<AuthState>(AuthState.Unknown)
-
     init {
         CoroutineScope(Default).launch {
             delay(3_000)
-            authState.emit(AuthState.LoggedOut)
+            emit(AuthState.LoggedOut)
         }
+    }
+
+    private var emit: (AuthState) -> Unit = {}
+    val mockUser = User(
+        "AsonCS Mock",
+        "asoncs_github_mock@mock.com.br",
+        "https://avatars.githubusercontent.com/u/42609750?v=4",
+        "uid"
+    )
+
+    override fun onAuthInit(
+        emit: (AuthState) -> Unit
+    ) {
+        this.emit = emit
+        emit(AuthState.LoggedOut)
     }
 
     override suspend fun login(
@@ -87,21 +100,14 @@ object AuthMock : Auth {
     }
 
     override suspend fun loginWithGoogle() {
-        delay(3_000)
-        authState.emit(
-            AuthState.LoggedIn(
-                User(
-                    "Son",
-                    "abc@com.br",
-                    null,
-                    "uid"
-                )
-            )
+        delay(1_500)
+        emit(
+            AuthState.LoggedIn(mockUser)
         )
     }
 
     override suspend fun logout() {
-        authState.emit(AuthState.LoggedOut)
+        emit(AuthState.LoggedOut)
     }
 
     override suspend fun signup(

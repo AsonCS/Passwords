@@ -4,12 +4,32 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import br.com.asoncs.multi.passwords.ui.app.AppViewModel
 import br.com.asoncs.multi.passwords.ui.navigation.LoginDestination
 import kotlinx.coroutines.flow.StateFlow
 
 const val TAG_LOGIN = "login"
 
-data object LoginScreenDestination : LoginDestination("login")
+data object LoginScreenDestination : LoginDestination<LoginScreenDestination.Args>(
+    "login"
+) {
+    class Args(
+        val appViewModel: AppViewModel,
+        val navigateToSignup: () -> Unit
+    )
+
+    override fun destination(
+        args: Args,
+        builder: NavGraphBuilder
+    ) {
+        builder.composable(route) {
+            LoginScreen(
+                args.appViewModel,
+                args.navigateToSignup
+            )
+        }
+    }
+}
 
 internal open class LoginProps(
     val appName: String,
@@ -43,9 +63,11 @@ sealed class LoginState {
         override val password: String,
         override val username: String
     ) : LoginState()
+
 }
 
 abstract class LoginViewModel : ViewModel() {
+
     open val state: StateFlow<LoginState>
         get() = TODO("Not yet implemented")
 
@@ -72,12 +94,5 @@ abstract class LoginViewModel : ViewModel() {
     ) {
         TODO("Not yet implemented")
     }
-}
 
-fun NavGraphBuilder.loginDestination(
-    navigateToSignup: () -> Unit,
-) {
-    composable(route = LoginScreenDestination.route) {
-        LoginScreen(navigateToSignup)
-    }
 }

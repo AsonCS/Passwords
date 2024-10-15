@@ -6,6 +6,7 @@ xcuserdata
 !src/**/build/
 local.properties
 keystore.properties
+composeApp/release_notes.txt
 .idea
 .DS_Store
 captures
@@ -17,3 +18,4 @@ captures
 !*.xcodeproj/project.xcworkspace/
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
+kotlin-js-store/yarn.lock

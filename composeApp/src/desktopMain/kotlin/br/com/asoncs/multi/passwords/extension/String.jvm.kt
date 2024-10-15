@@ -6,7 +6,7 @@ actual fun platformError(
     throwable: Throwable?
 ) {
     println("$tag| $message")
-    error(throwable ?: Throwable(message))
+    println(throwable ?: Throwable(message))
 }
 
 actual fun platformLog(

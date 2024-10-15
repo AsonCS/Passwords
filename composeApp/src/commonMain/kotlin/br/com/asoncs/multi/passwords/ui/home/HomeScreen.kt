@@ -3,48 +3,50 @@ package br.com.asoncs.multi.passwords.ui.home
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import br.com.asoncs.multi.passwords.Greeting
-import br.com.asoncs.multi.passwords.auth.Auth
-import br.com.asoncs.multi.passwords.auth.AuthState.LoggedIn
-import kotlinx.coroutines.launch
+import br.com.asoncs.multi.passwords.ui.app.AppViewModel
+import br.com.asoncs.multi.passwords.ui.component.Loading
+import br.com.asoncs.multi.passwords.ui.home.HomeState.*
 import org.jetbrains.compose.resources.painterResource
-import org.koin.compose.koinInject
 import passwords.composeapp.generated.resources.Res
 import passwords.composeapp.generated.resources.compose_multiplatform
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier,
-    auth: Auth = koinInject()
+    appViewModel: AppViewModel,
+    homeViewModel: HomeViewModel,
+    navigateToUser: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val scope = rememberCoroutineScope()
-    val authState by auth.authState.collectAsState()
+    val state by homeViewModel.state
+        .collectAsState()
 
     HomeScreen(
         modifier = modifier,
         props = HomeProps(
-            image = painterResource(Res.drawable.compose_multiplatform),
-            onLogout = {
-                scope.launch {
-                    auth.logout()
-                }
-            }
+            image = painterResource(Res.drawable.compose_multiplatform)
         ),
-        state = authState as? LoggedIn
+        state = state
     )
+
+    LaunchedEffect(Unit) {
+        homeViewModel.githubUser()
+        appViewModel.stateTopBarUpdate(
+            handlerUser = navigateToUser
+        )
+    }
 }
 
 @Composable
 internal fun HomeScreen(
     modifier: Modifier,
     props: HomeProps,
-    state: LoggedIn?,
+    state: HomeState,
     initialShowContent: Boolean = false
 ) {
     var showContent by remember {
@@ -55,16 +57,24 @@ internal fun HomeScreen(
             .verticalScroll(rememberScrollState())
             .fillMaxSize()
             .padding(
+                horizontal = 8.dp,
                 vertical = 32.dp
             ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Button(
-            props.onLogout
-        ) {
-            Text("Log out")
+        if (state is Loading) {
+            Loading()
+            return
         }
+
+        if (state is Error) {
+            Text(
+                "Error: ${state.message}",
+                color = MaterialTheme.colors.error
+            )
+        }
+
         Button(
             onClick = { showContent = !showContent }
         ) {
@@ -86,12 +96,18 @@ internal fun HomeScreen(
                 Text(
                     "Compose: $greeting"
                 )
-                state?.user?.run {
+                if (state is Success) {
                     Text(
-                        "Hello $name, you're logged in!"
+                        "Github result"
                     )
                     Text(
-                        "Email: $email"
+                        "Name: ${state.githubUser.name}"
+                    )
+                    Text(
+                        "Login: ${state.githubUser.login}"
+                    )
+                    Text(
+                        "Id: ${state.githubUser.id}"
                     )
                 }
             }

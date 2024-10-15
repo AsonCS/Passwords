@@ -1,47 +1,26 @@
 package br.com.asoncs.multi.passwords.auth
 
 import br.com.asoncs.multi.passwords.auth.AuthState.LoggedOut
-import br.com.asoncs.multi.passwords.extension.*
+import br.com.asoncs.multi.passwords.extension.error
+import br.com.asoncs.multi.passwords.extension.isMobile
 import br.com.asoncs.multi.passwords.external.*
 import br.com.asoncs.multi.passwords.ui.login.TAG_LOGIN
 import kotlinx.browser.window
 import kotlinx.coroutines.await
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.update
 
 object WasmJsAuth : Auth {
-
-    override val authState = MutableStateFlow<AuthState>(
-        AuthState.Unknown
-    )
 
     private lateinit var app: JsAny
     private lateinit var auth: FirebaseAuth.Auth
     private lateinit var googleProvider: FirebaseAuth.GoogleAuthProvider
 
-    suspend fun checkAuthState() {
-        /*
-        val currentUser = auth.currentUser
-        console.log("checkAuthState", currentUser)
-        if (currentUser != null)
-            currentUser.emitUser()
-        else
-            authState.emit(LoggedOut)
-        */
-        authState.emit(LoggedOut)
-        FirebaseAuth.onAuthStateChanged(auth) {
-            val user = auth.currentUser
-            // console.log("checkAuthState.onAuthStateChanged", user)
-            if (user != null)
-                user.emitUser()
-            else
-                authState.update {
-                    LoggedOut
-                }
-        }
-    }
+    private var emit: (AuthState) -> Unit = {}
 
-    fun init() {
+    override fun onAuthInit(
+        emit: (AuthState) -> Unit
+    ) {
+        this.emit = emit
+
         app = FirebaseApp
             .initializeApp(firebaseConfig)
         // console.log("app", app)
@@ -60,6 +39,23 @@ object WasmJsAuth : Auth {
                 languageCode = "it"
             }
         // console.log("auth", auth)
+
+        /*
+        val currentUser = auth.currentUser
+        console.log("checkAuthState", currentUser)
+        if (currentUser != null)
+            currentUser.emitUser()
+        else
+            authState.emit(LoggedOut)
+        */
+        FirebaseAuth.onAuthStateChanged(auth) {
+            val user = auth.currentUser
+            // console.log("checkAuthState.onAuthStateChanged", user)
+            if (user != null)
+                user.emitUser()
+            else
+                emit(LoggedOut)
+        }
     }
 
     override suspend fun login(
@@ -82,7 +78,7 @@ object WasmJsAuth : Auth {
 
     override suspend fun loginWithGoogle() {
         val isMobile = window.isMobile
-        TAG_LOGIN.log("loginWithGoogle| isMobile: $isMobile")
+        // TAG_LOGIN.log("loginWithGoogle| isMobile: $isMobile")
         // TODO Fix redirect method
         if (false && isMobile)
             loginWithGetRedirectResult()
@@ -94,7 +90,7 @@ object WasmJsAuth : Auth {
         FirebaseAuth
             .signOut(auth)
             .await<JsAny>()
-        authState.emit(LoggedOut)
+        emit(LoggedOut)
     }
 
     override suspend fun signup(
@@ -119,7 +115,7 @@ object WasmJsAuth : Auth {
         if (this == null)
             throw AuthException.InvalidUserException
 
-        authState.update {
+        emit(
             AuthState.LoggedIn(
                 User(
                     name = displayName,
@@ -128,7 +124,7 @@ object WasmJsAuth : Auth {
                     uid = uid
                 )
             )
-        }
+        )
 
         return this
     }
@@ -141,7 +137,7 @@ object WasmJsAuth : Auth {
                 val credential = FirebaseAuth
                     .GoogleAuthProvider
                     .credentialFromResult(it);
-                TAG_LOGIN.log("accessToken: ${credential.accessToken}")
+                // TAG_LOGIN.log("accessToken: ${credential.accessToken}")
 
                 auth.currentUser.emitUser()
             }.catch {
@@ -159,7 +155,7 @@ object WasmJsAuth : Auth {
                 val credential = FirebaseAuth
                     .GoogleAuthProvider
                     .credentialFromResult(it)
-                TAG_LOGIN.log("accessToken: ${credential.accessToken}")
+                // TAG_LOGIN.log("accessToken: ${credential.accessToken}")
 
                 auth.currentUser.emitUser()
             }.catch {

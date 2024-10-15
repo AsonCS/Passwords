@@ -1,21 +1,28 @@
 package br.com.asoncs.multi.passwords.auth
 
 import androidx.activity.ComponentActivity
+import androidx.lifecycle.lifecycleScope
 import br.com.asoncs.multi.passwords.auth.AuthState.LoggedIn
 import br.com.asoncs.multi.passwords.auth.AuthState.LoggedOut
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 interface AuthAndroid : Auth {
 
+    var emit: (AuthState) -> Unit
+
     val activity: ComponentActivity
-    override val authState: MutableStateFlow<AuthState>
+
+    override fun onAuthInit(
+        emit: (AuthState) -> Unit
+    ) {
+        this.emit = emit
+        onAuthResume(activity.lifecycleScope)
+    }
 
     override suspend fun login(
         password: String,
@@ -27,6 +34,8 @@ interface AuthAndroid : Auth {
                 .await()
                 .user
                 .emitUser()
+        } catch (e: FirebaseAuthInvalidCredentialsException) {
+            throw AuthException.FirebaseAuthInvalidCredentialsException(e)
         } catch (t: Throwable) {
             throw AuthException.UnknownException(t)
         }
@@ -34,7 +43,7 @@ interface AuthAndroid : Auth {
 
     override suspend fun logout() {
         Firebase.auth.signOut()
-        authState.emit(LoggedOut)
+        emit(LoggedOut)
     }
 
     override suspend fun signup(
@@ -58,7 +67,7 @@ interface AuthAndroid : Auth {
         if (this == null)
             throw AuthException.InvalidUserException
 
-        authState.emit(
+        emit(
             LoggedIn(
                 User(
                     name = displayName,
@@ -82,7 +91,7 @@ interface AuthAndroid : Auth {
             Firebase.auth
                 .currentUser
                 ?.emitUser()
-                ?: authState.emit(LoggedOut)
+                ?: emit(LoggedOut)
         }
     }
 

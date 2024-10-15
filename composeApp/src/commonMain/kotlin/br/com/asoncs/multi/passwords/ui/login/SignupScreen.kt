@@ -3,32 +3,33 @@ package br.com.asoncs.multi.passwords.ui.login
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import br.com.asoncs.multi.passwords.ui.app.AppViewModel
 import br.com.asoncs.multi.passwords.ui.component.Loading
 import br.com.asoncs.multi.passwords.ui.login.LoginState.Filling
 import br.com.asoncs.multi.passwords.ui.login.LoginState.Loading
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 import passwords.composeapp.generated.resources.*
 
 @Composable
 fun SignupScreen(
+    appViewModel: AppViewModel,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: LoginViewModel = koinInject()
+    viewModel: LoginViewModel = koinViewModel()
 ) {
-    val state by viewModel.state.collectAsState()
+    val state by viewModel.state
+        .collectAsState()
 
     SignupScreen(
         modifier = modifier,
-        navigateUp = navigateUp,
         props = LoginProps(
             appName = stringResource(Res.string.multi_app_name),
             googleLogin = null,
@@ -47,75 +48,58 @@ fun SignupScreen(
         ),
         state = state
     )
+
+    LaunchedEffect(Unit) {
+        appViewModel.stateTopBarUpdate(
+            handlerBack = navigateUp
+        )
+    }
 }
 
 @Composable
 internal fun SignupScreen(
     modifier: Modifier,
-    navigateUp: () -> Unit,
     props: LoginProps,
     state: LoginState
 ) {
-    Box(
+    Column(
         modifier
             .fillMaxSize()
-    ) {
-        Column(
-            modifier
-                .matchParentSize()
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement
-                .spacedBy(
-                    alignment = Alignment.CenterVertically,
-                    space = 16.dp
-                )
-        ) {
-            Logo(
-                Modifier,
-                props
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement
+            .spacedBy(
+                alignment = Alignment.CenterVertically,
+                space = 16.dp
             )
+    ) {
+        Logo(
+            Modifier,
+            props
+        )
 
-            when (state) {
-                is Filling -> {
-                    if (state.errorMessage != null) {
-                        Text(
-                            state.errorMessage,
-                            color = MaterialTheme.colors.error
-                        )
-                    }
-
-                    Fields(
-                        Modifier,
-                        props,
-                        state
-                    )
-
-                    Buttons(
-                        Modifier,
-                        props
+        when (state) {
+            is Filling -> {
+                if (state.errorMessage != null) {
+                    Text(
+                        state.errorMessage,
+                        color = MaterialTheme.colors.error
                     )
                 }
 
-                is Loading -> Loading()
-            }
-        }
-
-        IconButton(
-            navigateUp,
-            Modifier
-                .align(Alignment.TopStart)
-                .padding(
-                    start = 16.dp,
-                    top = 48.dp
+                Fields(
+                    Modifier,
+                    props,
+                    state
                 )
-        ) {
-            Icon(
-                Icons.AutoMirrored.Filled.ArrowBack,
-                null,
-                Modifier
-                    .size(48.dp)
-            )
+
+                Buttons(
+                    Modifier,
+                    props
+                )
+            }
+
+            is Loading -> Loading()
         }
     }
 }

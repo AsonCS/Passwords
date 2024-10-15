@@ -12,19 +12,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import br.com.asoncs.multi.passwords.ui.app.AppViewModel
 import br.com.asoncs.multi.passwords.ui.component.Loading
 import br.com.asoncs.multi.passwords.ui.login.LoginState.Filling
 import br.com.asoncs.multi.passwords.ui.login.LoginState.Loading
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
 import passwords.composeapp.generated.resources.*
 
 @Composable
 fun LoginScreen(
+    appViewModel: AppViewModel,
     navigateToSignup: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: LoginViewModel = koinInject()
+    viewModel: LoginViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -48,6 +50,10 @@ fun LoginScreen(
         ),
         state = state
     )
+
+    LaunchedEffect(Unit) {
+        appViewModel.stateTopBarUpdate()
+    }
 }
 
 @Composable
