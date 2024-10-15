@@ -100,7 +100,7 @@ object AuthMock : Auth {
     }
 
     override suspend fun loginWithGoogle() {
-        delay(3_000)
+        delay(1_500)
         emit(
             AuthState.LoggedIn(mockUser)
         )

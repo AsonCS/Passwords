@@ -48,19 +48,13 @@ fun AppNavHost(
         appViewModel.stateAuth.collect {
             when (it) {
                 is LoggedIn -> {
-                    navController.navigate(HomeNavDestination.route) {
-                        popUpTo(LoginNavDestination.route) {
-                            inclusive = true
-                        }
-                    }
+                    navController.popBackStack()
+                    navController.navigate(HomeNavDestination.route)
                 }
 
                 LoggedOut -> {
-                    navController.navigate(LoginNavDestination.route) {
-                        popUpTo(SplashDestination.route) {
-                            inclusive = true
-                        }
-                    }
+                    navController.popBackStack()
+                    navController.navigate(LoginNavDestination.route)
                 }
 
                 Unknown -> {

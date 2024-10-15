@@ -5,7 +5,6 @@ import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.lifecycleScope
 import br.com.asoncs.multi.passwords.extension.error
-import br.com.asoncs.multi.passwords.extension.log
 import br.com.asoncs.multi.passwords.ui.login.TAG_LOGIN
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
@@ -19,7 +18,7 @@ interface AuthAndroidV2 : AuthAndroid {
     val signInLauncher: ActivityResultLauncher<Intent>
 
     override suspend fun loginWithGoogle() {
-        TAG_LOGIN.log("AuthAndroidV2.loginWithGoogle")
+        // TAG_LOGIN.log("AuthAndroidV2.loginWithGoogle")
         // com.google.android.gms.auth.api.credentials.CredentialsOptions
         // Choose authentication providers
         val providers = arrayListOf(

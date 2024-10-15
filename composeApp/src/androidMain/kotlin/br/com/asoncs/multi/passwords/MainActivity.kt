@@ -18,7 +18,6 @@ class MainActivity : ComponentActivity(),
     override fun onCreate(
         savedInstanceState: Bundle?
     ) {
-        // TAG_APP.log("MainActivity.onCreate")
         super.onCreate(savedInstanceState)
         onAuthCreate()
 
@@ -27,38 +26,10 @@ class MainActivity : ComponentActivity(),
 
         setContent {
             App(
-                auth = /*this, // */ AuthMock,
+                auth = this, // */ AuthMock,
             )
         }
     }
-
-    /*
-    override fun onStart() {
-        TAG_APP.log("MainActivity.onStart")
-        super.onStart()
-    }
-
-    override fun onResume() {
-        TAG_APP.log("MainActivity.onResume")
-        super.onResume()
-        onAuthResume(lifecycleScope)
-    }
-
-    override fun onPause() {
-        TAG_APP.log("MainActivity.onPause")
-        super.onPause()
-    }
-
-    override fun onStop() {
-        TAG_APP.log("MainActivity.onStop")
-        super.onStop()
-    }
-
-    override fun onDestroy() {
-        TAG_APP.log("MainActivity.onDestroy")
-        super.onDestroy()
-    }
-    // */
 
     override suspend fun loginWithGoogle() {
         // TODO Check NoClassDefFoundError super<AuthAndroidV2>.loginWithGoogle()

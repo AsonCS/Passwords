@@ -1,7 +1,8 @@
 package br.com.asoncs.multi.passwords.auth
 
 import br.com.asoncs.multi.passwords.auth.AuthState.LoggedOut
-import br.com.asoncs.multi.passwords.extension.*
+import br.com.asoncs.multi.passwords.extension.error
+import br.com.asoncs.multi.passwords.extension.isMobile
 import br.com.asoncs.multi.passwords.external.*
 import br.com.asoncs.multi.passwords.ui.login.TAG_LOGIN
 import kotlinx.browser.window
@@ -76,7 +77,7 @@ object WasmJsAuth : Auth {
 
     override suspend fun loginWithGoogle() {
         val isMobile = window.isMobile
-        TAG_LOGIN.log("loginWithGoogle| isMobile: $isMobile")
+        // TAG_LOGIN.log("loginWithGoogle| isMobile: $isMobile")
         // TODO Fix redirect method
         if (false && isMobile)
             loginWithGetRedirectResult()
@@ -135,7 +136,7 @@ object WasmJsAuth : Auth {
                 val credential = FirebaseAuth
                     .GoogleAuthProvider
                     .credentialFromResult(it);
-                TAG_LOGIN.log("accessToken: ${credential.accessToken}")
+                // TAG_LOGIN.log("accessToken: ${credential.accessToken}")
 
                 auth.currentUser.emitUser()
             }.catch {
@@ -153,7 +154,7 @@ object WasmJsAuth : Auth {
                 val credential = FirebaseAuth
                     .GoogleAuthProvider
                     .credentialFromResult(it)
-                TAG_LOGIN.log("accessToken: ${credential.accessToken}")
+                // TAG_LOGIN.log("accessToken: ${credential.accessToken}")
 
                 auth.currentUser.emitUser()
             }.catch {

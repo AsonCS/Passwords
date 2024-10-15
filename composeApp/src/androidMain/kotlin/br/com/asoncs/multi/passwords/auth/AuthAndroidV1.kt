@@ -3,8 +3,6 @@ package br.com.asoncs.multi.passwords.auth
 import androidx.credentials.*
 import androidx.credentials.exceptions.*
 import br.com.asoncs.multi.passwords.R
-import br.com.asoncs.multi.passwords.extension.log
-import br.com.asoncs.multi.passwords.ui.login.TAG_LOGIN
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.auth.GoogleAuthProvider
@@ -15,7 +13,7 @@ import kotlinx.coroutines.tasks.await
 interface AuthAndroidV1 : AuthAndroid {
 
     override suspend fun loginWithGoogle() {
-        TAG_LOGIN.log("AuthAndroidV1.loginWithGoogle")
+        // TAG_LOGIN.log("AuthAndroidV1.loginWithGoogle")
         /*
         delay(3_000)
         authState.emit(
