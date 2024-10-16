@@ -35,6 +35,7 @@ fun UserIcon(
                 Icons.Sharp.Person,
                 userName,
                 Modifier
+                    .size(size)
                     .border(borderSize, Color.Black, CircleShape)
                     .padding(borderSize),
                 tint = Color.Black
