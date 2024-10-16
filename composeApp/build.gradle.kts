@@ -178,41 +178,61 @@ compose.desktop {
     }
 }
 
-val buildConfigGenerator by tasks.registering(Sync::class) {
+val desktopBuildConfigGenerator by tasks.registering(Sync::class) {
     from(
         resources.text.fromString(
-            """
-                |package $lApplicationId.generated
-                |
-                |object MultiBuildConfig {
-                |   const val APPLICATION_ID = "$lApplicationId"
-                |   const val APPLICATION_VERSION = "$lApplicationVersion"
-                |   const val APPLICATION_VERSION_CODE = "$lApplicationVersionCode"
-                |
-                |   const val BASE_URL_TEST = "https://api.github.com"
-                |
-                |   const val DEBUG = true
-                |
-                |   const val FIREBASE_APP_ID = "${keystoreProperties["firebaseAppId"]}"
-                |   const val FIREBASE_API_KEY = "${keystoreProperties["firebaseApiKey"]}"
-                |   const val FIREBASE_AUTH_DOMAIN = "${keystoreProperties["firebaseAuthDomain"]}"
-                |   const val FIREBASE_MEASUREMENT_ID = "${keystoreProperties["firebaseMeasurementId"]}"
-                |   const val FIREBASE_MESSAGING_SENDER_ID = "${keystoreProperties["firebaseMessagingSenderId"]}"
-                |   const val FIREBASE_PROJECT_ID = "${keystoreProperties["firebaseProjectId"]}"
-                |   const val FIREBASE_STORAGE_BUCKET = "${keystoreProperties["firebaseStorageBucket"]}"
-                |}
-                |
-            """.trimMargin()
+            getBuildConfig(
+                """|
+                        |   const val FIREBASE_AUTH_API_HOST_IDENTIFY = "https://identitytoolkit.googleapis.com/v1"
+                        |   const val FIREBASE_AUTH_API_HOST_TOKEN = "https://securetoken.googleapis.com/v1"
+                        |   const val FIREBASE_WEB_API_KEY = "${keystoreProperties["firebaseWebApiKey"]}"
+                        |"""
+            )
         )
     ) {
-        rename { "MultiBuildConfig.kt" } // set the file name
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        rename { "BuildConfig.kt" } // set the file name FIREBASE_AUTH_API_TOKEN_HOST
         into("") // change the directory to match the package
     }
 
     // the target directory
     into(
         layout.projectDirectory.dir(
-            "src/commonMain/kotlin/${
+            "src/desktopMain/kotlin/${
+                lApplicationId.replace(
+                    ".",
+                    "/"
+                )
+            }/generated/"
+        )
+    )
+}
+
+val webBuildConfigGenerator by tasks.registering(Sync::class) {
+    from(
+        resources.text.fromString(
+            getBuildConfig(
+                """|
+                    |   const val FIREBASE_APP_ID = "${keystoreProperties["firebaseAppId"]}"
+                    |   const val FIREBASE_API_KEY = "${keystoreProperties["firebaseApiKey"]}"
+                    |   const val FIREBASE_AUTH_DOMAIN = "${keystoreProperties["firebaseAuthDomain"]}"
+                    |   const val FIREBASE_MEASUREMENT_ID = "${keystoreProperties["firebaseMeasurementId"]}"
+                    |   const val FIREBASE_MESSAGING_SENDER_ID = "${keystoreProperties["firebaseMessagingSenderId"]}"
+                    |   const val FIREBASE_PROJECT_ID = "${keystoreProperties["firebaseProjectId"]}"
+                    |   const val FIREBASE_STORAGE_BUCKET = "${keystoreProperties["firebaseStorageBucket"]}"
+                    |"""
+            )
+        )
+    ) {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        rename { "BuildConfig.kt" } // set the file name FIREBASE_AUTH_API_TOKEN_HOST
+        into("") // change the directory to match the package
+    }
+
+    // the target directory
+    into(
+        layout.projectDirectory.dir(
+            "src/wasmJsMain/kotlin/${
                 lApplicationId.replace(
                     ".",
                     "/"
@@ -239,4 +259,22 @@ val moveBuiltFiles by tasks.registering(Sync::class) {
     into(
         destination
     )
+}
+
+fun getBuildConfig(
+    fields: String
+): String {
+    return """
+        |package $lApplicationId.generated
+        |
+        |object BuildConfig {
+        |   const val APPLICATION_ID = "$lApplicationId"
+        |   const val APPLICATION_VERSION = "$lApplicationVersion"
+        |   const val APPLICATION_VERSION_CODE = "$lApplicationVersionCode"
+        |
+        |   const val DEBUG = true
+        $fields
+        |}
+        |
+    """.trimMargin()
 }

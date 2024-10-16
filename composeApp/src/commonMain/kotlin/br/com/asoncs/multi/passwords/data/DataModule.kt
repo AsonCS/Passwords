@@ -1,12 +1,12 @@
 package br.com.asoncs.multi.passwords.data
 
+import br.com.asoncs.multi.passwords.data.api.FirebaseAuthApi
 import br.com.asoncs.multi.passwords.data.api.TestApi
 import br.com.asoncs.multi.passwords.data.remote.ImageRemote
 import br.com.asoncs.multi.passwords.data.remote.TestRemote
 import br.com.asoncs.multi.passwords.data.repository.ImageRepository
 import br.com.asoncs.multi.passwords.data.repository.TestRepository
 import br.com.asoncs.multi.passwords.extension.log
-import br.com.asoncs.multi.passwords.generated.MultiBuildConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngineFactory
 import io.ktor.client.plugins.cache.HttpCache
@@ -16,15 +16,23 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
+expect val hostIdentify: String
 expect val platformEngine: HttpClientEngineFactory<*>
 
 const val TAG_DATA = "data"
 
 fun dataModule() = module {
     // Api
+    single<FirebaseAuthApi> {
+        FirebaseAuthApi.Impl(
+            hostIdentify = hostIdentify,
+            hostToken = hostToken,
+            webApiKey = ""
+        )
+    }
     single<TestApi> {
         TestApi.Impl(
-            baseUrl = MultiBuildConfig.BASE_URL_TEST
+            baseUrl = "https://api.github.com"
         )
     }
 

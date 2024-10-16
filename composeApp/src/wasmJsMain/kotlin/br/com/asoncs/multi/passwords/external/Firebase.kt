@@ -2,7 +2,7 @@
 
 package br.com.asoncs.multi.passwords.external
 
-import br.com.asoncs.multi.passwords.generated.MultiBuildConfig
+import br.com.asoncs.multi.passwords.generated.BuildConfig
 import kotlin.js.Promise
 
 @JsModule("firebase/app")
@@ -86,13 +86,13 @@ val firebaseConfig: JsAny = js(
     """
             (
                 {
-                    appId: "${MultiBuildConfig.FIREBASE_APP_ID}",
-                    apiKey: "${MultiBuildConfig.FIREBASE_API_KEY}",
-                    authDomain: "${MultiBuildConfig.FIREBASE_AUTH_DOMAIN}",
-                    measurementId: "${MultiBuildConfig.FIREBASE_MEASUREMENT_ID}",
-                    messagingSenderId: "${MultiBuildConfig.FIREBASE_MESSAGING_SENDER_ID}",
-                    projectId: "${MultiBuildConfig.FIREBASE_PROJECT_ID}",
-                    storageBucket: "${MultiBuildConfig.FIREBASE_STORAGE_BUCKET}"
+                    appId: "${BuildConfig.FIREBASE_APP_ID}",
+                    apiKey: "${BuildConfig.FIREBASE_API_KEY}",
+                    authDomain: "${BuildConfig.FIREBASE_AUTH_DOMAIN}",
+                    measurementId: "${BuildConfig.FIREBASE_MEASUREMENT_ID}",
+                    messagingSenderId: "${BuildConfig.FIREBASE_MESSAGING_SENDER_ID}",
+                    projectId: "${BuildConfig.FIREBASE_PROJECT_ID}",
+                    storageBucket: "${BuildConfig.FIREBASE_STORAGE_BUCKET}"
                 }
             )
         """
