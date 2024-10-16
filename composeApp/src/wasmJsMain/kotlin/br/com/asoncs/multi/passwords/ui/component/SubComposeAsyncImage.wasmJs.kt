@@ -7,7 +7,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import br.com.asoncs.multi.passwords.data.repository.ImageRepository
+import br.com.asoncs.multi.passwords.data.image.ImageRepository
 import br.com.asoncs.multi.passwords.extension.error
 import br.com.asoncs.multi.passwords.extension.log
 import br.com.asoncs.multi.passwords.ui.app.TAG_APP

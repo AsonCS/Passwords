@@ -88,9 +88,11 @@ kotlin {
             implementation(compose.runtime)
             implementation(compose.ui)
 
+            implementation(libs.androidx.datastore)
+            implementation(libs.androidx.datastore.preferences)
+            implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
-            implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.androidx.navigation.compose)
             implementation(libs.coil3.compose)
             implementation(libs.koin.core)
@@ -101,7 +103,7 @@ kotlin {
             implementation(libs.ktor.core)
             implementation(libs.ktor.logging)
             implementation(libs.ktor.negotiation)
-            implementation(libs.ktor.serialization)
+            implementation(libs.ktor.serialization.json)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

@@ -15,17 +15,16 @@ import br.com.asoncs.multi.passwords.ui.login.LoginState.Filling
 import br.com.asoncs.multi.passwords.ui.login.LoginState.Loading
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 import passwords.composeapp.generated.resources.*
 
 @Composable
 fun SignupScreen(
     appViewModel: AppViewModel,
+    loginViewModel: LoginViewModel,
     navigateUp: () -> Unit,
-    modifier: Modifier = Modifier,
-    viewModel: LoginViewModel = koinViewModel()
+    modifier: Modifier = Modifier
 ) {
-    val state by viewModel.state
+    val state by loginViewModel.state
         .collectAsState()
 
     SignupScreen(
@@ -37,9 +36,9 @@ fun SignupScreen(
             login = null,
             onGoogleLogin = null,
             onLogin = null,
-            onSignup = viewModel::signup,
-            onUpdatePassword = viewModel::updatePassword,
-            onUpdateUsername = viewModel::updateUsername,
+            onSignup = loginViewModel::signup,
+            onUpdatePassword = loginViewModel::updatePassword,
+            onUpdateUsername = loginViewModel::updateUsername,
             password = stringResource(Res.string.login_screen_password),
             passwordPlaceholder = stringResource(Res.string.login_screen_password_placeholder),
             signup = stringResource(Res.string.login_screen_signup),

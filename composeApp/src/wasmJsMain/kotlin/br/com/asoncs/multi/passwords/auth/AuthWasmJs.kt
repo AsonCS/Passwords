@@ -8,7 +8,7 @@ import br.com.asoncs.multi.passwords.ui.login.TAG_LOGIN
 import kotlinx.browser.window
 import kotlinx.coroutines.await
 
-object WasmJsAuth : Auth {
+object AuthWasmJs : Auth {
 
     private lateinit var app: JsAny
     private lateinit var auth: FirebaseAuth.Auth
@@ -16,7 +16,7 @@ object WasmJsAuth : Auth {
 
     private var emit: (AuthState) -> Unit = {}
 
-    override fun onAuthInit(
+    override suspend fun onAuthInit(
         emit: (AuthState) -> Unit
     ) {
         this.emit = emit

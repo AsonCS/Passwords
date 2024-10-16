@@ -1,7 +1,6 @@
-package br.com.asoncs.multi.passwords.data.remote
+package br.com.asoncs.multi.passwords.data.test
 
-import br.com.asoncs.multi.passwords.data.api.TestApi
-import br.com.asoncs.multi.passwords.data.model.GithubUserRemote
+import br.com.asoncs.multi.passwords.data.test.model.GithubUserRemote
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get

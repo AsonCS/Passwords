@@ -6,8 +6,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import br.com.asoncs.multi.passwords.ui.app.AppViewModel
-import br.com.asoncs.multi.passwords.ui.login.LoginScreenDestination
-import br.com.asoncs.multi.passwords.ui.login.SignupDestination
+import br.com.asoncs.multi.passwords.ui.login.*
+import org.koin.compose.viewmodel.koinViewModel
 
 abstract class LoginDestination<Args>(
     val route: String
@@ -22,7 +22,8 @@ abstract class LoginDestination<Args>(
 fun LoginNavHost(
     appViewModel: AppViewModel,
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    loginViewModel: LoginViewModel = koinViewModel()
 ) {
     NavHost(
         navController = navController,
@@ -32,6 +33,7 @@ fun LoginNavHost(
         LoginScreenDestination.destination(
             LoginScreenDestination.Args(
                 appViewModel,
+                loginViewModel,
                 navigateToSignup = {
                     navController.navigate(SignupDestination.route)
                 }
@@ -41,6 +43,7 @@ fun LoginNavHost(
         SignupDestination.destination(
             SignupDestination.Args(
                 appViewModel,
+                loginViewModel,
                 navigateUp = navController::navigateUp
             ),
             this

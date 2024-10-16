@@ -10,6 +10,7 @@ data object SignupDestination : LoginDestination<SignupDestination.Args>(
 ) {
     class Args(
         val appViewModel: AppViewModel,
+        val loginViewModel: LoginViewModel,
         val navigateUp: () -> Unit
     )
 
@@ -20,6 +21,7 @@ data object SignupDestination : LoginDestination<SignupDestination.Args>(
         builder.composable(route) {
             SignupScreen(
                 args.appViewModel,
+                args.loginViewModel,
                 args.navigateUp
             )
         }

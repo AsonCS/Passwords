@@ -2,7 +2,10 @@ package br.com.asoncs.multi.passwords.ui.home
 
 import androidx.lifecycle.viewModelScope
 import br.com.asoncs.multi.passwords.auth.Auth
-import br.com.asoncs.multi.passwords.data.repository.TestRepository
+import br.com.asoncs.multi.passwords.data.TAG_DATA
+import br.com.asoncs.multi.passwords.data.test.TestRepository
+import br.com.asoncs.multi.passwords.extension.error
+import br.com.asoncs.multi.passwords.extension.log
 import br.com.asoncs.multi.passwords.ui.home.HomeState.Error
 import br.com.asoncs.multi.passwords.ui.home.HomeState.Success
 import kotlinx.coroutines.flow.*
@@ -33,11 +36,12 @@ class HomeViewModelImpl(
             runCatching {
                 repository.githubUser("AsonCS")
             }.onSuccess { result ->
-                // TAG_DATA.log("githubUser: $result")
+                TAG_DATA.log("githubUser: $result")
                 _state.update {
                     Success(result)
                 }
             }.onFailure { throwable ->
+                TAG_DATA.error("githubUser", throwable)
                 _state.update {
                     Error(
                         message = throwable.message

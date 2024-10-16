@@ -1,4 +1,4 @@
-package br.com.asoncs.multi.passwords.data.remote
+package br.com.asoncs.multi.passwords.data.image
 
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get

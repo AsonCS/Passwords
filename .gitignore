@@ -21,3 +21,4 @@ captures
 kotlin-js-store/yarn.lock
 /composeApp/src/desktopMain/kotlin/br/com/asoncs/multi/passwords/generated
 /composeApp/src/wasmJsMain/kotlin/br/com/asoncs/multi/passwords/generated
+/composeApp/dice.preferences_pb

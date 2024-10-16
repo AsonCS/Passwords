@@ -1,4 +1,4 @@
-package br.com.asoncs.multi.passwords.data.api
+package br.com.asoncs.multi.passwords.data.test
 
 interface TestApi {
 

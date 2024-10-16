@@ -1,7 +1,6 @@
-package br.com.asoncs.multi.passwords.data.repository
+package br.com.asoncs.multi.passwords.data.image
 
 import androidx.compose.ui.graphics.ImageBitmap
-import br.com.asoncs.multi.passwords.data.remote.ImageRemote
 
 expect val ByteArray.asImageBitmap: ImageBitmap?
 

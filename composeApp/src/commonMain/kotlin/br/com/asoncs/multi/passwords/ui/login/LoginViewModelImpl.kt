@@ -9,7 +9,10 @@ import kotlinx.coroutines.launch
 
 class LoginViewModelImpl(
     private val auth: Auth,
-    initialState: LoginState = Filling()
+    initialState: LoginState = Filling(
+        password = "123456",
+        username = "abcd@com.br"
+    )
 ) : LoginViewModel() {
 
     private val _state = MutableStateFlow(initialState)

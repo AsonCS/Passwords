@@ -1,4 +1,4 @@
-package br.com.asoncs.multi.passwords.data.model
+package br.com.asoncs.multi.passwords.data.test.model
 
 import br.com.asoncs.multi.passwords.core.model.GithubUser
 import kotlinx.serialization.SerialName
@@ -6,8 +6,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class GithubUserRemote(
-    @SerialName("avatar_url")
-    val avatarUrl: String? = null,
     @SerialName("id")
     val id: Int? = null,
     @SerialName("name")
@@ -15,9 +13,11 @@ data class GithubUserRemote(
     @SerialName("login")
     val login: String? = null
 ) {
-    fun toGithubUser(): GithubUser {
+    fun toUi(
+        exampleCounter: Int
+    ): GithubUser {
         return GithubUser(
-            avatarUrl = avatarUrl,
+            exampleCounter = exampleCounter,
             id = id
                 ?: 0,
             name = name
