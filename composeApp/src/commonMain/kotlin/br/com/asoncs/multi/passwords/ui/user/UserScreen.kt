@@ -13,9 +13,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import br.com.asoncs.multi.passwords.auth.User
 import br.com.asoncs.multi.passwords.ui.app.AppViewModel
+import br.com.asoncs.multi.passwords.ui.component.Loading
 import br.com.asoncs.multi.passwords.ui.component.UserIcon
+import br.com.asoncs.multi.passwords.ui.user.UserState.Filling
+import br.com.asoncs.multi.passwords.ui.user.UserState.Loading
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -30,16 +32,15 @@ fun UserScreen(
     val user by appViewModel.stateAuthUser
         .collectAsState(null)
 
-    user?.let {
-        UserScreen(
-            modifier = modifier,
-            onLogout = userViewModel::logout,
-            onUpdateDisplayName = userViewModel::onUpdateDisplayName,
-            onUpdatePhotoUrl = userViewModel::onUpdatePhotoUrl,
-            user = it,
-            state = state
-        )
-    }
+    UserScreen(
+        modifier = modifier,
+        onLogout = userViewModel::logout,
+        onReload = userViewModel::reload,
+        onSave = userViewModel::save,
+        onUpdateDisplayName = userViewModel::updateDisplayName,
+        onUpdatePhotoUrl = userViewModel::updatePhotoUrl,
+        state = state
+    )
 
     LaunchedEffect(Unit) {
         appViewModel.stateTopBarUpdate(
@@ -57,10 +58,11 @@ fun UserScreen(
 fun UserScreen(
     modifier: Modifier,
     onLogout: () -> Unit,
+    onReload: () -> Unit,
+    onSave: () -> Unit,
     onUpdateDisplayName: (String) -> Unit,
     onUpdatePhotoUrl: (String) -> Unit,
-    state: UserState,
-    user: User
+    state: UserState
 ) {
     Column(
         modifier
@@ -75,15 +77,31 @@ fun UserScreen(
             space = 16.dp
         )
     ) {
+        if (state is Filling && state.errorMessage != null) {
+            Text(
+                state.errorMessage,
+                color = MaterialTheme.colors.error
+            )
+        }
+        if (state is Loading) {
+            Loading(
+                Modifier
+                    .align(Alignment.CenterHorizontally)
+            )
+        }
+
         UserIcon(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally),
             size = 144.dp,
-            userName = user.name,
-            userPhotoUrl = user.photoUrl
+            userName = state.user
+                ?.name,
+            userPhotoUrl = state.user
+                ?.photoUrl
         )
         TextField(
-            state.photoUrl
+            state.user
+                ?.photoUrl
                 ?: "",
             onUpdatePhotoUrl,
             Modifier
@@ -119,7 +137,8 @@ fun UserScreen(
         Divider()
 
         TextField(
-            state.displayName
+            state.user
+                ?.name
                 ?: "",
             onUpdateDisplayName,
             Modifier
@@ -155,33 +174,39 @@ fun UserScreen(
 
         Divider()
 
-        user.email?.let { email ->
-            Text(
-                "Email:"
-            )
-            Text(
-                email,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
-            )
+        state.user
+            ?.email
+            ?.let { email ->
+                Text(
+                    "Email:"
+                )
+                Text(
+                    email,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
 
-            Divider()
-        }
+                Divider()
+            }
 
-        Text(
-            "UID:"
-        )
-        Text(
-            user.uid,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold
-        )
+        state.user
+            ?.uid
+            ?.let { uid ->
+                Text(
+                    "UID:"
+                )
+                Text(
+                    uid,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
 
-        Divider()
+                Divider()
+            }
 
         if (state.hasChanges) {
             Button(
-                onLogout,
+                onSave,
                 Modifier
                     .align(Alignment.CenterHorizontally)
                     .width(200.dp)
@@ -191,6 +216,7 @@ fun UserScreen(
                 )
             }
         }
+
         OutlinedButton(
             onLogout,
             Modifier
@@ -199,6 +225,17 @@ fun UserScreen(
         ) {
             Text(
                 "Logout"
+            )
+        }
+
+        OutlinedButton(
+            onReload,
+            Modifier
+                .align(Alignment.CenterHorizontally)
+                .width(200.dp)
+        ) {
+            Text(
+                "Reload"
             )
         }
     }

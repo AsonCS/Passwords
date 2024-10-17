@@ -13,6 +13,8 @@ data class ResponseSignIn(
     val expiresIn: String? = null, // The number of seconds in which the ID token expires.
     @SerialName("idToken")
     val idToken: String? = null, // A Firebase Auth ID token for the authenticated user.
+    @SerialName("kind")
+    override val kind: String? = null,
     @SerialName("localId")
     val localId: String? = null, // The uid of the authenticated user.
     @SerialName("refreshToken")

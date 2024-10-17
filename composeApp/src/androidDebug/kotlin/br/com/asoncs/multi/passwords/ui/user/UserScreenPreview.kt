@@ -13,12 +13,14 @@ private fun UserScreenPreview() {
         UserScreen(
             modifier = Modifier,
             onLogout = {},
+            onReload = {},
+            onSave = {},
             onUpdateDisplayName = {},
             onUpdatePhotoUrl = {},
             state = UserState.Filling(
-                hasChanges = true
-            ),
-            user = mockUser
+                hasChanges = true,
+                user = mockUser
+            )
         )
     }
 }

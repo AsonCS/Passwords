@@ -20,6 +20,19 @@ interface AuthRemote {
         private val api: AuthApi,
         private val client: HttpClient
     ) : AuthRemote {
+        override suspend fun lookup(
+            idToken: String
+        ) = client.post {
+            url {
+                takeFrom(api.lookup())
+            }
+            contentType(Json)
+            setBody(
+                BodyLookup(idToken)
+            )
+        }.body<ResponseLookup>()
+            .also { TAG_DATA.log("AuthRemote.lookup: $it") }
+
         override suspend fun refreshToken(
             token: String
         ) = client.post {
@@ -87,6 +100,12 @@ interface AuthRemote {
         }.body<ResponseUpdate>()
             .also { TAG_DATA.log("AuthRemote.update: $it") }
 
+    }
+
+    suspend fun lookup(
+        idToken: String
+    ): ResponseLookup {
+        TODO("Not yet implemented")
     }
 
     suspend fun refreshToken(

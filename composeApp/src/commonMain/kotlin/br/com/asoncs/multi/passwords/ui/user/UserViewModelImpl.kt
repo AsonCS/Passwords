@@ -3,13 +3,16 @@ package br.com.asoncs.multi.passwords.ui.user
 import androidx.lifecycle.viewModelScope
 import br.com.asoncs.multi.passwords.auth.Auth
 import br.com.asoncs.multi.passwords.auth.User
+import br.com.asoncs.multi.passwords.extension.error
+import br.com.asoncs.multi.passwords.ui.login.TAG_LOGIN
 import br.com.asoncs.multi.passwords.ui.user.UserState.Filling
+import br.com.asoncs.multi.passwords.ui.user.UserState.Loading
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class UserViewModelImpl(
     private val auth: Auth,
-    initialState: UserState = Filling()
+    initialState: UserState = Loading()
 ) : UserViewModel() {
 
     private val _state = MutableStateFlow(
@@ -18,18 +21,15 @@ class UserViewModelImpl(
     override val state = _state
         .asStateFlow()
 
-    private var displayName: String? = null
-    private var photoUrl: String? = null
+    private var initialUser: User? = null
 
     override fun initUserData(
         user: User
     ) {
-        displayName = user.name
-        photoUrl = user.photoUrl
+        initialUser = user
         _state.update {
             Filling(
-                displayName = displayName,
-                photoUrl = photoUrl
+                user = user
             )
         }
     }
@@ -40,32 +40,82 @@ class UserViewModelImpl(
         }
     }
 
-    override fun onUpdatePhotoUrl(
+    override fun reload() {
+        viewModelScope.launch {
+            auth.lookup().let {
+                _state.update { _ ->
+                    Filling(
+                        user = it
+                    )
+                }
+            }
+        }
+    }
+
+    override fun save() {
+        viewModelScope.launch {
+            _state.update {
+                Loading(
+                    user = it.user
+                )
+            }
+
+            runCatching {
+                val displayName = auth.verifyDisplayName(
+                    _state
+                        .value
+                        .user
+                        ?.name
+                )
+                val photoUrl = auth.verifyPhotoUrl(
+                    _state
+                        .value
+                        .user
+                        ?.photoUrl
+                )
+                auth.update(
+                    displayName = displayName,
+                    photoUrl = photoUrl
+                )
+            }.onFailure { error ->
+                _state.update {
+                    Filling(
+                        errorMessage = error.message
+                            ?: "save",
+                        user = it.user
+                    )
+                }
+                TAG_LOGIN.error("save", error)
+            }.onSuccess {
+                initUserData(it)
+            }
+        }
+    }
+
+    override fun updatePhotoUrl(
         url: String
     ) {
-        val url = url.takeIf {
-            it.isNotBlank()
-        }
-        _state.update {
-            (it as Filling).copy(
-                hasChanges = it.displayName != displayName
-                        || url != photoUrl,
-                photoUrl = url
+        _state.update { state ->
+            val user = state.user!!.copy(
+                photoUrl = url.takeIf { it.isNotBlank() }
+            )
+            (state as Filling).copy(
+                hasChanges = user != initialUser,
+                user = user
             )
         }
     }
 
-    override fun onUpdateDisplayName(
+    override fun updateDisplayName(
         name: String
     ) {
-        val name = name.takeIf {
-            it.isNotBlank()
-        }
-        _state.update {
-            (it as Filling).copy(
-                displayName = name,
-                hasChanges = name != displayName
-                        || it.photoUrl != photoUrl
+        _state.update { state ->
+            val user = state.user!!.copy(
+                name = name.takeIf { it.isNotBlank() }
+            )
+            (state as Filling).copy(
+                hasChanges = user != initialUser,
+                user = user
             )
         }
     }

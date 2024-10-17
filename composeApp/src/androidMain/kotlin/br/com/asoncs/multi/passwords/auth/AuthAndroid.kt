@@ -14,6 +14,14 @@ interface AuthAndroid : Auth {
 
     val activity: ComponentActivity
 
+    override suspend fun getIdToken(): String? {
+        return Firebase.auth
+            .currentUser
+            ?.getIdToken(false)
+            ?.await()
+            ?.token
+    }
+
     override suspend fun onAuthInit(
         emit: (AuthState) -> Unit
     ) {

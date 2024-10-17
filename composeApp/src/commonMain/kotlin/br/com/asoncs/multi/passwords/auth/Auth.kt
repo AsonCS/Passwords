@@ -11,6 +11,8 @@ interface Auth {
     val emit: (AuthState) -> Unit
     val repository: AuthRepository
 
+    suspend fun getIdToken(): String? = null
+
     suspend fun onAuthInit(
         emit: (AuthState) -> Unit
     )
@@ -30,6 +32,29 @@ interface Auth {
         TODO("Not yet implemented")
     }
 
+    suspend fun lookup(): User {
+        val user = repository.lookup(
+            getIdToken()
+        )
+        emit(
+            AuthState.LoggedIn(user)
+        )
+
+        return user
+    }
+
+    suspend fun lookupCatching() {
+        runCatching {
+            emit(
+                AuthState.LoggedIn(
+                    repository.lookup(
+                        getIdToken()
+                    )
+                )
+            )
+        }
+    }
+
     suspend fun signup(
         password: String,
         username: String
@@ -40,15 +65,26 @@ interface Auth {
     suspend fun update(
         displayName: String,
         photoUrl: String
-    ) {
-        emit(
-            AuthState.LoggedIn(
-                repository.update(
-                    displayName = displayName,
-                    photoUrl = photoUrl
-                )
-            )
+    ): User {
+        val user = repository.update(
+            displayName = displayName,
+            idToken = getIdToken(),
+            photoUrl = photoUrl
         )
+        emit(
+            AuthState.LoggedIn(user)
+        )
+
+        return user
+    }
+
+    fun verifyDisplayName(
+        displayName: String?
+    ): String {
+        if (displayName.isNullOrBlank())
+            throw AuthException.InvalidDisplayNameException
+
+        return displayName
     }
 
     fun verifyPassword(
@@ -64,6 +100,25 @@ interface Auth {
             else
                 throw AuthException.InvalidPasswordException
         }
+    }
+
+    fun verifyPhotoUrl(
+        photoUrl: String?
+    ): String {
+        if (photoUrl.isNullOrBlank())
+            throw AuthException.InvalidPhotoUrlException
+
+        photoUrl.trim().let {
+            val isValid = Regex(
+                "(http(s?):)([/|.\\w\\s-])*\\.(?:jpg|gif|png)"
+            ).matches(it)
+            if (isValid)
+                it
+            else
+                throw AuthException.InvalidPhotoUrlException
+        }
+
+        return photoUrl
     }
 
     fun verifyUsername(

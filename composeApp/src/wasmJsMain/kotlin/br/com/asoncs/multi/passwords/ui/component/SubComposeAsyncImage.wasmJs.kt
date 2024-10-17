@@ -52,9 +52,9 @@ actual fun SubComposeAsyncImage(
         }
     }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(model) {
         runCatching {
-            TAG_APP.log("TODO Fix loading images on web.")
+            TAG_APP.log("TODO Fix loading images on web. $model")
             repository
                 .getImage(model)
         }.onFailure {

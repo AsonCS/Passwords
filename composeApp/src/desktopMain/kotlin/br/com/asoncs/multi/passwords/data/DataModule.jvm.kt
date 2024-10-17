@@ -4,7 +4,6 @@ package br.com.asoncs.multi.passwords.data
 
 import androidx.datastore.preferences.core.*
 import br.com.asoncs.multi.passwords.data.PlatformDataModule.DataStore
-import br.com.asoncs.multi.passwords.generated.BuildConfig
 import io.ktor.client.engine.apache5.Apache5
 import kotlinx.coroutines.flow.first
 import okio.Path.Companion.toPath
@@ -16,9 +15,6 @@ internal actual val platform = object : PlatformDataModule(
     override val dataStore by lazy {
         getDataStore(dataStoreFileName)
     }
-    override val hostIdentify = BuildConfig.FIREBASE_AUTH_API_HOST_IDENTIFY
-    override val hostToken = BuildConfig.FIREBASE_AUTH_API_HOST_TOKEN
-    override val webApiKey = BuildConfig.FIREBASE_WEB_API_KEY
 }
 
 private fun getDataStore(

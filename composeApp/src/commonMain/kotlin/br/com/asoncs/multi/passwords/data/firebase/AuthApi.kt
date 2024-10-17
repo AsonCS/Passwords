@@ -9,6 +9,8 @@ interface AuthApi {
         private val hostToken: String,
         private val webApiKey: String
     ) : AuthApi {
+        override fun lookup() = "$hostIdentify/accounts:lookup?key=$webApiKey"
+
         override fun refreshToken() = "$hostToken/token?key=$webApiKey"
 
         override fun signIn() = "$hostIdentify/accounts:signInWithPassword?key=$webApiKey"
@@ -16,6 +18,10 @@ interface AuthApi {
         override fun signUp() = "$hostIdentify/accounts:signUp?key=$webApiKey"
 
         override fun update() = "$hostIdentify/accounts:update?key=$webApiKey"
+    }
+
+    fun lookup(): String {
+        TODO("Not yet implemented")
     }
 
     fun refreshToken(): String {

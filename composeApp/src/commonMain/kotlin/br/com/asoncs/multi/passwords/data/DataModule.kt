@@ -5,6 +5,7 @@ import br.com.asoncs.multi.passwords.data.image.ImageRemote
 import br.com.asoncs.multi.passwords.data.image.ImageRepository
 import br.com.asoncs.multi.passwords.data.test.*
 import br.com.asoncs.multi.passwords.extension.log
+import br.com.asoncs.multi.passwords.generated.BuildConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -21,9 +22,9 @@ fun dataModule() = module {
     // Api
     single<AuthApi> {
         AuthApi.Impl(
-            hostIdentify = platform.hostIdentify,
-            hostToken = platform.hostToken,
-            webApiKey = platform.webApiKey
+            hostIdentify = BuildConfig.FIREBASE_AUTH_API_HOST_IDENTIFY,
+            hostToken = BuildConfig.FIREBASE_AUTH_API_HOST_TOKEN,
+            webApiKey = BuildConfig.FIREBASE_WEB_API_KEY
         )
     }
     single<TestApi> {

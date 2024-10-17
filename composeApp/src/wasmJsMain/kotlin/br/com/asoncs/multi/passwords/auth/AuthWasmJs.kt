@@ -20,6 +20,11 @@ object AuthWasmJs : Auth, KoinComponent {
     override var emit: (AuthState) -> Unit = {}
     override val repository by inject<AuthRepository>()
 
+    override suspend fun getIdToken(): String? {
+        return auth.currentUser
+            ?.accessToken
+    }
+
     override suspend fun onAuthInit(
         emit: (AuthState) -> Unit
     ) {

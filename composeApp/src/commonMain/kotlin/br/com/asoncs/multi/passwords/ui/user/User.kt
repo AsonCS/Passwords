@@ -31,20 +31,18 @@ data object UserDestination : HomeDestination<UserDestination.Args>(
 
 sealed class UserState {
 
-    abstract val displayName: String?
     abstract val hasChanges: Boolean
-    abstract val photoUrl: String?
+    abstract val user: User?
 
     data class Filling(
-        override val displayName: String? = null,
+        val errorMessage: String? = null,
         override val hasChanges: Boolean = false,
-        override val photoUrl: String? = null
+        override val user: User? = null
     ) : UserState()
 
     class Loading(
-        override val displayName: String?,
         override val hasChanges: Boolean = false,
-        override val photoUrl: String?
+        override val user: User? = null
     ) : UserState()
 
 }
@@ -64,13 +62,21 @@ abstract class UserViewModel : ViewModel() {
         TODO("Not yet implemented")
     }
 
-    open fun onUpdatePhotoUrl(
+    open fun reload() {
+        TODO("Not yet implemented")
+    }
+
+    open fun save() {
+        TODO("Not yet implemented")
+    }
+
+    open fun updatePhotoUrl(
         url: String
     ) {
         TODO("Not yet implemented")
     }
 
-    open fun onUpdateDisplayName(
+    open fun updateDisplayName(
         name: String
     ) {
         TODO("Not yet implemented")

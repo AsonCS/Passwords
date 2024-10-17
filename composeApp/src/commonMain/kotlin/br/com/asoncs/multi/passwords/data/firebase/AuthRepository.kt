@@ -44,6 +44,53 @@ interface AuthRepository {
             dao.setUser(null)
         }
 
+        override suspend fun lookup(
+            idToken: String?
+        ): User {
+            val userDao = dao
+                .getUser()
+
+            val response = remote.lookup(
+                idToken = userDao
+                    ?.idToken
+                    ?: idToken
+                    ?: throw AuthException.InvalidUserException
+            ).also { it.throwOnError() }
+                .users!![0]
+
+            return if (userDao != null) {
+                val user = AuthUser(
+                    expiresIn = response.expiresIn
+                        ?.toLong()
+                        ?: userDao.expiresIn,
+                    idToken = response.idToken
+                        ?: userDao.idToken,
+                    name = response.displayName,
+                    email = response.email,
+                    photoUrl = response.photoUrl,
+                    refreshToken = response.refreshToken
+                        ?: userDao.refreshToken,
+                    timestamp = getTimeSeconds(),
+                    uid = response.localId
+                        ?: userDao.uid
+                )
+                dao.setUser(user)
+                user.toUi()
+            } else {
+                AuthUser(
+                    expiresIn = -1,
+                    idToken = "",
+                    name = response.displayName,
+                    email = response.email,
+                    photoUrl = response.photoUrl,
+                    refreshToken = "",
+                    timestamp = -1,
+                    uid = response.localId
+                        ?: ""
+                ).toUi()
+            }
+        }
+
         override suspend fun signIn(
             email: String,
             password: String
@@ -96,33 +143,52 @@ interface AuthRepository {
 
         override suspend fun update(
             displayName: String,
+            idToken: String?,
             photoUrl: String
         ): User {
             val userDao = dao
                 .getUser()
-                ?: throw AuthException.InvalidUserException
 
             val response = remote.update(
                 displayName = displayName,
-                idToken = userDao.idToken,
+                idToken = userDao
+                    ?.idToken
+                    ?: idToken
+                    ?: throw AuthException.InvalidUserException,
                 photoUrl = photoUrl
             ).also { it.throwOnError() }
 
-            val user = AuthUser(
-                expiresIn = response.expiresIn!!
-                    .toLong(),
-                idToken = response.idToken!!,
-                name = response.displayName,
-                email = response.email,
-                photoUrl = response.photoUrl,
-                refreshToken = response.refreshToken!!,
-                timestamp = getTimeSeconds(),
-                uid = response.localId!!
-            )
-
-            dao.setUser(user)
-
-            return user.toUi()
+            return if (userDao != null) {
+                val user = AuthUser(
+                    expiresIn = response.expiresIn
+                        ?.toLong()
+                        ?: userDao.expiresIn,
+                    idToken = response.idToken
+                        ?: userDao.idToken,
+                    name = response.displayName,
+                    email = response.email,
+                    photoUrl = response.photoUrl,
+                    refreshToken = response.refreshToken
+                        ?: userDao.refreshToken,
+                    timestamp = getTimeSeconds(),
+                    uid = response.localId
+                        ?: userDao.uid
+                )
+                dao.setUser(user)
+                user.toUi()
+            } else {
+                AuthUser(
+                    expiresIn = -1,
+                    idToken = "",
+                    name = response.displayName,
+                    email = response.email,
+                    photoUrl = response.photoUrl,
+                    refreshToken = "",
+                    timestamp = -1,
+                    uid = response.localId
+                        ?: ""
+                ).toUi()
+            }
         }
 
     }
@@ -132,6 +198,12 @@ interface AuthRepository {
     }
 
     suspend fun logout() {
+        TODO("Not yet implemented")
+    }
+
+    suspend fun lookup(
+        idToken: String?
+    ): User {
         TODO("Not yet implemented")
     }
 
@@ -151,6 +223,7 @@ interface AuthRepository {
 
     suspend fun update(
         displayName: String,
+        idToken: String?,
         photoUrl: String
     ): User
 

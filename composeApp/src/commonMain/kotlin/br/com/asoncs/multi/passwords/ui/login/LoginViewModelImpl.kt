@@ -31,6 +31,7 @@ class LoginViewModelImpl(
                     password = password,
                     username = username
                 )
+                auth.lookupCatching()
             }.onFailure { error ->
                 emitFilling(error.message ?: "login")
                 TAG_LOGIN.error("login", error)

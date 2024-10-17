@@ -10,8 +10,7 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value="desktopBuildConfigGenerator" />
-          <option value="webBuildConfigGenerator" />
+          <option value="buildConfigGenerator" />
         </list>
       </option>
       <option name="vmOptions" />

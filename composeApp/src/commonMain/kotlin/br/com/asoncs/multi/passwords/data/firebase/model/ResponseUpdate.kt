@@ -16,6 +16,8 @@ data class ResponseUpdate(
     val expiresIn: String? = null, // The number of seconds in which the ID token expires.
     @SerialName("idToken")
     val idToken: String? = null, // New Firebase Auth ID token for user.
+    @SerialName("kind")
+    override val kind: String? = null,
     @SerialName("localId")
     val localId: String? = null, // The uid of the current user.
     @SerialName("passwordHash")
