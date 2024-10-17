@@ -1,9 +1,15 @@
 package br.com.asoncs.multi.passwords.auth
 
+import br.com.asoncs.multi.passwords.data.firebase.AuthRepository
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Default
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 interface Auth {
+
+    val emit: (AuthState) -> Unit
+    val repository: AuthRepository
 
     suspend fun onAuthInit(
         emit: (AuthState) -> Unit
@@ -29,6 +35,20 @@ interface Auth {
         username: String
     ) {
         TODO("Not yet implemented")
+    }
+
+    suspend fun update(
+        displayName: String,
+        photoUrl: String
+    ) {
+        emit(
+            AuthState.LoggedIn(
+                repository.update(
+                    displayName = displayName,
+                    photoUrl = photoUrl
+                )
+            )
+        )
     }
 
     fun verifyPassword(
@@ -68,7 +88,7 @@ sealed class AuthState {
     data object Unknown : AuthState()
 }
 
-object AuthMock : Auth {
+object AuthMock : Auth, KoinComponent {
 
     init {
         CoroutineScope(Default).launch {
@@ -77,13 +97,15 @@ object AuthMock : Auth {
         }
     }
 
-    private var emit: (AuthState) -> Unit = {}
     val mockUser = User(
         "AsonCS Mock",
         "asoncs_github_mock@mock.com.br",
         "https://avatars.githubusercontent.com/u/42609750?v=4",
         "uid"
     )
+
+    override var emit: (AuthState) -> Unit = {}
+    override val repository by inject<AuthRepository>()
 
     override suspend fun onAuthInit(
         emit: (AuthState) -> Unit

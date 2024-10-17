@@ -14,7 +14,6 @@ data object HomeScreenDestination : HomeDestination<HomeScreenDestination.Args>(
 ) {
     class Args(
         val appViewModel: AppViewModel,
-        val homeViewModel: HomeViewModel,
         val navigateToUser: () -> Unit
     )
 
@@ -25,7 +24,6 @@ data object HomeScreenDestination : HomeDestination<HomeScreenDestination.Args>(
         builder.composable(route) {
             HomeScreen(
                 args.appViewModel,
-                args.homeViewModel,
                 args.navigateToUser
             )
         }
@@ -54,10 +52,6 @@ abstract class HomeViewModel : ViewModel() {
 
     open val state: StateFlow<HomeState>
         get() = TODO("Not yet implemented")
-
-    open fun logout() {
-        TODO("Not yet implemented")
-    }
 
     open fun githubUser() {
         TODO("Not yet implemented")

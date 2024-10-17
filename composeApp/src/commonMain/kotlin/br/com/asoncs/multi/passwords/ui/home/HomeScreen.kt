@@ -13,15 +13,16 @@ import br.com.asoncs.multi.passwords.ui.app.AppViewModel
 import br.com.asoncs.multi.passwords.ui.component.Loading
 import br.com.asoncs.multi.passwords.ui.home.HomeState.*
 import org.jetbrains.compose.resources.painterResource
+import org.koin.compose.viewmodel.koinViewModel
 import passwords.composeapp.generated.resources.Res
 import passwords.composeapp.generated.resources.compose_multiplatform
 
 @Composable
 fun HomeScreen(
     appViewModel: AppViewModel,
-    homeViewModel: HomeViewModel,
     navigateToUser: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    homeViewModel: HomeViewModel = koinViewModel()
 ) {
     val state by homeViewModel.state
         .collectAsState()

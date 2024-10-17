@@ -14,6 +14,8 @@ interface AuthApi {
         override fun signIn() = "$hostIdentify/accounts:signInWithPassword?key=$webApiKey"
 
         override fun signUp() = "$hostIdentify/accounts:signUp?key=$webApiKey"
+
+        override fun update() = "$hostIdentify/accounts:update?key=$webApiKey"
     }
 
     fun refreshToken(): String {
@@ -25,6 +27,10 @@ interface AuthApi {
     }
 
     fun signUp(): String {
+        TODO("Not yet implemented")
+    }
+
+    fun update(): String {
         TODO("Not yet implemented")
     }
 

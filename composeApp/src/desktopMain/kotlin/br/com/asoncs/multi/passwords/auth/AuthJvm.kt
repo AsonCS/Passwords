@@ -10,9 +10,8 @@ import org.koin.core.component.inject
 
 object AuthJvm : Auth, KoinComponent {
 
-    private val repository by inject<AuthRepository>()
-
-    private var emit: (AuthState) -> Unit = {}
+    override var emit: (AuthState) -> Unit = {}
+    override val repository by inject<AuthRepository>()
 
     override suspend fun onAuthInit(
         emit: (AuthState) -> Unit

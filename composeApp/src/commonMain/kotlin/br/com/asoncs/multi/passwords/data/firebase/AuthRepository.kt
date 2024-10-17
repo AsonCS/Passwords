@@ -1,5 +1,6 @@
 package br.com.asoncs.multi.passwords.data.firebase
 
+import br.com.asoncs.multi.passwords.auth.AuthException
 import br.com.asoncs.multi.passwords.auth.User
 import br.com.asoncs.multi.passwords.data.firebase.model.AuthUser
 import br.com.asoncs.multi.passwords.extension.getTimeSeconds
@@ -10,6 +11,7 @@ interface AuthRepository {
         private val dao: AuthDao,
         private val remote: AuthRemote
     ) : AuthRepository {
+
         override suspend fun getUser(): User? {
             var user = dao
                 .getUser() //.also { TAG_DATA.log("AuthRepository.getUser: $it") }
@@ -91,6 +93,38 @@ interface AuthRepository {
 
             return user.toUi()
         }
+
+        override suspend fun update(
+            displayName: String,
+            photoUrl: String
+        ): User {
+            val userDao = dao
+                .getUser()
+                ?: throw AuthException.InvalidUserException
+
+            val response = remote.update(
+                displayName = displayName,
+                idToken = userDao.idToken,
+                photoUrl = photoUrl
+            ).also { it.throwOnError() }
+
+            val user = AuthUser(
+                expiresIn = response.expiresIn!!
+                    .toLong(),
+                idToken = response.idToken!!,
+                name = response.displayName,
+                email = response.email,
+                photoUrl = response.photoUrl,
+                refreshToken = response.refreshToken!!,
+                timestamp = getTimeSeconds(),
+                uid = response.localId!!
+            )
+
+            dao.setUser(user)
+
+            return user.toUi()
+        }
+
     }
 
     suspend fun getUser(): User? {
@@ -114,5 +148,10 @@ interface AuthRepository {
     ): User {
         TODO("Not yet implemented")
     }
+
+    suspend fun update(
+        displayName: String,
+        photoUrl: String
+    ): User
 
 }

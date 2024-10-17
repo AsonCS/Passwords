@@ -1,7 +1,6 @@
 package br.com.asoncs.multi.passwords.ui.home
 
 import androidx.lifecycle.viewModelScope
-import br.com.asoncs.multi.passwords.auth.Auth
 import br.com.asoncs.multi.passwords.data.TAG_DATA
 import br.com.asoncs.multi.passwords.data.test.TestRepository
 import br.com.asoncs.multi.passwords.extension.error
@@ -11,7 +10,6 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class HomeViewModelImpl(
-    private val auth: Auth,
     private val repository: TestRepository
 ) : HomeViewModel() {
 
@@ -20,12 +18,6 @@ class HomeViewModelImpl(
     )
     override val state = _state
         .asStateFlow()
-
-    override fun logout() {
-        viewModelScope.launch {
-            auth.logout()
-        }
-    }
 
     override fun githubUser() {
         if (_state.value is Success)

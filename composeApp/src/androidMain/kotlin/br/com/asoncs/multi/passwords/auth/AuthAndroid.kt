@@ -10,7 +10,7 @@ import kotlinx.coroutines.tasks.await
 
 interface AuthAndroid : Auth {
 
-    var emit: (AuthState) -> Unit
+    override var emit: (AuthState) -> Unit
 
     val activity: ComponentActivity
 
