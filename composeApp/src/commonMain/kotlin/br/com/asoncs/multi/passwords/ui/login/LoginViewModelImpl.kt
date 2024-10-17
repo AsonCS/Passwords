@@ -12,7 +12,9 @@ class LoginViewModelImpl(
     initialState: LoginState = Filling()
 ) : LoginViewModel() {
 
-    private val _state = MutableStateFlow(initialState)
+    private val _state = MutableStateFlow(
+        initialState
+    )
     override val state = _state.asStateFlow()
 
     override fun login() {
@@ -29,6 +31,7 @@ class LoginViewModelImpl(
                     password = password,
                     username = username
                 )
+                auth.lookupCatching()
             }.onFailure { error ->
                 emitFilling(error.message ?: "login")
                 TAG_LOGIN.error("login", error)

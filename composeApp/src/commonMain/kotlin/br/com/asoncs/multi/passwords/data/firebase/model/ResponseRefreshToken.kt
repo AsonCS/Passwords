@@ -11,6 +11,8 @@ data class ResponseRefreshToken(
     val expiresIn: String? = null, // The number of seconds in which the ID token expires.
     @SerialName("id_token")
     val idToken: String? = null, // A Firebase Auth ID token.
+    @SerialName("kind")
+    override val kind: String? = null,
     @SerialName("project_id")
     val projectId: String? = null, // Your Firebase project ID.
     @SerialName("refresh_token")

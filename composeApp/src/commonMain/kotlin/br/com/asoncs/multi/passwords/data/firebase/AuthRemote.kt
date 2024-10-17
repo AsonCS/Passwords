@@ -20,9 +20,22 @@ interface AuthRemote {
         private val api: AuthApi,
         private val client: HttpClient
     ) : AuthRemote {
+        override suspend fun lookup(
+            idToken: String
+        ) = client.post {
+            url {
+                takeFrom(api.lookup())
+            }
+            contentType(Json)
+            setBody(
+                BodyLookup(idToken)
+            )
+        }.body<ResponseLookup>()
+            .also { TAG_DATA.log("AuthRemote.lookup: $it") }
+
         override suspend fun refreshToken(
             token: String
-        ): ResponseRefreshToken = client.post {
+        ) = client.post {
             url {
                 takeFrom(api.refreshToken())
             }
@@ -37,7 +50,7 @@ interface AuthRemote {
         override suspend fun signIn(
             email: String,
             password: String
-        ): ResponseSignIn = client.post {
+        ) = client.post {
             url {
                 takeFrom(api.signIn())
             }
@@ -54,7 +67,7 @@ interface AuthRemote {
         override suspend fun signUp(
             email: String,
             password: String
-        ): ResponseSignUp = client.post {
+        ) = client.post {
             url {
                 takeFrom(api.signUp())
             }
@@ -68,20 +81,31 @@ interface AuthRemote {
         }.body<ResponseSignUp>()
             .also { TAG_DATA.log("AuthRemote.signUp: $it") }
 
-        /*private suspend inline fun <reified T> HttpResponse.bodyOrError(): T {
-            return try {
-                if (status.isSuccess())
-                    body<T>()
-                else {
-                    val error = body<ResponseError>()
-                }
-            } catch (t: Throwable) {
-                val error = body<ResponseError>()
-                TAG_DATA.error("AuthRemote.signIn: $error", t)
-                throw AuthException.UnknownException(t)
+        override suspend fun update(
+            displayName: String,
+            idToken: String,
+            photoUrl: String
+        ) = client.post {
+            url {
+                takeFrom(api.update())
             }
-        }*/
+            contentType(Json)
+            setBody(
+                BodyUpdate(
+                    displayName = displayName,
+                    idToken = idToken,
+                    photoUrl = photoUrl
+                )
+            )
+        }.body<ResponseUpdate>()
+            .also { TAG_DATA.log("AuthRemote.update: $it") }
 
+    }
+
+    suspend fun lookup(
+        idToken: String
+    ): ResponseLookup {
+        TODO("Not yet implemented")
     }
 
     suspend fun refreshToken(
@@ -123,6 +147,14 @@ interface AuthRemote {
             localId = mockUser.uid,
             refreshToken = "signUp.refreshToken"
         ) // */
+        TODO("Not yet implemented")
+    }
+
+    suspend fun update(
+        displayName: String,
+        idToken: String,
+        photoUrl: String
+    ): ResponseUpdate {
         TODO("Not yet implemented")
     }
 

@@ -4,7 +4,9 @@ sealed class AuthException(
     override val message: String,
     override val cause: Throwable? = null
 ) : Exception() {
+    data object InvalidDisplayNameException : AuthException("InvalidDisplayNameException")
     data object InvalidPasswordException : AuthException("InvalidPasswordException")
+    data object InvalidPhotoUrlException : AuthException("InvalidPhotoUrlException")
     data object InvalidUserException : AuthException("InvalidUserException")
     data object InvalidUserNameException : AuthException("InvalidUserNameException")
 

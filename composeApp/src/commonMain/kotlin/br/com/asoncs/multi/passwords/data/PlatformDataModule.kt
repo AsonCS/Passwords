@@ -8,9 +8,6 @@ import kotlin.reflect.KClass
 abstract class PlatformDataModule(
     internal val engine: HttpClientEngineFactory<*>
 ) {
-    internal open val hostIdentify: String = ""
-    internal open val hostToken: String = ""
-    internal open val webApiKey: String = ""
 
     // region DataStore
 
@@ -60,4 +57,5 @@ abstract class PlatformDataModule(
     }
 
     // endregion
+
 }

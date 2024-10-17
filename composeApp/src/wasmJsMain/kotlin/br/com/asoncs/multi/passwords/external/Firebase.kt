@@ -74,6 +74,7 @@ external object FirebaseAuth : JsAny {
     }
 
     class User : JsAny {
+        val accessToken: String?
         val displayName: String?
         val email: String?
         val photoURL: String?

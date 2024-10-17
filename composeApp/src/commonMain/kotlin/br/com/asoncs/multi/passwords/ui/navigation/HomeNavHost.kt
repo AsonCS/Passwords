@@ -7,9 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import br.com.asoncs.multi.passwords.ui.app.AppViewModel
 import br.com.asoncs.multi.passwords.ui.home.HomeScreenDestination
-import br.com.asoncs.multi.passwords.ui.home.HomeViewModel
 import br.com.asoncs.multi.passwords.ui.user.UserDestination
-import org.koin.compose.viewmodel.koinViewModel
 
 abstract class HomeDestination<Args>(
     val route: String
@@ -24,8 +22,7 @@ abstract class HomeDestination<Args>(
 fun HomeNavHost(
     appViewModel: AppViewModel,
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController(),
-    homeViewModel: HomeViewModel = koinViewModel()
+    navController: NavHostController = rememberNavController()
 ) {
     NavHost(
         navController = navController,
@@ -35,7 +32,6 @@ fun HomeNavHost(
         HomeScreenDestination.destination(
             HomeScreenDestination.Args(
                 appViewModel,
-                homeViewModel,
                 navigateToUser = {
                     navController.navigate(UserDestination.route)
                 }
@@ -45,7 +41,6 @@ fun HomeNavHost(
         UserDestination.destination(
             UserDestination.Args(
                 appViewModel,
-                homeViewModel,
                 navigateUp = navController::navigateUp
             ),
             this

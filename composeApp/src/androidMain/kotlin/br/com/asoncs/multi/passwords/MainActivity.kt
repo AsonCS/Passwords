@@ -6,15 +6,20 @@ import android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import br.com.asoncs.multi.passwords.auth.*
+import br.com.asoncs.multi.passwords.data.firebase.AuthRepository
 import br.com.asoncs.multi.passwords.ui.app.App
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import org.koin.dsl.module
 
 class MainActivity : ComponentActivity(),
+    KoinComponent,
     AuthAndroidV1,
     AuthAndroidV2 {
 
     override val activity = this
     override var emit: (AuthState) -> Unit = {}
+    override val repository by inject<AuthRepository>()
     override val signInLauncher = signInLauncher()
 
     override fun onCreate(

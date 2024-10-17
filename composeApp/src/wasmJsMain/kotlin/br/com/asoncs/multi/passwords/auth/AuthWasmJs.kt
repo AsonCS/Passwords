@@ -1,20 +1,29 @@
 package br.com.asoncs.multi.passwords.auth
 
 import br.com.asoncs.multi.passwords.auth.AuthState.LoggedOut
+import br.com.asoncs.multi.passwords.data.firebase.AuthRepository
 import br.com.asoncs.multi.passwords.extension.error
 import br.com.asoncs.multi.passwords.extension.isMobile
 import br.com.asoncs.multi.passwords.external.*
 import br.com.asoncs.multi.passwords.ui.login.TAG_LOGIN
 import kotlinx.browser.window
 import kotlinx.coroutines.await
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-object AuthWasmJs : Auth {
+object AuthWasmJs : Auth, KoinComponent {
 
     private lateinit var app: JsAny
     private lateinit var auth: FirebaseAuth.Auth
     private lateinit var googleProvider: FirebaseAuth.GoogleAuthProvider
 
-    private var emit: (AuthState) -> Unit = {}
+    override var emit: (AuthState) -> Unit = {}
+    override val repository by inject<AuthRepository>()
+
+    override suspend fun getIdToken(): String? {
+        return auth.currentUser
+            ?.accessToken
+    }
 
     override suspend fun onAuthInit(
         emit: (AuthState) -> Unit

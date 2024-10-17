@@ -10,9 +10,17 @@ import kotlinx.coroutines.tasks.await
 
 interface AuthAndroid : Auth {
 
-    var emit: (AuthState) -> Unit
+    override var emit: (AuthState) -> Unit
 
     val activity: ComponentActivity
+
+    override suspend fun getIdToken(): String? {
+        return Firebase.auth
+            .currentUser
+            ?.getIdToken(false)
+            ?.await()
+            ?.token
+    }
 
     override suspend fun onAuthInit(
         emit: (AuthState) -> Unit
