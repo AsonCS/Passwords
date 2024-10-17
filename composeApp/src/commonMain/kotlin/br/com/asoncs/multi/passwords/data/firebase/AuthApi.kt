@@ -16,8 +16,16 @@ interface AuthApi {
         override fun signUp() = "$hostIdentify/accounts:signUp?key=$webApiKey"
     }
 
-    fun refreshToken(): String
-    fun signIn(): String
-    fun signUp(): String
+    fun refreshToken(): String {
+        TODO("Not yet implemented")
+    }
+
+    fun signIn(): String {
+        TODO("Not yet implemented")
+    }
+
+    fun signUp(): String {
+        TODO("Not yet implemented")
+    }
 
 }

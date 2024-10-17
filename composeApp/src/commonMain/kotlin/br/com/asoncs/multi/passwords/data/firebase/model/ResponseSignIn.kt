@@ -4,20 +4,22 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SignInResponse(
+data class ResponseSignIn(
     @SerialName("email")
-    val email: String, // The email for the authenticated user.
+    val email: String? = null, // The email for the authenticated user.
+    @SerialName("error")
+    override val error: Error? = null,
     @SerialName("expiresIn")
-    val expiresIn: String, // The number of seconds in which the ID token expires.
+    val expiresIn: String? = null, // The number of seconds in which the ID token expires.
     @SerialName("idToken")
-    val idToken: String, // A Firebase Auth ID token for the authenticated user.
+    val idToken: String? = null, // A Firebase Auth ID token for the authenticated user.
     @SerialName("localId")
-    val localId: String, // The uid of the authenticated user.
+    val localId: String? = null, // The uid of the authenticated user.
     @SerialName("refreshToken")
-    val refreshToken: String, // A Firebase Auth refresh token for the authenticated user.
+    val refreshToken: String? = null, // A Firebase Auth refresh token for the authenticated user.
     @SerialName("registered")
-    val registered: Boolean // Whether the email is for an existing account.
-)
+    val registered: Boolean? = null // Whether the email is for an existing account.
+) : Response
 
 /*
 {

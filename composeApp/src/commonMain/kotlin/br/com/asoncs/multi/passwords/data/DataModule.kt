@@ -56,10 +56,7 @@ fun dataModule() = module {
 
     // Dao
     single<AuthDao> {
-        AuthDao.Impl(
-            dataStore = get(),
-            json = get()
-        )
+        AuthDao.Impl
     }
 
     // Remote

@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RefreshTokenBody(
+data class BodyRefreshToken(
     @SerialName("refresh_token")
     val token: String, // A Firebase Auth refresh token.
     @SerialName("grant_type")

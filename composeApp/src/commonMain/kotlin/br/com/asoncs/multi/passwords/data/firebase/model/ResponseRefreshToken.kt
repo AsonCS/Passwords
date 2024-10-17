@@ -4,20 +4,22 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RefreshTokenResponse(
+data class ResponseRefreshToken(
+    @SerialName("error")
+    override val error: Error? = null,
     @SerialName("expires_in")
-    val expiresIn: String, // The number of seconds in which the ID token expires.
+    val expiresIn: String? = null, // The number of seconds in which the ID token expires.
     @SerialName("id_token")
-    val idToken: String, // A Firebase Auth ID token.
+    val idToken: String? = null, // A Firebase Auth ID token.
     @SerialName("project_id")
-    val projectId: String, // Your Firebase project ID.
+    val projectId: String? = null, // Your Firebase project ID.
     @SerialName("refresh_token")
-    val refreshToken: String, // The Firebase Auth refresh token provided in the request or a new refresh token.
+    val refreshToken: String? = null, // The Firebase Auth refresh token provided in the request or a new refresh token.
     @SerialName("token_type")
-    val tokenType: String = "Bearer", // The type of the refresh token, always "Bearer".
+    val tokenType: String? = null, // The type of the refresh token, always "Bearer".
     @SerialName("user_id")
-    val userId: String, // The uid corresponding to the provided ID token.
-)
+    val userId: String? = null // The uid corresponding to the provided ID token.
+) : Response
 
 /*
 {
