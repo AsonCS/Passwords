@@ -22,8 +22,8 @@ abstract class LoginDestination<Args>(
 fun LoginNavHost(
     appViewModel: AppViewModel,
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController(),
-    loginViewModel: LoginViewModel = koinViewModel()
+    loginViewModel: LoginViewModel = koinViewModel(),
+    navController: NavHostController = rememberNavController()
 ) {
     NavHost(
         navController = navController,
