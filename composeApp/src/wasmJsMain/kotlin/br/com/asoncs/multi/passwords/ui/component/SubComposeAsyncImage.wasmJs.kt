@@ -3,10 +3,11 @@ package br.com.asoncs.multi.passwords.ui.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import br.com.asoncs.multi.passwords.data.repository.ImageRepository
+import br.com.asoncs.multi.passwords.data.image.ImageRepository
 import br.com.asoncs.multi.passwords.extension.error
 import br.com.asoncs.multi.passwords.extension.log
 import br.com.asoncs.multi.passwords.ui.app.TAG_APP
@@ -27,7 +28,8 @@ actual fun SubComposeAsyncImage(
     }
 
     Box(
-        modifier
+        modifier,
+        contentAlignment = Alignment.Center
     ) {
         state.let { state ->
             when (state) {
@@ -55,12 +57,14 @@ actual fun SubComposeAsyncImage(
             TAG_APP.log("TODO Fix loading images on web.")
             repository
                 .getImage(model)
-                ?: throw IllegalStateException("Image is null")
         }.onFailure {
             TAG_APP.error("SubComposeAsyncImage.getImage", it)
             state = ImageState.Error
         }.onSuccess {
-            state = ImageState.Success(it)
+            state = if (it != null)
+                ImageState.Success(it)
+            else
+                ImageState.Error
         }
     }
 }

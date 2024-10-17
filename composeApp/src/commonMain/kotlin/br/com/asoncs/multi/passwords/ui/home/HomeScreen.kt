@@ -109,6 +109,9 @@ internal fun HomeScreen(
                     Text(
                         "Id: ${state.githubUser.id}"
                     )
+                    Text(
+                        "ExampleCounter: ${state.githubUser.exampleCounter}"
+                    )
                 }
             }
         }

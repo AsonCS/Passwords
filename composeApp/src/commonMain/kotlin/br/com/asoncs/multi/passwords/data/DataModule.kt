@@ -1,14 +1,11 @@
 package br.com.asoncs.multi.passwords.data
 
-import br.com.asoncs.multi.passwords.data.api.TestApi
-import br.com.asoncs.multi.passwords.data.remote.ImageRemote
-import br.com.asoncs.multi.passwords.data.remote.TestRemote
-import br.com.asoncs.multi.passwords.data.repository.ImageRepository
-import br.com.asoncs.multi.passwords.data.repository.TestRepository
+import br.com.asoncs.multi.passwords.data.firebase.*
+import br.com.asoncs.multi.passwords.data.image.ImageRemote
+import br.com.asoncs.multi.passwords.data.image.ImageRepository
+import br.com.asoncs.multi.passwords.data.test.*
 import br.com.asoncs.multi.passwords.extension.log
-import br.com.asoncs.multi.passwords.generated.MultiBuildConfig
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.HttpClientEngineFactory
 import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.*
@@ -16,19 +13,42 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
-expect val platformEngine: HttpClientEngineFactory<*>
+internal expect val platform: PlatformDataModule
 
 const val TAG_DATA = "data"
 
 fun dataModule() = module {
     // Api
+    single<AuthApi> {
+        AuthApi.Impl(
+            hostIdentify = platform.hostIdentify,
+            hostToken = platform.hostToken,
+            webApiKey = platform.webApiKey
+        )
+    }
     single<TestApi> {
         TestApi.Impl(
-            baseUrl = MultiBuildConfig.BASE_URL_TEST
+            baseUrl = "https://api.github.com"
+        )
+    }
+
+    // Dao
+    single<AuthDao> {
+        AuthDao.Impl(
+            dataStore = get(),
+            json = get()
         )
     }
 
     // Remote
+    single<AuthRemote> {
+        AuthRemote.Impl(
+            api = get(),
+            client = get()
+        )
+        // TODO Remove mock response
+        //object : AuthRemote {}
+    }
     single<ImageRemote> {
         ImageRemote.Impl(
             client = get()
@@ -42,6 +62,12 @@ fun dataModule() = module {
     }
 
     // Repository
+    single<AuthRepository> {
+        AuthRepository.Impl(
+            dao = get(),
+            remote = get()
+        )
+    }
     single<ImageRepository> {
         ImageRepository.Impl(
             remote = get()
@@ -49,12 +75,17 @@ fun dataModule() = module {
     }
     single<TestRepository> {
         TestRepository.Impl(
+            dataStore = get(),
             remote = get()
         )
     }
 
+    factory {
+        platform.dataStore
+    }
+
     single {
-        HttpClient(platformEngine) {
+        HttpClient(platform.engine) {
             install(Logging) {
                 //  logger = Logger.DEFAULT
                 level = LogLevel.INFO
@@ -66,6 +97,7 @@ fun dataModule() = module {
                 }
             }
             install(ContentNegotiation) {
+
                 json(Json {
                     ignoreUnknownKeys = true
                     prettyPrint = true

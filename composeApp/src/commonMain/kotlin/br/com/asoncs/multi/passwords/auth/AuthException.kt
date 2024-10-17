@@ -43,6 +43,8 @@ sealed class AuthException(
         cause
     )
 
+    data object NotImplementedYetException : AuthException("NotImplementedYetException")
+
     class UnknownException(
         cause: Throwable? = null
     ) : AuthException(

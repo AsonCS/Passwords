@@ -1,14 +1,11 @@
 package br.com.asoncs.multi.passwords.auth
 
 import androidx.activity.ComponentActivity
-import androidx.lifecycle.lifecycleScope
 import br.com.asoncs.multi.passwords.auth.AuthState.LoggedIn
 import br.com.asoncs.multi.passwords.auth.AuthState.LoggedOut
 import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 interface AuthAndroid : Auth {
@@ -17,11 +14,14 @@ interface AuthAndroid : Auth {
 
     val activity: ComponentActivity
 
-    override fun onAuthInit(
+    override suspend fun onAuthInit(
         emit: (AuthState) -> Unit
     ) {
         this.emit = emit
-        onAuthResume(activity.lifecycleScope)
+        Firebase.auth
+            .currentUser
+            ?.emitUser()
+            ?: emit(LoggedOut)
     }
 
     override suspend fun login(
@@ -78,21 +78,6 @@ interface AuthAndroid : Auth {
                 )
             )
         )
-    }
-
-    fun onAuthCreate() {
-        Firebase.auth
-    }
-
-    fun onAuthResume(
-        scope: CoroutineScope
-    ) {
-        scope.launch {
-            Firebase.auth
-                .currentUser
-                ?.emitUser()
-                ?: emit(LoggedOut)
-        }
     }
 
 }

@@ -5,7 +5,7 @@ import kotlinx.coroutines.Dispatchers.Default
 
 interface Auth {
 
-    fun onAuthInit(
+    suspend fun onAuthInit(
         emit: (AuthState) -> Unit
     )
 
@@ -85,7 +85,7 @@ object AuthMock : Auth {
         "uid"
     )
 
-    override fun onAuthInit(
+    override suspend fun onAuthInit(
         emit: (AuthState) -> Unit
     ) {
         this.emit = emit

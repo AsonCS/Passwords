@@ -1,5 +1,7 @@
 package br.com.asoncs.multi.passwords.extension
 
+import io.ktor.util.date.getTimeMillis
+
 fun Any.error(
     message: String,
     throwable: Throwable? = null,
@@ -14,3 +16,5 @@ fun Any.log(
 ) {
     tag.log(message)
 }
+
+fun getTimeSeconds() = getTimeMillis() / 1_000
