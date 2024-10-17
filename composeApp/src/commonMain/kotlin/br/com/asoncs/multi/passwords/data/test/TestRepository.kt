@@ -1,26 +1,29 @@
 package br.com.asoncs.multi.passwords.data.test
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.*
 import br.com.asoncs.multi.passwords.core.model.GithubUser
-
-val EXAMPLE_COUNTER = intPreferencesKey("example_counter")
+import br.com.asoncs.multi.passwords.data.PlatformDataModule.DataStore
 
 interface TestRepository {
 
     class Impl(
-        private val dataStore: DataStore<Preferences>,
+        dataStore: DataStore,
         private val remote: TestRemote
     ) : TestRepository {
+
+        private val preference = dataStore
+            .createPreference(
+                Int::class,
+                "EXAMPLE_COUNTER"
+            )
 
         override suspend fun githubUser(
             user: String
         ): GithubUser {
-            var exampleCounter = -1
-            dataStore.edit { settings ->
-                exampleCounter = settings[EXAMPLE_COUNTER] ?: 0
-                settings[EXAMPLE_COUNTER] = exampleCounter + 1
-            }
+            val exampleCounter = preference
+                .get()
+                ?: -1
+            preference.set(exampleCounter + 1)
+
             return remote.githubUser(user)
                 .toUi(exampleCounter)
         }

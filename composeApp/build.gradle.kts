@@ -66,6 +66,8 @@ kotlin {
             implementation(compose.preview)
 
             implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.datastore)
+            implementation(libs.androidx.datastore.preferences)
             // implementation(libs.firebase.admin)
             implementation(libs.coil3.okhttp)
             implementation(libs.firebase.analytics)
@@ -88,8 +90,6 @@ kotlin {
             implementation(compose.runtime)
             implementation(compose.ui)
 
-            implementation(libs.androidx.datastore)
-            implementation(libs.androidx.datastore.preferences)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -108,6 +108,8 @@ kotlin {
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
 
+            implementation(libs.androidx.datastore)
+            implementation(libs.androidx.datastore.preferences)
             implementation(libs.coil3.jvm)
             implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.ktor.apache5)

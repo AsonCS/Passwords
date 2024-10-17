@@ -11,7 +11,7 @@ fun main() = application {
         title = "\uD83D\uDD10\uD83D\uDD10\uD83D\uDD10",
     ) {
         App(
-            AuthJvm, // */ AuthMock
+            AuthJvm, // */ AuthMock,
         )
     }
 }

@@ -13,16 +13,22 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import org.koin.compose.KoinApplication
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.module.Module
+import org.koin.dsl.module
 
 const val TAG_APP = "passwords_app"
 
 @Composable
 fun App(
     auth: Auth,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    platformModule: Module = module { }
 ) {
     KoinApplication({
-        koinApplication(auth)
+        koinApplication(
+            auth,
+            platformModule
+        )
     }) {
         MaterialTheme {
             val navController = rememberNavController()

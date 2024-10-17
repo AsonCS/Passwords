@@ -1,21 +1,27 @@
 package br.com.asoncs.multi.passwords.data.firebase
 
-import androidx.datastore.preferences.core.stringPreferencesKey
-import br.com.asoncs.multi.passwords.data.Dao
+import br.com.asoncs.multi.passwords.data.PlatformDataModule.DataStore
 import br.com.asoncs.multi.passwords.data.firebase.model.AuthUser
+import kotlinx.serialization.json.Json
 
 interface AuthDao {
 
-    object Impl : Dao(), AuthDao {
-        private val userKey = stringPreferencesKey(
+    class Impl(
+        dataStore: DataStore,
+        json: Json,
+    ) : AuthDao {
+
+        private val userPreference = DataStore.PreferenceJson<AuthUser>(
+            dataStore,
+            json,
             "AUTH_DAO_USER"
         )
 
-        override suspend fun getUser(): AuthUser? = get(userKey)
+        override suspend fun getUser(): AuthUser? = userPreference.get()
 
         override suspend fun setUser(
             user: AuthUser?
-        ) = set(userKey, user)
+        ) = userPreference.set(user)
     }
 
     suspend fun getUser(): AuthUser? {

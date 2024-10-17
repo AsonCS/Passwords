@@ -22,7 +22,7 @@ private fun HomeScreenPreview(
             props = props(),
             state = HomeState.Success(
                 githubUser = GithubUser(
-                    avatarUrl = null,
+                    exampleCounter = 2,
                     id = 1,
                     login = "Son",
                     name = "Son"

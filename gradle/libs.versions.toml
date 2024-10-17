@@ -1,6 +1,6 @@
 [versions]
 applicationId = "br.com.asoncs.multi.passwords"
-applicationVersion = "1.0.1" # Just one digit for minor and medium versions
+applicationVersion = "1.0.2" # Just one digit for minor and medium versions
 
 agp = "8.2.2"
 android-compileSdk = "34"

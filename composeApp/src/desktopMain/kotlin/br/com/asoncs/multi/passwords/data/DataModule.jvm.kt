@@ -1,17 +1,63 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package br.com.asoncs.multi.passwords.data
 
+import androidx.datastore.preferences.core.*
+import br.com.asoncs.multi.passwords.data.PlatformDataModule.DataStore
 import br.com.asoncs.multi.passwords.generated.BuildConfig
-import io.ktor.client.engine.HttpClientEngineFactory
 import io.ktor.client.engine.apache5.Apache5
-import org.koin.core.module.Module
+import kotlinx.coroutines.flow.first
+import okio.Path.Companion.toPath
+import kotlin.reflect.KClass
 
-internal actual val hostIdentify: String = BuildConfig.FIREBASE_AUTH_API_HOST_IDENTIFY
-internal actual val hostToken: String = BuildConfig.FIREBASE_AUTH_API_HOST_TOKEN
-internal actual val webApiKey: String = BuildConfig.FIREBASE_WEB_API_KEY
-internal actual val platformEngine: HttpClientEngineFactory<*> = Apache5
-
-internal actual fun Module.platformModules() {
-    factory<DataStorePathProducer> {
-        object : DataStorePathProducer {}
+internal actual val platform = object : PlatformDataModule(
+    engine = Apache5
+) {
+    override val dataStore by lazy {
+        getDataStore(dataStoreFileName)
     }
+    override val hostIdentify = BuildConfig.FIREBASE_AUTH_API_HOST_IDENTIFY
+    override val hostToken = BuildConfig.FIREBASE_AUTH_API_HOST_TOKEN
+    override val webApiKey = BuildConfig.FIREBASE_WEB_API_KEY
+}
+
+private fun getDataStore(
+    fileName: String
+) = object : DataStore {
+
+    private val _dataStore = PreferenceDataStoreFactory
+        .createWithPath(
+            produceFile = {
+                fileName.toPath()
+            }
+        )
+
+    override fun <T : Any> createPreference(
+        cls: KClass<T>,
+        key: String
+    ) = object : DataStore.Preference<T> {
+
+        private val preferenceKey = when (cls) {
+            Boolean::javaClass -> booleanPreferencesKey(key)
+            Int::javaClass -> intPreferencesKey(key)
+            else -> stringPreferencesKey(key)
+        } as Preferences.Key<T>
+
+        override suspend fun set(
+            value: T?
+        ) {
+            _dataStore.edit { settings ->
+                if (value == null) {
+                    settings.remove(preferenceKey)
+                } else {
+                    settings[preferenceKey] = value
+                }
+            }
+        }
+
+        override suspend fun get() = _dataStore
+            .data
+            .first()[preferenceKey]
+    }
+
 }

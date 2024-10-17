@@ -1,51 +1,29 @@
 package br.com.asoncs.multi.passwords.data
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import androidx.datastore.preferences.core.Preferences
 import br.com.asoncs.multi.passwords.data.firebase.*
 import br.com.asoncs.multi.passwords.data.image.ImageRemote
 import br.com.asoncs.multi.passwords.data.image.ImageRepository
 import br.com.asoncs.multi.passwords.data.test.*
 import br.com.asoncs.multi.passwords.extension.log
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.HttpClientEngineFactory
 import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.*
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import okio.Path.Companion.toPath
-import org.koin.core.module.Module
 import org.koin.dsl.module
 
-internal interface DataStorePathProducer {
-    fun producePath(
-        fileName: String
-    ): String = fileName
-}
-
-internal expect val hostIdentify: String
-internal expect val hostToken: String
-internal expect val webApiKey: String
-internal expect val platformEngine: HttpClientEngineFactory<*>
-
-internal expect fun Module.platformModules()
+internal expect val platform: PlatformDataModule
 
 const val TAG_DATA = "data"
 
-// TODO Check why "single" is not working
-private var dataStore: DataStore<Preferences>? = null
-
 fun dataModule() = module {
-    platformModules()
-
     // Api
     single<AuthApi> {
         AuthApi.Impl(
-            hostIdentify = hostIdentify,
-            hostToken = hostToken,
-            webApiKey = webApiKey
+            hostIdentify = platform.hostIdentify,
+            hostToken = platform.hostToken,
+            webApiKey = platform.webApiKey
         )
     }
     single<TestApi> {
@@ -56,7 +34,10 @@ fun dataModule() = module {
 
     // Dao
     single<AuthDao> {
-        AuthDao.Impl
+        AuthDao.Impl(
+            dataStore = get(),
+            json = get()
+        )
     }
 
     // Remote
@@ -100,20 +81,11 @@ fun dataModule() = module {
     }
 
     factory {
-        dataStore = dataStore ?: PreferenceDataStoreFactory
-            .createWithPath(
-                produceFile = {
-                    get<DataStorePathProducer>()
-                        .producePath(
-                            fileName = "dice.preferences_pb"
-                        ).toPath()
-                }
-            )
-        dataStore!!
+        platform.dataStore
     }
 
     single {
-        HttpClient(platformEngine) {
+        HttpClient(platform.engine) {
             install(Logging) {
                 //  logger = Logger.DEFAULT
                 level = LogLevel.INFO
