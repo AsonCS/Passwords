@@ -12,8 +12,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import br.com.asoncs.multi.passwords.ui.app.AppViewModel
 import br.com.asoncs.multi.passwords.ui.component.Loading
+import br.com.asoncs.multi.passwords.ui.login.LoginScreenDestination.Args
 import br.com.asoncs.multi.passwords.ui.login.LoginState.Filling
 import br.com.asoncs.multi.passwords.ui.login.LoginState.Loading
 import org.jetbrains.compose.resources.painterResource
@@ -22,12 +22,10 @@ import passwords.composeapp.generated.resources.*
 
 @Composable
 fun LoginScreen(
-    appViewModel: AppViewModel,
-    loginViewModel: LoginViewModel,
-    navigateToSignup: () -> Unit,
+    args: Args,
     modifier: Modifier = Modifier
 ) {
-    val state by loginViewModel.state.collectAsState()
+    val state by args.loginViewModel.state.collectAsState()
 
     LoginScreen(
         modifier = modifier,
@@ -36,11 +34,11 @@ fun LoginScreen(
             googleLogin = stringResource(Res.string.login_screen_google_login),
             image = painterResource(Res.drawable.compose_multiplatform),
             login = stringResource(Res.string.login_screen_login),
-            onGoogleLogin = loginViewModel::loginWithGoogle,
-            onLogin = loginViewModel::login,
-            onSignup = navigateToSignup,
-            onUpdatePassword = loginViewModel::updatePassword,
-            onUpdateUsername = loginViewModel::updateUsername,
+            onGoogleLogin = args.loginViewModel::loginWithGoogle,
+            onLogin = args.loginViewModel::login,
+            onSignup = args.navigateToSignup,
+            onUpdatePassword = args.loginViewModel::updatePassword,
+            onUpdateUsername = args.loginViewModel::updateUsername,
             password = stringResource(Res.string.login_screen_password),
             passwordPlaceholder = stringResource(Res.string.login_screen_password_placeholder),
             signup = stringResource(Res.string.login_screen_signup),
@@ -51,7 +49,7 @@ fun LoginScreen(
     )
 
     LaunchedEffect(Unit) {
-        appViewModel.stateTopBarUpdate()
+        args.appViewModel.stateTopBarUpdate()
     }
 }
 

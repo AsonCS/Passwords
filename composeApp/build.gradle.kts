@@ -66,6 +66,11 @@ kotlin {
             implementation(compose.preview)
 
             implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.camera.camera2)
+            implementation(libs.androidx.camera.core)
+            implementation(libs.androidx.camera.extensions)
+            implementation(libs.androidx.camera.lifecycle)
+            implementation(libs.androidx.camera.view)
             implementation(libs.androidx.datastore)
             implementation(libs.androidx.datastore.preferences)
             // implementation(libs.firebase.admin)
@@ -80,7 +85,9 @@ kotlin {
             implementation(libs.koin.android)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.ktor.okhttp)
+            implementation(libs.mlkit.barcode)
             implementation(libs.play.services.auth)
+            implementation(libs.play.services.scanner)
         }
         commonMain.dependencies {
             implementation(compose.components.resources)

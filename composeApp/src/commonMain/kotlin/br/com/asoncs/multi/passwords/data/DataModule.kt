@@ -16,7 +16,7 @@ import org.koin.dsl.module
 
 internal expect val platform: PlatformDataModule
 
-const val TAG_DATA = "data"
+const val TAG_DATA = "passwords_app:data"
 
 fun dataModule() = module {
     // Api

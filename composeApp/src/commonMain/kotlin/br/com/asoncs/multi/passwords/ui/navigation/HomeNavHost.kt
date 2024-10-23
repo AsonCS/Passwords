@@ -32,6 +32,9 @@ fun HomeNavHost(
         HomeScreenDestination.destination(
             HomeScreenDestination.Args(
                 appViewModel,
+                navigateToScanner = {
+                    navController.navigate(ScannerNavDestination.route)
+                },
                 navigateToUser = {
                     navController.navigate(UserDestination.route)
                 }
@@ -40,6 +43,13 @@ fun HomeNavHost(
         )
         UserDestination.destination(
             UserDestination.Args(
+                appViewModel,
+                navigateUp = navController::navigateUp
+            ),
+            this
+        )
+        ScannerNavDestination.destination(
+            ScannerNavDestination.Args(
                 appViewModel,
                 navigateUp = navController::navigateUp
             ),

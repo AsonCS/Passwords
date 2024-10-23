@@ -6,15 +6,19 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import br.com.asoncs.multi.passwords.core.model.GithubUser
 import br.com.asoncs.multi.passwords.ui.app.AppViewModel
+import br.com.asoncs.multi.passwords.ui.home.HomeScreenDestination.Args
 import br.com.asoncs.multi.passwords.ui.navigation.HomeDestination
 import kotlinx.coroutines.flow.StateFlow
 
-data object HomeScreenDestination : HomeDestination<HomeScreenDestination.Args>(
+const val TAG_HOME = "passwords_app:home"
+
+data object HomeScreenDestination : HomeDestination<Args>(
     "home"
 ) {
     class Args(
         val appViewModel: AppViewModel,
-        val navigateToUser: () -> Unit
+        val navigateToScanner: () -> Unit,
+        val navigateToUser: () -> Unit,
     )
 
     override fun destination(
@@ -22,16 +26,14 @@ data object HomeScreenDestination : HomeDestination<HomeScreenDestination.Args>(
         builder: NavGraphBuilder
     ) {
         builder.composable(route) {
-            HomeScreen(
-                args.appViewModel,
-                args.navigateToUser
-            )
+            HomeScreen(args)
         }
     }
 }
 
 internal class HomeProps(
-    val image: Painter
+    val image: Painter,
+    val navigateToScanner: () -> Unit
 )
 
 sealed class HomeState {

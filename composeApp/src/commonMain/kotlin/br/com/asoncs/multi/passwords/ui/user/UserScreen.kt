@@ -13,23 +13,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import br.com.asoncs.multi.passwords.ui.app.AppViewModel
 import br.com.asoncs.multi.passwords.ui.component.Loading
 import br.com.asoncs.multi.passwords.ui.component.UserIcon
+import br.com.asoncs.multi.passwords.ui.user.UserDestination.Args
 import br.com.asoncs.multi.passwords.ui.user.UserState.Filling
 import br.com.asoncs.multi.passwords.ui.user.UserState.Loading
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun UserScreen(
-    appViewModel: AppViewModel,
-    navigateUp: () -> Unit,
+    args: Args,
     modifier: Modifier = Modifier,
     userViewModel: UserViewModel = koinViewModel()
 ) {
     val state by userViewModel.state
         .collectAsState()
-    val user by appViewModel.stateAuthUser
+    val user by args.appViewModel.stateAuthUser
         .collectAsState(null)
 
     UserScreen(
@@ -43,8 +42,8 @@ fun UserScreen(
     )
 
     LaunchedEffect(Unit) {
-        appViewModel.stateTopBarUpdate(
-            handlerBack = navigateUp
+        args.appViewModel.stateTopBarUpdate(
+            handlerBack = args.navigateUp
         )
     }
     LaunchedEffect(user == null) {

@@ -9,22 +9,20 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import br.com.asoncs.multi.passwords.ui.app.AppViewModel
 import br.com.asoncs.multi.passwords.ui.component.Loading
 import br.com.asoncs.multi.passwords.ui.login.LoginState.Filling
 import br.com.asoncs.multi.passwords.ui.login.LoginState.Loading
+import br.com.asoncs.multi.passwords.ui.login.SignupDestination.Args
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import passwords.composeapp.generated.resources.*
 
 @Composable
 fun SignupScreen(
-    appViewModel: AppViewModel,
-    loginViewModel: LoginViewModel,
-    navigateUp: () -> Unit,
+    args: Args,
     modifier: Modifier = Modifier
 ) {
-    val state by loginViewModel.state
+    val state by args.loginViewModel.state
         .collectAsState()
 
     SignupScreen(
@@ -36,9 +34,9 @@ fun SignupScreen(
             login = null,
             onGoogleLogin = null,
             onLogin = null,
-            onSignup = loginViewModel::signup,
-            onUpdatePassword = loginViewModel::updatePassword,
-            onUpdateUsername = loginViewModel::updateUsername,
+            onSignup = args.loginViewModel::signup,
+            onUpdatePassword = args.loginViewModel::updatePassword,
+            onUpdateUsername = args.loginViewModel::updateUsername,
             password = stringResource(Res.string.login_screen_password),
             passwordPlaceholder = stringResource(Res.string.login_screen_password_placeholder),
             signup = stringResource(Res.string.login_screen_signup),
@@ -49,8 +47,8 @@ fun SignupScreen(
     )
 
     LaunchedEffect(Unit) {
-        appViewModel.stateTopBarUpdate(
-            handlerBack = navigateUp
+        args.appViewModel.stateTopBarUpdate(
+            handlerBack = args.navigateUp
         )
     }
 }

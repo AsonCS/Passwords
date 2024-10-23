@@ -6,9 +6,10 @@ import androidx.navigation.compose.composable
 import br.com.asoncs.multi.passwords.auth.User
 import br.com.asoncs.multi.passwords.ui.app.AppViewModel
 import br.com.asoncs.multi.passwords.ui.navigation.HomeDestination
+import br.com.asoncs.multi.passwords.ui.user.UserDestination.Args
 import kotlinx.coroutines.flow.StateFlow
 
-data object UserDestination : HomeDestination<UserDestination.Args>(
+data object UserDestination : HomeDestination<Args>(
     "user"
 ) {
     class Args(
@@ -21,10 +22,7 @@ data object UserDestination : HomeDestination<UserDestination.Args>(
         builder: NavGraphBuilder
     ) {
         builder.composable(route) {
-            UserScreen(
-                args.appViewModel,
-                args.navigateUp
-            )
+            UserScreen(args)
         }
     }
 }

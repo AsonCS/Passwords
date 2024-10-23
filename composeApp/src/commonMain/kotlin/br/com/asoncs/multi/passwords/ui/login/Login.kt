@@ -5,12 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import br.com.asoncs.multi.passwords.ui.app.AppViewModel
+import br.com.asoncs.multi.passwords.ui.login.LoginScreenDestination.Args
 import br.com.asoncs.multi.passwords.ui.navigation.LoginDestination
 import kotlinx.coroutines.flow.StateFlow
 
-const val TAG_LOGIN = "login"
+const val TAG_LOGIN = "passwords_app:login"
 
-data object LoginScreenDestination : LoginDestination<LoginScreenDestination.Args>(
+data object LoginScreenDestination : LoginDestination<Args>(
     "login"
 ) {
     class Args(
@@ -24,11 +25,7 @@ data object LoginScreenDestination : LoginDestination<LoginScreenDestination.Arg
         builder: NavGraphBuilder
     ) {
         builder.composable(route) {
-            LoginScreen(
-                args.appViewModel,
-                args.loginViewModel,
-                args.navigateToSignup
-            )
+            LoginScreen(args)
         }
     }
 }

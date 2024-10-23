@@ -9,8 +9,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import br.com.asoncs.multi.passwords.Greeting
-import br.com.asoncs.multi.passwords.ui.app.AppViewModel
 import br.com.asoncs.multi.passwords.ui.component.Loading
+import br.com.asoncs.multi.passwords.ui.home.HomeScreenDestination.Args
 import br.com.asoncs.multi.passwords.ui.home.HomeState.*
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -18,9 +18,14 @@ import passwords.composeapp.generated.resources.Res
 import passwords.composeapp.generated.resources.compose_multiplatform
 
 @Composable
+internal expect fun PlatformScannerButton(
+    onClick: () -> Unit,
+    modifier: Modifier
+)
+
+@Composable
 fun HomeScreen(
-    appViewModel: AppViewModel,
-    navigateToUser: () -> Unit,
+    args: Args,
     modifier: Modifier = Modifier,
     homeViewModel: HomeViewModel = koinViewModel()
 ) {
@@ -30,15 +35,16 @@ fun HomeScreen(
     HomeScreen(
         modifier = modifier,
         props = HomeProps(
-            image = painterResource(Res.drawable.compose_multiplatform)
+            image = painterResource(Res.drawable.compose_multiplatform),
+            navigateToScanner = args.navigateToScanner
         ),
         state = state
     )
 
     LaunchedEffect(Unit) {
         homeViewModel.githubUser()
-        appViewModel.stateTopBarUpdate(
-            handlerUser = navigateToUser
+        args.appViewModel.stateTopBarUpdate(
+            handlerUser = args.navigateToUser
         )
     }
 }
@@ -75,6 +81,11 @@ internal fun HomeScreen(
                 color = MaterialTheme.colors.error
             )
         }
+
+        PlatformScannerButton(
+            onClick = props.navigateToScanner,
+            Modifier
+        )
 
         Button(
             onClick = { showContent = !showContent }
