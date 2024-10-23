@@ -1,0 +1,11 @@
+version:0
+string|firebase_default_web_client_id|ODIxNjc1MDUwODI4LTZkcjY5ZW40aTNwaTdndWFvZ2F0ajUxY3JqcDVpOTRkLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29t
+string|login_screen_google_login|R29vZ2xlIGxvZyBpbg==
+string|login_screen_login|TG9nIGlu
+string|login_screen_password_placeholder|OCBjaGFyYWN0ZXJzIG1pbmltdW0=
+string|login_screen_password|UGFzc3dvcmQ=
+string|login_screen_signup|U2lnbiB1cA==
+string|login_screen_username_placeholder|RW1haWwsIHBob25lLCBvciB1c2VybmFtZQ==
+string|login_screen_username|VXNlcm5hbWU=
+string|multi_app_name|UGFzc3dvcmRz
+string|signup_screen|U2lnbiB1cA==
