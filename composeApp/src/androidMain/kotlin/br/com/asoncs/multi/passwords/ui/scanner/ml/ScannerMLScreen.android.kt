@@ -6,24 +6,18 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.OptIn
-import androidx.camera.core.*
-import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.view.PreviewView
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import br.com.asoncs.multi.passwords.extension.error
-import br.com.asoncs.multi.passwords.ui.home.TAG_HOME
-import com.google.mlkit.vision.barcode.BarcodeScannerOptions
-import com.google.mlkit.vision.barcode.common.Barcode.FORMAT_QR_CODE
+import br.com.asoncs.multi.passwords.scan.Camera
 
 @Composable
 internal actual fun PlatformScannerMLScreen(
@@ -31,50 +25,70 @@ internal actual fun PlatformScannerMLScreen(
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    val previewView = remember {
-        PreviewView(context)
+    val camera = remember {
+        Camera(context, lifecycleOwner)
     }
+
+    val state by camera.state.collectAsState()
 
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) {
-        startCamera(
-            context,
-            lifecycleOwner,
-            previewView
-        )
+        camera.startCamera()
     }
 
     Column(
         modifier
+            .verticalScroll(rememberScrollState())
+            .padding(32.dp)
     ) {
-        Text(
-            "ML Scanner"
+        TextButton(
+            onClick = {}
+        ) {
+            Text(
+                "Not yet implemented, ML Scanner from media piker"
+            )
+        }
+
+        Button(
+            onClick = { camera.captureImage() }
+        ) {
+            Text(
+                "Capture Image"
+            )
+        }
+
+        Spacer(
+            Modifier
+                .height(38.dp)
         )
         AndroidView(
-            { previewView },
+            { camera.previewView },
             Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
+        )
+        Spacer(
+            Modifier
+                .height(38.dp)
+        )
+
+        Text(
+            text = state
+                .joinToString()
         )
     }
 
-    /*
-    // Set up the listeners for take photo and video capture buttons
-    viewBinding.imageCaptureButton.setOnClickListener { takePhoto() }
-    viewBinding.videoCaptureButton.setOnClickListener { captureVideo() }
-
-    cameraExecutor = Executors.newSingleThreadExecutor()
-     */
-
     LaunchedEffect(Unit) {
         if (allPermissionsGranted(context)) {
-            startCamera(
-                context,
-                lifecycleOwner,
-                previewView
-            )
+            camera.startCamera()
         } else {
             launcher.launch(requiredPermissions)
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            camera.shutdown()
         }
     }
 }
@@ -97,67 +111,7 @@ private fun allPermissionsGranted(
     ) == PackageManager.PERMISSION_GRANTED
 }
 
-private fun startCamera(
-    context: Context,
-    lifecycleOwner: LifecycleOwner,
-    previewView: PreviewView
-) {
-    val cameraProviderFuture = ProcessCameraProvider
-        .getInstance(context)
 
-    cameraProviderFuture.addListener({
-        // Used to bind the lifecycle of cameras to the lifecycle owner
-        val cameraProvider: ProcessCameraProvider = cameraProviderFuture
-            .get()
 
-        // Preview
-        val preview = Preview.Builder()
-            .build()
-            .also {
-                it.setSurfaceProvider(previewView.surfaceProvider)
-            }
 
-        // Select back camera as a default
-        val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
-        try {
-            // Unbind use cases before rebinding
-            cameraProvider.unbindAll()
-
-            // Bind use cases to camera
-            cameraProvider.bindToLifecycle(
-                lifecycleOwner,
-                cameraSelector,
-                preview
-            )
-
-        } catch (t: Throwable) {
-            TAG_HOME.error("Use case binding failed", t)
-        }
-
-    }, ContextCompat.getMainExecutor(context))
-}
-
-private suspend fun scan() {
-    val options = BarcodeScannerOptions
-        .Builder()
-        .setBarcodeFormats(
-            FORMAT_QR_CODE
-        )
-        .enableAllPotentialBarcodes()
-        .build()
-}
-
-private class YourImageAnalyzer : ImageAnalysis.Analyzer {
-    @OptIn(ExperimentalGetImage::class)
-    override fun analyze(
-        imageProxy: ImageProxy
-    ) {
-        val mediaImage = imageProxy.image
-        if (mediaImage != null) {
-            // val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
-            // Pass image to an ML Kit Vision API
-            // ...
-        }
-    }
-}
