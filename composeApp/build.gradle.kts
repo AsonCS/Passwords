@@ -81,11 +81,16 @@ kotlin {
             // implementation(libs.firebase.mpp.auth)
             // implementation(libs.firebase.performance)
             implementation(libs.firebase.ui)
+            implementation(libs.firebase.vertexai.get().toString()) {
+                exclude(group = "io.ktor")
+            }
             implementation(libs.google.id)
             implementation(libs.koin.android)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.ktor.okhttp)
             implementation(libs.mlkit.barcode)
+            implementation(libs.mlkit.text.recognition)
+            implementation(libs.mlkit.text.recognition.japanese)
             implementation(libs.play.services.auth)
             implementation(libs.play.services.scanner)
         }
@@ -151,6 +156,14 @@ android {
     }
     buildTypes {
         getByName("debug") {
+            applicationIdSuffix = ".debug"
+
+            resValue(
+                "string",
+                "firebase_ml_debug_api_key",
+                keystoreProperties["firebaseMlDebugApiKey"].toString()
+            )
+
             firebaseAppDistribution {
                 artifactPath =
                     "./composeApp/build/outputs/apk_from_bundle/debug/composeApp-debug-universal.apk"

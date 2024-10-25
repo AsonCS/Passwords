@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:label="🔐🔐🔐 db"
+        android:icon="@mipmap/ic_launcher">
+
+        <meta-data
+            android:name="com.firebase.ml.cloud.ApiKeyForDebug"
+            android:value="@string/firebase_ml_debug_api_key" />
+
+    </application>
+
+</manifest>

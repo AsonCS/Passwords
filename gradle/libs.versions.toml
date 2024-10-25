@@ -24,6 +24,7 @@ kotlin = "2.0.20"
 kotlinx-coroutines = "1.8.1"
 kotlinx-serialization = "1.7.1"
 ktor = "3.0.0"
+mlkit-text-recognition = "16.0.1"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
@@ -45,10 +46,11 @@ coil3-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = 
 #firebase-admin = { module = "com.google.firebase:firebase-admin", version = "9.3.0" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
-firebase-bom = "com.google.firebase:firebase-bom:33.5.0"
+firebase-bom = "com.google.firebase:firebase-bom:33.5.1"
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics" }
 #firebase-performance = { module = "com.google.firebase:firebase-perf" }
 firebase-ui = { group = "com.firebaseui", name = "firebase-ui-auth", version.ref = "firebase-ui" }
+firebase-vertexai = { module = "com.google.firebase:firebase-vertexai" }
 google-id = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "google-id" }
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
@@ -67,6 +69,8 @@ ktor-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation"
 ktor-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
 ktor-serialization-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 mlkit-barcode = { group = "com.google.mlkit", name = "barcode-scanning", version = "17.3.0" }
+mlkit-text-recognition = { group = "com.google.mlkit", name = "text-recognition", version.ref = "mlkit-text-recognition" }
+mlkit-text-recognition-japanese = { group = "com.google.mlkit", name = "text-recognition-japanese", version.ref = "mlkit-text-recognition" }
 play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version = "20.7.0" }
 play-services-scanner = { group = "com.google.android.gms", name = "play-services-code-scanner", version = "16.1.0" }
 
