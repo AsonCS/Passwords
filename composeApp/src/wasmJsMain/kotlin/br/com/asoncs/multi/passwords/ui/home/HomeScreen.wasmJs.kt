@@ -9,3 +9,10 @@ internal actual fun PlatformScannerButton(
     modifier: Modifier
 ) {
 }
+
+@Composable
+internal actual fun PlatformTextRecognitionButton(
+    onClick: () -> Unit,
+    modifier: Modifier
+) {
+}

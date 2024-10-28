@@ -9,7 +9,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import br.com.asoncs.multi.passwords.scan.ScanWithGmsBarcode
 
 @Composable
 internal actual fun PlatformScannerScreen(
@@ -24,11 +23,16 @@ fun ScannerList(
     modifier: Modifier
 ) {
     val context = LocalContext.current
-    val scan = remember {
-        ScanWithGmsBarcode(context)
+
+    var results by remember {
+        mutableStateOf(emptyList<Result>())
     }
 
-    val state by scan.state.collectAsState()
+    val scan = remember {
+        GmsBarcode(context) {
+            results = (listOf(it) + results).distinct()
+        }
+    }
 
     Column(
         modifier
@@ -58,7 +62,7 @@ fun ScannerList(
         }
 
         Text(
-            text = state
+            text = results
                 .joinToString()
         )
     }

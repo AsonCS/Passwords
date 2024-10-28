@@ -24,6 +24,12 @@ internal expect fun PlatformScannerButton(
 )
 
 @Composable
+internal expect fun PlatformTextRecognitionButton(
+    onClick: () -> Unit,
+    modifier: Modifier
+)
+
+@Composable
 fun HomeScreen(
     args: Args,
     modifier: Modifier = Modifier,
@@ -36,7 +42,8 @@ fun HomeScreen(
         modifier = modifier,
         props = HomeProps(
             image = painterResource(Res.drawable.compose_multiplatform),
-            navigateToScanner = args.navigateToScanner
+            navigateToScanner = args.navigateToScanner,
+            navigateToTextRecognition = args.navigateToTextRecognition
         ),
         state = state
     )
@@ -84,6 +91,11 @@ internal fun HomeScreen(
 
         PlatformScannerButton(
             onClick = props.navigateToScanner,
+            Modifier
+        )
+
+        PlatformTextRecognitionButton(
+            onClick = props.navigateToTextRecognition,
             Modifier
         )
 

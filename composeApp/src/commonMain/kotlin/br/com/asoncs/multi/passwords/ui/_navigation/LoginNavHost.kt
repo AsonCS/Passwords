@@ -1,4 +1,4 @@
-package br.com.asoncs.multi.passwords.ui.navigation
+package br.com.asoncs.multi.passwords.ui._navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -12,7 +12,7 @@ import org.koin.compose.viewmodel.koinViewModel
 abstract class LoginDestination<Args>(
     val route: String
 ) {
-    abstract fun destination(
+    abstract operator fun invoke(
         args: Args,
         builder: NavGraphBuilder
     )
@@ -30,7 +30,7 @@ fun LoginNavHost(
         startDestination = LoginScreenDestination.route,
         modifier = modifier
     ) {
-        LoginScreenDestination.destination(
+        LoginScreenDestination(
             LoginScreenDestination.Args(
                 appViewModel,
                 loginViewModel,
@@ -40,7 +40,7 @@ fun LoginNavHost(
             ),
             this
         )
-        SignupDestination.destination(
+        SignupDestination(
             SignupDestination.Args(
                 appViewModel,
                 loginViewModel,
@@ -54,7 +54,7 @@ fun LoginNavHost(
 data object LoginNavDestination : AppDestination<AppViewModel>(
     "login"
 ) {
-    override fun destination(
+    override operator fun invoke(
         args: AppViewModel,
         builder: NavGraphBuilder
     ) {

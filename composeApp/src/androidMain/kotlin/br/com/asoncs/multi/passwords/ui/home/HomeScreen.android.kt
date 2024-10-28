@@ -14,3 +14,13 @@ internal actual fun PlatformScannerButton(
         Text("Google code scanner")
     }
 }
+
+@Composable
+internal actual fun PlatformTextRecognitionButton(
+    onClick: () -> Unit,
+    modifier: Modifier
+) {
+    TextButton(onClick, modifier) {
+        Text("Text Recognition")
+    }
+}

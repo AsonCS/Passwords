@@ -1,12 +1,12 @@
-package br.com.asoncs.multi.passwords.scan
+package br.com.asoncs.multi.passwords.ui.scanner
 
 import com.google.mlkit.vision.barcode.common.Barcode
 
-sealed class ScanResult {
+internal sealed class Result {
 
     data class Error(
         val message: String
-    ) : ScanResult()
+    ) : Result()
 
     data class Success(
         val format: Int?,
@@ -14,7 +14,7 @@ sealed class ScanResult {
         val type: Int?,
         val url: String?,
         val wifi: String?
-    ) : ScanResult() {
+    ) : Result() {
         constructor(
             barcode: Barcode
         ) : this(

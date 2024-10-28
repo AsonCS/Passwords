@@ -1,4 +1,4 @@
-package br.com.asoncs.multi.passwords.scan
+package br.com.asoncs.multi.passwords.ui.scanner
 
 import androidx.annotation.OptIn
 import androidx.camera.core.*
@@ -7,8 +7,8 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode.FORMAT_UNKNOWN
 import com.google.mlkit.vision.common.InputImage
 
-internal class CameraAnalyzer(
-    private val onResult: (List<ScanResult>) -> Unit
+internal class Analyzer(
+    private val onResult: (List<Result>) -> Unit
 ) : ImageAnalysis.Analyzer {
     @OptIn(ExperimentalGetImage::class)
     override fun analyze(
@@ -36,7 +36,7 @@ internal class CameraAnalyzer(
                 barcodes
                     .mapNotNull {
                         if (it.format != FORMAT_UNKNOWN)
-                            ScanResult.Success(it)
+                            Result.Success(it)
                         else null
                     }
                     .let {
@@ -48,7 +48,7 @@ internal class CameraAnalyzer(
             .addOnCanceledListener {
                 onResult(
                     listOf(
-                        ScanResult.Error(
+                        Result.Error(
                             "YourImageAnalyzer cancel"
                         )
                     )
@@ -57,7 +57,7 @@ internal class CameraAnalyzer(
             .addOnFailureListener {
                 onResult(
                     listOf(
-                        ScanResult.Error(
+                        Result.Error(
                             it.message
                                 ?: "YourImageAnalyzer failure"
                         )

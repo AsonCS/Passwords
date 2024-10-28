@@ -3,7 +3,7 @@ package br.com.asoncs.multi.passwords.ui.scanner
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import br.com.asoncs.multi.passwords.ui.app.AppViewModel
-import br.com.asoncs.multi.passwords.ui.navigation.ScannerDestination
+import br.com.asoncs.multi.passwords.ui._navigation.ScannerDestination
 import br.com.asoncs.multi.passwords.ui.scanner.ScannerScreenDestination.Args
 
 data object ScannerScreenDestination : ScannerDestination<Args>(
@@ -15,7 +15,7 @@ data object ScannerScreenDestination : ScannerDestination<Args>(
         val navigateUp: () -> Unit
     )
 
-    override fun destination(
+    override operator fun invoke(
         args: Args,
         builder: NavGraphBuilder
     ) {

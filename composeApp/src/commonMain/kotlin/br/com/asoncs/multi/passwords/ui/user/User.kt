@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import br.com.asoncs.multi.passwords.auth.User
 import br.com.asoncs.multi.passwords.ui.app.AppViewModel
-import br.com.asoncs.multi.passwords.ui.navigation.HomeDestination
+import br.com.asoncs.multi.passwords.ui._navigation.HomeDestination
 import br.com.asoncs.multi.passwords.ui.user.UserDestination.Args
 import kotlinx.coroutines.flow.StateFlow
 
@@ -17,7 +17,7 @@ data object UserDestination : HomeDestination<Args>(
         val navigateUp: () -> Unit
     )
 
-    override fun destination(
+    override operator fun invoke(
         args: Args,
         builder: NavGraphBuilder
     ) {

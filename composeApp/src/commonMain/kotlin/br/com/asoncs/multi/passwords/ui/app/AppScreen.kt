@@ -5,7 +5,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
-import br.com.asoncs.multi.passwords.ui.navigation.AppNavHost
+import br.com.asoncs.multi.passwords.ui._navigation.AppNavHost
 
 @Composable
 fun AppScreen(

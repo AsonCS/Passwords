@@ -1,4 +1,4 @@
-package br.com.asoncs.multi.passwords.scan
+package br.com.asoncs.multi.passwords.camera
 
 import android.content.ContentValues
 import android.content.Context
@@ -10,23 +10,15 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import br.com.asoncs.multi.passwords.extension.error
-import br.com.asoncs.multi.passwords.ui.home.TAG_HOME
 import io.ktor.util.date.getTimeMillis
-import kotlinx.coroutines.flow.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class Camera(
+internal class Camera(
+    private val analyzer: ImageAnalysis.Analyzer?,
     private val context: Context,
-    private val lifecycleOwner: LifecycleOwner,
-    private val withAnalyzer: Boolean = true
+    private val lifecycleOwner: LifecycleOwner
 ) {
-
-    private val _state = MutableStateFlow<List<ScanResult>>(
-        emptyList()
-    )
-    val state = _state.asStateFlow()
-
     private val executor by lazy {
         Executors.newSingleThreadExecutor()
     }
@@ -65,11 +57,15 @@ class Camera(
                 }
 
                 override fun onError(exception: ImageCaptureException) {
-                    TAG_HOME.error("imageCapture.takePicture: Failed", exception)
+                    TAG_CAMERA.error("imageCapture.takePicture: Failed", exception)
                 }
 
             }
         )
+    }
+
+    fun shutdown() {
+        executor.shutdown()
     }
 
     fun startCamera() {
@@ -91,8 +87,8 @@ class Camera(
                         }
                 )
                 add(imageCapture)
-                if (withAnalyzer) {
-                    add(getImageAnalysis(executor))
+                if (analyzer != null) {
+                    add(getImageAnalysis(analyzer, executor))
                 }
             }.toTypedArray()
 
@@ -108,17 +104,14 @@ class Camera(
                 )
 
             } catch (t: Throwable) {
-                TAG_HOME.error("Use case binding failed", t)
+                TAG_CAMERA.error("Use case binding failed", t)
             }
 
         }, ContextCompat.getMainExecutor(context))
     }
 
-    fun shutdown() {
-        executor.shutdown()
-    }
-
     private fun getImageAnalysis(
+        analyzer: ImageAnalysis.Analyzer,
         executor: ExecutorService
     ): ImageAnalysis {
         return ImageAnalysis.Builder()
@@ -137,11 +130,7 @@ class Camera(
             .also { analysis ->
                 analysis.setAnalyzer(
                     executor,
-                    CameraAnalyzer { results ->
-                        _state.update {
-                            (results + it).distinct()
-                        }
-                    }
+                    analyzer
                 )
             }
     }

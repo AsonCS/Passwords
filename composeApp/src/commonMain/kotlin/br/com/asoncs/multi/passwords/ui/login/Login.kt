@@ -6,7 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import br.com.asoncs.multi.passwords.ui.app.AppViewModel
 import br.com.asoncs.multi.passwords.ui.login.LoginScreenDestination.Args
-import br.com.asoncs.multi.passwords.ui.navigation.LoginDestination
+import br.com.asoncs.multi.passwords.ui._navigation.LoginDestination
 import kotlinx.coroutines.flow.StateFlow
 
 const val TAG_LOGIN = "passwords_app:login"
@@ -20,7 +20,7 @@ data object LoginScreenDestination : LoginDestination<Args>(
         val navigateToSignup: () -> Unit
     )
 
-    override fun destination(
+    override operator fun invoke(
         args: Args,
         builder: NavGraphBuilder
     ) {

@@ -1,4 +1,4 @@
-package br.com.asoncs.multi.passwords.ui.navigation
+package br.com.asoncs.multi.passwords.ui._navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -6,14 +6,14 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
 import br.com.asoncs.multi.passwords.ui.app.AppViewModel
-import br.com.asoncs.multi.passwords.ui.navigation.ScannerNavDestination.Args
+import br.com.asoncs.multi.passwords.ui._navigation.ScannerNavDestination.Args
 import br.com.asoncs.multi.passwords.ui.scanner.ScannerScreenDestination
 import br.com.asoncs.multi.passwords.ui.scanner.ml.ScannerMLDestination
 
 abstract class ScannerDestination<Args>(
     val route: String
 ) {
-    abstract fun destination(
+    abstract operator fun invoke(
         args: Args,
         builder: NavGraphBuilder
     )
@@ -30,7 +30,7 @@ fun ScannerNavHost(
         startDestination = ScannerScreenDestination.route,
         modifier = modifier
     ) {
-        ScannerScreenDestination.destination(
+        ScannerScreenDestination(
             ScannerScreenDestination.Args(
                 args.appViewModel,
                 navigateToScannerML = {
@@ -40,7 +40,7 @@ fun ScannerNavHost(
             ),
             this
         )
-        ScannerMLDestination.destination(
+        ScannerMLDestination(
             ScannerMLDestination.Args(
                 args.appViewModel,
                 navigateUp = navController::navigateUp
@@ -58,7 +58,7 @@ data object ScannerNavDestination : HomeDestination<Args>(
         val navigateUp: () -> Unit,
     )
 
-    override fun destination(
+    override operator fun invoke(
         args: Args,
         builder: NavGraphBuilder
     ) {

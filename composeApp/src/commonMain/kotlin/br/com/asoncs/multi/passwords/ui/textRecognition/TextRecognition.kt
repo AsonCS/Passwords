@@ -1,17 +1,16 @@
-package br.com.asoncs.multi.passwords.ui.login
+package br.com.asoncs.multi.passwords.ui.textRecognition
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import br.com.asoncs.multi.passwords.ui.app.AppViewModel
-import br.com.asoncs.multi.passwords.ui.login.SignupDestination.Args
-import br.com.asoncs.multi.passwords.ui._navigation.LoginDestination
+import br.com.asoncs.multi.passwords.ui._navigation.HomeDestination
+import br.com.asoncs.multi.passwords.ui.textRecognition.TextRecognition.Args
 
-data object SignupDestination : LoginDestination<Args>(
-    "signup"
+data object TextRecognition : HomeDestination<Args>(
+    "Text Recognition"
 ) {
     class Args(
         val appViewModel: AppViewModel,
-        val loginViewModel: LoginViewModel,
         val navigateUp: () -> Unit
     )
 
@@ -20,7 +19,7 @@ data object SignupDestination : LoginDestination<Args>(
         builder: NavGraphBuilder
     ) {
         builder.composable(route) {
-            SignupScreen(args)
+            TextRecognitionScreen(args)
         }
     }
 }

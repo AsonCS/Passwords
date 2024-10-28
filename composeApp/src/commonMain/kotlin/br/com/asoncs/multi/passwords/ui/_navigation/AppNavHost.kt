@@ -1,4 +1,4 @@
-package br.com.asoncs.multi.passwords.ui.navigation
+package br.com.asoncs.multi.passwords.ui._navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -13,7 +13,7 @@ import br.com.asoncs.multi.passwords.ui.splash.SplashDestination
 abstract class AppDestination<Args>(
     val route: String
 ) {
-    abstract fun destination(
+    abstract operator fun invoke(
         args: Args,
         builder: NavGraphBuilder
     )
@@ -30,15 +30,15 @@ fun AppNavHost(
         startDestination = SplashDestination.route,
         modifier = modifier
     ) {
-        HomeNavDestination.destination(
+        HomeNavDestination(
             appViewModel,
             this
         )
-        LoginNavDestination.destination(
+        LoginNavDestination(
             appViewModel,
             this
         )
-        SplashDestination.destination(
+        SplashDestination(
             Unit,
             this
         )
