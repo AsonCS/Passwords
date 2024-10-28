@@ -1,6 +1,5 @@
 package br.com.asoncs.multi.passwords.camera
 
-import androidx.camera.core.ImageAnalysis
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
@@ -17,7 +16,7 @@ const val TAG_CAMERA = "passwords_app:camera"
 @Composable
 fun CameraComponent(
     modifier: Modifier = Modifier,
-    analyzer: ImageAnalysis.Analyzer? = null
+    analyzer: CameraAnalyzer? = null
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current

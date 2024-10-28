@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 internal class Camera(
-    private val analyzer: ImageAnalysis.Analyzer?,
+    private val analyzer: CameraAnalyzer?,
     private val context: Context,
     private val lifecycleOwner: LifecycleOwner
 ) {

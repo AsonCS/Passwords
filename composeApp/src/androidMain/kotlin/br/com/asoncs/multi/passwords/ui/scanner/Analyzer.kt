@@ -1,7 +1,11 @@
 package br.com.asoncs.multi.passwords.ui.scanner
 
-import androidx.annotation.OptIn
-import androidx.camera.core.*
+import android.content.Context
+import android.net.Uri
+import br.com.asoncs.multi.passwords.camera.CameraAnalyzer
+import br.com.asoncs.multi.passwords.extension.error
+import br.com.asoncs.multi.passwords.ui.home.TAG_HOME
+import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode.FORMAT_UNKNOWN
@@ -9,24 +13,37 @@ import com.google.mlkit.vision.common.InputImage
 
 internal class Analyzer(
     private val onResult: (List<Result>) -> Unit
-) : ImageAnalysis.Analyzer {
-    @OptIn(ExperimentalGetImage::class)
+) : CameraAnalyzer() {
     override fun analyze(
-        imageProxy: ImageProxy
-    ) {
-        val mediaImage = imageProxy.image
-            ?: let {
-                imageProxy.close()
-                return
-            }
+        image: InputImage
+    ) = analyze(
+        image,
+        onResult
+    )
 
-        val image = InputImage
-            .fromMediaImage(
-                mediaImage,
-                imageProxy.imageInfo.rotationDegrees
-            )
+    companion object {
+        fun analyze(
+            context: Context,
+            uri: Uri,
+            onResult: (List<Result>) -> Unit
+        ) {
+            runCatching {
+                val image = InputImage.fromFilePath(context, uri)
+                analyze(
+                    image,
+                    onResult
+                ).addOnCompleteListener {
+                    image.mediaImage?.close()
+                }
+            }.onFailure {
+                TAG_HOME.error("Scanner.Analyzer", it)
+            }.getOrNull()
+        }
 
-        BarcodeScanning.getClient(
+        fun analyze(
+            image: InputImage,
+            onResult: (List<Result>) -> Unit
+        ): Task<*> = BarcodeScanning.getClient(
             BarcodeScannerOptions
                 .Builder()
                 .enableAllPotentialBarcodes()
@@ -64,8 +81,6 @@ internal class Analyzer(
                     )
                 )
             }
-            .addOnCompleteListener {
-                imageProxy.close()
-            }
     }
+
 }
