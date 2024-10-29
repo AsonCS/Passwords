@@ -14,15 +14,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import br.com.asoncs.multi.passwords.camera.CameraComponent
+import br.com.asoncs.multi.passwords.ui.component.Loading
 import br.com.asoncs.multi.passwords.ui.scanner.Analyzer
 import br.com.asoncs.multi.passwords.ui.scanner.Result
+import kotlinx.coroutines.launch
 
 @Composable
 internal actual fun PlatformScannerMLScreen(
     modifier: Modifier
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
+    var isLoading by remember {
+        mutableStateOf(false)
+    }
     var results by remember {
         mutableStateOf(emptyList<Result>())
     }
@@ -33,12 +39,13 @@ internal actual fun PlatformScannerMLScreen(
     val pickMedia = rememberLauncherForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     ) { uri ->
-        if (uri == null) return@rememberLauncherForActivityResult
-
-        Analyzer.analyze(context, uri) {
-            results = (it + results).distinct()
-
-            It's crashing the app
+        if (uri != null) {
+            scope.launch {
+                isLoading = true
+                results = (Analyzer.analyze(context, uri) + results)
+                    .distinct()
+                isLoading = false
+            }
         }
     }
 
@@ -80,6 +87,10 @@ internal actual fun PlatformScannerMLScreen(
                     "Chose an image"
                 )
             }
+        }
+
+        if (isLoading) {
+            Loading()
         }
 
         Text(

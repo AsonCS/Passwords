@@ -10,6 +10,10 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode.FORMAT_UNKNOWN
 import com.google.mlkit.vision.common.InputImage
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 internal class Analyzer(
     private val onResult: (List<Result>) -> Unit
@@ -22,22 +26,34 @@ internal class Analyzer(
     )
 
     companion object {
-        fun analyze(
+        suspend fun analyze(
             context: Context,
-            uri: Uri,
-            onResult: (List<Result>) -> Unit
-        ) {
-            runCatching {
-                val image = InputImage.fromFilePath(context, uri)
-                analyze(
-                    image,
-                    onResult
-                ).addOnCompleteListener {
-                    image.mediaImage?.close()
+            uri: Uri
+        ): List<Result> {
+            return withContext(IO) {
+                val image = runCatching {
+                    InputImage.fromFilePath(context, uri)
+                }.onFailure {
+                    TAG_HOME.error("Scanner.Analyzer", it)
+                }.getOrNull()
+                    ?: return@withContext emptyList()
+
+                suspendCoroutine { continuation ->
+                    var resumed = false
+                    analyze(
+                        image,
+                        onResult = {
+                            continuation.resume(it)
+                            resumed = true
+                        }
+                    ).addOnCompleteListener {
+                        image.mediaImage?.close()
+                        if (resumed.not()) {
+                            continuation.resume(emptyList())
+                        }
+                    }
                 }
-            }.onFailure {
-                TAG_HOME.error("Scanner.Analyzer", it)
-            }.getOrNull()
+            }
         }
 
         fun analyze(
